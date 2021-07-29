@@ -1,4 +1,6 @@
 from flask import Flask
+from apis.PlayerAPI import PlayerAPI
+from apis.GameStateAPI import GameStateAPI
 
 app = Flask(__name__)
 
@@ -6,6 +8,8 @@ app = Flask(__name__)
 def home():
 	return "Home"
 
-@app.route("/hello")
-def hello():
-	return "Hello, world!"
+PlayerAPI.register(app)
+GameStateAPI.register(app)
+
+# if __name__ == '__main__':
+# 	app.run(debug=True)
