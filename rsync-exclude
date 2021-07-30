@@ -1,0 +1,11 @@
+*__pycache__/*
+realtime/*
+.DS_Store
+.gitignore
+.gitmodules
+.git
+Makefile
+README.md
+config/config.py
+rsync-exclude
+*.log
