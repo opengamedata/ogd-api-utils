@@ -1,10 +1,11 @@
+from flask import Flask
 from flask_restful import Resource, Api, reqparse
 
 class GameStateAPI:
     @staticmethod
-    def register(app):
+    def register(app:Flask):
         api = Api(app)
-        api.add_resource(GameStateAPI.GameState, '/state/<player_id>')
+        api.add_resource(GameStateAPI.GameState, '/player/<player_id>/state')
 
     class GameState(Resource):
         def get(self, player_id):
