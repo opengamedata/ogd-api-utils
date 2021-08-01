@@ -8,8 +8,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-	return "Home"
-
+    return "Home"
+    
 ClassroomAPI.register(app)
 DashboardAPI.register(app)
 GameStateAPI.register(app)
