@@ -333,7 +333,7 @@ class ClassroomAPI:
                 fd_config = settings["db_config"]["fd_users"]
                 _dummy, db_conn = SQL.prepareDB(db_settings=fd_config)
                 # Step 2: If teacher has student, then we can retrieve their name.
-                if db_conn is not None and ClassroomAPI.Teacher._hasStudent(db_conn=db_conn, db_name=fd_config["DB_NAME"], teacher_id=teacher_id, student_id=player_id):
+                if db_conn is not None and ClassroomAPI.Teacher._hasStudent(db_conn=db_conn, db_name=fd_config["DB_NAME"], teacher_id=args["teacher_id"], student_id=player_id):
                     try:
                         db_name = fd_config['DB_NAME']
                         query_string = f"""SELECT {db_name}.player_classrooms.class_id from {db_name}.player_classrooms
