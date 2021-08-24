@@ -1,5 +1,7 @@
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
+from mysql.connector import Error as MySQLError
+from mysql.connector.connection import MySQLConnection
 
 class DashboardAPI:
     @staticmethod
