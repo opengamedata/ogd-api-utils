@@ -1,0 +1,13 @@
+settings = {
+    "db_config":
+    {
+        "DB_HOST" : "127.0.0.1",
+        "DB_USER" : "username",
+        "DB_PW" : "password",
+        "DB_NAME" : "logger",
+        "TABLE" : "log",
+        "DB_PORT" : 3306
+    },
+    "OGD_CORE_PATH":"Path/To/opengamedata-core",
+    "DEBUG_LEVEL":"INFO"
+}
