@@ -31,7 +31,7 @@ class SimRTServer:
     ssh_settings = settings["ssh_config"]
     rt_settings  = settings["realtime_config"]
     db_settings = settings["db_sim_config"]
-    DB_NAME_DATA = db_settings["DB_NAME_DATA"]
+    DB_NAME = db_settings["DB_NAME"]
     DB_TABLE = db_settings["TABLE"]
 
     ## Handler to retrieve all active sessions for a given game.
@@ -176,11 +176,11 @@ class SimRTServer:
             cursor = db.cursor()
             # filt = f"`session_id`='{sess_id}' AND `event`='COMPLETE' AND `time_elapsed` < {sim_time}"
             # max_level_raw = SQL.SELECT(cursor=cursor,
-            #                                  db_name=SimRTServer.DB_NAME_DATA, table=SimRTServer.DB_TABLE,\
+            #                                  db_name=SimRTServer.DB_NAME, table=SimRTServer.DB_TABLE,\
             #                                  columns=["MAX(level)"], filter=filt)
             filt = f"`session_id`='{sess_id}' AND `time_elapsed` < {sim_time}"
             cur_level_raw = SQL.SELECT(cursor=cursor,
-                                             db_name=SimRTServer.DB_NAME_DATA, table=SimRTServer.DB_TABLE,\
+                                             db_name=SimRTServer.DB_NAME, table=SimRTServer.DB_TABLE,\
                                              columns=["level", "server_time"], filter=filt,\
                                              sort_columns=["client_time"], sort_direction="DESC", limit=1)
             max_level = 0
@@ -316,7 +316,7 @@ class SimRTServer:
                 join_statement   = "INNER JOIN players ON `player_id`" if class_id is not None else ""
                 filt = f"`app_id`='{game_id}' AND `time_elapsed` < {sim_time} AND `time_elapsed` >= {max(0, sim_time-active_window)} {player_id_filter} {join_statement}"
                 active_sessions_raw = SQL.SELECT(cursor=cursor,
-                                                    db_name=SimRTServer.DB_NAME_DATA, table=SimRTServer.DB_TABLE,\
+                                                    db_name=SimRTServer.DB_NAME, table=SimRTServer.DB_TABLE,\
                                                     columns=["session_id", "player_id"], filter=filt,\
                                                     sort_columns=["session_id"], distinct=True)
                 #+++
@@ -345,7 +345,7 @@ class SimRTServer:
                 cursor = db.cursor()
                 filt = f"`session_id`='{session_id}' AND `time_elapsed` < {sim_time}"
                 session_data = SQL.SELECT(cursor=cursor,
-                                                db_name=SimRTServer.DB_NAME_DATA, table=SimRTServer.DB_TABLE,\
+                                                db_name=SimRTServer.DB_NAME, table=SimRTServer.DB_TABLE,\
                                                 filter=filt,\
                                                 sort_columns=["session_n", "client_time"])
             except Exception as err:

@@ -36,7 +36,7 @@ class RTServer:
     ssh_settings = settings["ssh_config"]
     rt_settings  = settings["realtime_config"]
     db_settings  = settings["db_config"]
-    DB_NAME_DATA = db_settings["DB_NAME_DATA"]
+    DB_NAME = db_settings["DB_NAME"]
     DB_TABLE     = db_settings["TABLE"]
 
     ## Handler to retrieve all active sessions for a given game.
@@ -190,11 +190,11 @@ class RTServer:
             cursor = db.cursor()
             # filt = f"`session_id`='{sess_id}' AND `event`='COMPLETE'"
             # max_level_raw = SQL.SELECT(cursor=cursor,
-            #                                  db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
+            #                                  db_name=RTServer.DB_NAME, table=RTServer.DB_TABLE,\
             #                                  columns=["MAX(level)"], filter=filt)
             filt = f"`session_id`='{sess_id}'"
             cur_level_raw = SQL.SELECT(cursor=cursor,
-                                             db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
+                                             db_name=RTServer.DB_NAME, table=RTServer.DB_TABLE,\
                                              columns=["level", "server_time"], filter=filt,\
                                              sort_columns=["client_time"], sort_direction="DESC", limit=1)
             # max_level = max_level_raw[0][0] if max_level_raw[0][0] != None else 0
@@ -356,7 +356,7 @@ class RTServer:
                 #---
                 cursor = db.cursor()
                 start_time = datetime.now() - timedelta(minutes=5)
-                # disamb = f"{RTServer.DB_NAME_DATA}.{RTServer.DB_TABLE}"
+                # disamb = f"{RTServer.DB_NAME}.{RTServer.DB_TABLE}"
                 player_id_filter = f"AND {RTServer.DB_TABLE}.player_id IS NOT NULL" if require_player_id else ""
                 if class_id is not None:
                     join_statement = f"INNER JOIN players ON {RTServer.DB_TABLE}.player_id=players.player_id" 
@@ -366,7 +366,7 @@ class RTServer:
                     column_names   = [f"session_id", "player_id"]
                 filt = f"{RTServer.DB_TABLE}.app_id='{game_id}' AND {RTServer.DB_TABLE}.server_time > '{start_time.isoformat()}' {player_id_filter}"
                 active_sessions_raw = SQL.SELECT(cursor=cursor,
-                                                 db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
+                                                 db_name=RTServer.DB_NAME, table=RTServer.DB_TABLE,\
                                                  columns=column_names, join=join_statement, filter=filt,\
                                                  sort_columns=["session_id"], distinct=True)
                 #+++
@@ -417,7 +417,7 @@ class RTServer:
                 cursor = db.cursor()
                 filt = f"`session_id`='{session_id}'"
                 session_data = SQL.SELECT(cursor=cursor,
-                                          db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
+                                          db_name=RTServer.DB_NAME, table=RTServer.DB_TABLE,\
                                           filter=filt, sort_columns=["session_n", "client_time"])
             except Exception as err:
                 msg = f"{type(err)} {str(err)}"
