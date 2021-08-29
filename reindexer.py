@@ -6,6 +6,8 @@ import os
 import pandas as pd
 import utils
 import zipfile
+from pathlib import Path
+from typing import Dict
 
 def meta_to_index(meta, data_dir):
     # just in case it didn't already end with a /
@@ -24,9 +26,10 @@ def meta_to_index(meta, data_dir):
             "sessions"     :meta['sessions']
         }
 
-def index_meta(root, name, indexed_files):
-    next_file = open(os.path.join(root, name), 'r')
-    next_meta = json.load(next_file)
+def index_meta(root:Path, name:str, indexed_files:Dict):
+    next_meta = {}
+    with open(root / name, 'r') as next_file:
+        next_meta = json.load(next_file)
     next_game = next_meta['game_id']
     next_data_id = next_meta['dataset_id']
     if not next_game in indexed_files.keys():
@@ -40,7 +43,7 @@ def index_meta(root, name, indexed_files):
         indexed_files[next_game][next_data_id] = meta_to_index(next_meta, root)
     return indexed_files
 
-def index_zip(root, name, indexed_files):
+def index_zip(root:Path, name:str, indexed_files):
     # for reference, here's how the indices of a tsv file should look, if we're not dealing with a "cycle" game.
     PIECE_INDICES = {'name':0, 'start_date':1, 'to':2, 'end_date':3, 'id':4, 'file_type':5}
     top = name.split('.')
@@ -54,7 +57,7 @@ def index_zip(root, name, indexed_files):
         indexed_files[game_id] = {}
     # if we already indexed something with this dataset id, then only update if this one is newer.
     # else, just stick this new meta in the index.
-    file_path = f"{root}/{name}" # os.path.join(root, name) is technically proper, but gives bad results in Windows.
+    file_path = root / name
     if not dataset_id in indexed_files[game_id].keys():
         # after getting info from filename on the game id, start/end dates, etc. we can peek at the file and count the rows, *if* it's a session file.
         session_ct = None
@@ -118,6 +121,6 @@ elif args.level == 'DEBUG':
 data_dirs = os.walk("./data/")
 indexed_files = generate_index(data_dirs)
 # print(f"Final set of indexed files: {indexed_files}")
-with open(f"./data/file_list.json", "w+") as indexed_zips_file:
+with open(Path("./data/file_list.json"), "w+") as indexed_zips_file:
     indexed_zips_file.write(json.dumps(indexed_files, indent=4, sort_keys=True))
     indexed_zips_file.close()
