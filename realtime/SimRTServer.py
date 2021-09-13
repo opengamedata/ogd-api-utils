@@ -132,9 +132,9 @@ class SimRTServer:
                     row = list(row)
                     row[game_table.complex_data_index] = complex_data_parsed
                     extractor.extractFromRow(event=row, table_schema=game_table)
-                extractor.calculateAggregateFeatures()
+                extractor.CalculateAggregateFeatures()
                 all_features = dict(zip( extractor.getFeatureNames(table_schema=game_table, game_schema=schema),
-                                            extractor.getCurrentFeatures() ))
+                                            extractor.GetCurrentFeatures() ))
                 # print(f"all_features: {all_features}")
                 prog = SimRTServer.getGameProgress(sess_id=sess_id, game_id=game_id, sim_time=sim_time)
                 cur_level = prog["cur_level"]

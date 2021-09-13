@@ -3,6 +3,7 @@ import json
 import logging
 import typing
 import logging
+from pathlib import Path
 ## import local files
 from models.DeathPredModel import SimpleDeathPredModel, SimpleFoodDeathPredModel, SimpleMoneyDeathPredModel
 from models.SingleFeatureModel import SingleFeatureModel
@@ -28,7 +29,7 @@ import utils
 ## @class ModelManager
 class ModelManager():
     def __init__(self, game_name):
-        self._models = utils.loadJSONFile(filename=f"{game_name}_models.json", path="./models/")
+        self._models = utils.loadJSONFile(filename=f"{game_name}_models.json", path=Path("./models/"))
         #print(f"In ModelManager, got the following list: {self._models}")
         # in the future, extend this with other ways of loading models.
     
