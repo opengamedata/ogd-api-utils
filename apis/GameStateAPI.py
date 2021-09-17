@@ -8,7 +8,8 @@ from mysql.connector.connection import MySQLConnection
 from config.config import settings
 
 import sys
-sys.path.append(settings["OGD_CORE_PATH"])
+if not settings["OGD_CORE_PATH"] in sys.path:
+    sys.path.append(settings["OGD_CORE_PATH"])
 from interfaces.MySQLInterface import SQL
 
 class GameStateAPI:
@@ -56,7 +57,7 @@ class GameStateAPI:
             count = args['count'] if args['count'] is not None else 1
             offset = args['offset'] if args['offset'] is not None else 0
             # Step 2: get states from database.
-            fd_config = settings["db_config"]["fd_users"]
+            fd_config = settings["DB_CONFIG"]["fd_users"]
             _dummy, db_conn = SQL.prepareDB(db_settings=fd_config)
             if db_conn is not None:
                 query_string = f"SELECT `game_state` from {fd_config['DB_NAME']}.game_states\n\
@@ -104,7 +105,7 @@ class GameStateAPI:
             args = parser.parse_args()
             state = args['state']
             # Step 2: insert state into database.
-            fd_config = settings["db_config"]["fd_users"]
+            fd_config = settings["DB_CONFIG"]["fd_users"]
             _dummy, db_conn = SQL.prepareDB(db_settings=fd_config)
             if db_conn is not None:
                 query_string = f"""INSERT INTO {fd_config['DB_NAME']}.game_states (`player_id`, `game_id`, `game_state`)

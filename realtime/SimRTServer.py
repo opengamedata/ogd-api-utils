@@ -28,8 +28,8 @@ from schemas.GameSchema import GameSchema
 class SimRTServer:
 
     # Load settings, set up consts.
-    ssh_settings = settings["ssh_config"]
-    rt_settings  = settings["realtime_config"]
+    ssh_settings = settings["SSH_CONFIG"]
+    rt_settings  = settings["REALTIME_CONFIG"]
     db_settings = settings["db_sim_config"]
     DB_NAME = db_settings["DB_NAME"]
     DB_TABLE = db_settings["TABLE"]

@@ -7,7 +7,8 @@ from mysql.connector.connection import MySQLConnection
 from config.config import settings
 
 import sys
-sys.path.append(settings["OGD_CORE_PATH"])
+if not settings["OGD_CORE_PATH"] in sys.path:
+    sys.path.append(settings["OGD_CORE_PATH"])
 from interfaces.MySQLInterface import SQL
 from interfaces.BigQueryInterface import BigQueryInterface
 

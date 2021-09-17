@@ -8,7 +8,8 @@ from typing import Any, Dict, List, Tuple, Union
 from config.config import settings
 
 import sys
-sys.path.append(settings["OGD_CORE_PATH"])
+if not settings["OGD_CORE_PATH"] in sys.path:
+    sys.path.append(settings["OGD_CORE_PATH"])
 from interfaces.MySQLInterface import SQL
 
 class PlayerAPI:
@@ -81,9 +82,9 @@ class PlayerAPI:
             # Step 1: get id from SQL
             ret_val : Dict[str,Any] = { "id":None, "message":"" }
 
-            id_config = settings["db_config"]["id_gen"]
+            id_config = settings["DB_CONFIG"]["id_gen"]
             _dummy, id_conn = SQL.prepareDB(db_settings=id_config)
-            fd_config = settings["db_config"]["fd_users"]
+            fd_config = settings["DB_CONFIG"]["fd_users"]
             _dummy, user_conn = SQL.prepareDB(db_settings=fd_config)
             if id_conn is not None:
                 try:
@@ -117,7 +118,7 @@ class PlayerAPI:
             player_id = args['player_id']
             name      = args['name']
             # Step 2: insert player into the database
-            fd_config = settings["db_config"]["fd_users"]
+            fd_config = settings["DB_CONFIG"]["fd_users"]
             _dummy, db_conn = SQL.prepareDB(db_settings=fd_config)
             if db_conn is not None:
                 insert_query = f"""INSERT INTO {fd_config['DB_NAME']}.player_codes (`player_id`, `name`) VALUES (%s, %s)
