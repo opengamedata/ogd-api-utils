@@ -1,3 +1,3 @@
 settings = {
-	"EXTERN_SERVER":"fieldday-web.ad.education.wisc.edu/opengamedata.wsgi"
+	"EXTERN_SERVER":"https://fieldday-web.wcer.wisc.edu/wsgi-bin/opengamedata.wsgi"
 }

@@ -4,18 +4,15 @@ from unittest import TestCase
 # local imports
 from tests.t_config import settings
 
-class t_GameStateAPI(TestCase):
+class t_HelloAPI(TestCase):
     def RunAll(self):
-        t = t_GameStateAPI.t_GameState()
+        t = t_HelloAPI.t_Hello()
         t.test_home()
-        t.test_post()
         t.test_get()
+        t.test_post()
+        t.test_put()
 
-    class t_GameState:
-        def __init__(self):
-            self.TEST_PLAYER_ID = "test_player"
-            self.TEST_GAME      = "AQUALAB"
-
+    class t_Hello:
         def test_home(self):
             base = settings['EXTERN_SERVER']
             print(f"GET test at {base}")
@@ -28,10 +25,9 @@ class t_GameStateAPI(TestCase):
 
         def test_get(self):
             base = settings['EXTERN_SERVER']
-            url = f"{base}/player/{self.TEST_PLAYER_ID}/game/{self.TEST_GAME}/state"
+            url = f"{base}/hello"
             print(f"GET test at {url}")
-            params = { 'count':1, 'offset':0 }
-            result = requests.get(url=url, params=params)
+            result = requests.get(url=url)
             if result is not None:
                 print(f"Result of get:\n{result.text}")
             else:
@@ -39,11 +35,20 @@ class t_GameStateAPI(TestCase):
 
         def test_post(self):
             base = settings['EXTERN_SERVER']
-            url = f"{base}/player/{self.TEST_PLAYER_ID}/game/{self.TEST_GAME}/state"
+            url = f"{base}/hello"
             print(f"POST test at {url}")
-            params = { 'state':"{'data':'test data'}" }
-            result = requests.post(url=url, params=params)
+            result = requests.post(url=url)
             if result is not None:
                 print(f"Result of post:\n{result.text}")
             else:
                 print(f"No response to POST request.")
+
+        def test_put(self):
+            base = settings['EXTERN_SERVER']
+            url = f"{base}/hello"
+            print(f"PUT test at {url}")
+            result = requests.put(url=url)
+            if result is not None:
+                print(f"Result of put:\n{result.text}")
+            else:
+                print(f"No response to PUT request.")
