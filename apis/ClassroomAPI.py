@@ -131,7 +131,13 @@ class ClassroomAPI:
             return ret_val
         
         def post(self, teacher_id):
-            ret_val : Dict[str,str] = {"message":""}
+            ret_val : Dict[str,Any] = {
+                "type":"POST",
+                "val":None,
+                "msg":"",
+                "status":"SUCCESS",
+                "version":settings['VER']
+            }
             # Step 1: Get args and check token is valid
             parser = reqparse.RequestParser()
             parser.add_argument("token")
@@ -149,11 +155,13 @@ class ClassroomAPI:
             # Step 3: Mark teacher as having a session
                 if teacher_id is not None:
                     session["teacher_id"] = teacher_id
-                    ret_val["message"] = f"SUCCESS: Teacher {teacher_id} is now logged in"
+                    ret_val["msg"] = f"SUCCESS: Teacher {teacher_id} is now logged in"
                 else:
-                    ret_val["message"] = "FAIL: Could not retrieve the teacher's id"
+                    ret_val["msg"] = "FAIL: Could not retrieve the teacher's id"
+                    ret_val['status'] = "ERR_DB"
             else:
                 ret_val["message"] = "FAIL: Could not verify the teacher's Google Login"
+                ret_val['status'] = "ERR_SRV"
             return ret_val
 
     class Teacher(Resource):
@@ -192,8 +200,11 @@ class ClassroomAPI:
 
         def get(self, teacher_id):
             ret_val : Dict[str,Any] = {
-                "teacher":None,
-                "message":""
+                "type":"GET",
+                "val":None,
+                "msg":"",
+                "status":"SUCCESS",
+                "version":settings['VER']
             }
             if "teacher_id" in session and (session['teacher_id'] == teacher_id):
                 # Step 1: Set up database and get the teacher info
@@ -210,18 +221,20 @@ class ClassroomAPI:
                 # Step 2: process and return data
                 except MySQLError as err:
                     print(f"ERROR: Could not complete query, got error {err}")
-                    ret_val["message"] = "FAIL: Could not retrieve the teacher's data"
+                    ret_val['msg'] = "FAIL: Could not retrieve the teacher's data"
+                    ret_val['status'] = "ERR_DB"
                 else:
                     given_name = teacher_data[0][0]
                     family_name = teacher_data[0][1]
                     email = teacher_data[0][2]
                     classrooms = [classroom[0] for classroom in classroom_data]
-                    ret_val["teacher"] = { "given_name":given_name, "family_name":family_name, "email":email, "classrooms":classrooms }
-                    ret_val["message"] = f"SUCCESS: Retrieved data for {teacher_id}"
+                    ret_val['val'] = { "given_name":given_name, "family_name":family_name, "email":email, "classrooms":classrooms }
+                    ret_val['msg'] = f"SUCCESS: Retrieved data for {teacher_id}"
                 finally:
                     SQL.disconnectMySQL(db_conn)
             else:
-                ret_val["message"] = f"FAIL: Could not get teacher info, {teacher_id} is not logged in"
+                ret_val['msg'] = f"FAIL: Could not get teacher info, {teacher_id} is not logged in"
+                ret_val['status'] = "ERR_REQ"
             return ret_val
         
         # def post(self, teacher_id):
@@ -241,8 +254,11 @@ class ClassroomAPI:
     class Classroom(Resource):
         def get(self, class_id):
             ret_val : Dict[str,Any] = {
-                "classlist":None,
-                "message":f""
+                "type":"GET",
+                "val":None,
+                "msg":"",
+                "status":"SUCCESS",
+                "version":settings['VER']
             }
             # Step 1: Get args and set up database
             parser = reqparse.RequestParser()
@@ -260,20 +276,26 @@ class ClassroomAPI:
                         players_params = (class_id,)
                         players_data = SQL.Query(cursor=db_conn.cursor(), query=players_query, params=players_params, fetch_results=True)
                     except MySQLError as err:
-                        ret_val["message"] = "FAIL: Could not retrieve the classroom data, an error occurred"
+                        ret_val['msg'] = "FAIL: Could not retrieve the classroom data, a database occurred"
+                        ret_val['status'] = "ERR_DB"
                     else:
             # Step 3: process and return data
-                        ret_val["classlist"] = [player[0] for player in players_data]
-                        ret_val["message"] = f"SUCCESS: Retrieved data for classroom {class_id}"
+                        ret_val['val'] = [player[0] for player in players_data]
+                        ret_val['msg'] = f"SUCCESS: Retrieved data for classroom {class_id}"
                 SQL.disconnectMySQL(db_conn)
             else:
-                ret_val["message"] = f"FAIL: Could not retreive the classroom data, {teacher_id} is not logged in"
+                ret_val['msg'] = f"FAIL: Could not retreive the classroom data, {teacher_id} is not logged in"
+                ret_val['status'] = "ERR_REQ"
             return ret_val
 
 
         def put(self, class_id):
-            ret_val : Dict[str,str] = {
-                "message":""
+            ret_val : Dict[str,Any] = {
+                "type":"PUT",
+                "val":None,
+                "msg":"",
+                "status":"SUCCESS",
+                "version":settings['VER']
             }
             # Step 1: Get args and set up database
             parser = reqparse.RequestParser()
@@ -292,16 +314,19 @@ class ClassroomAPI:
                         params = (teacher_id, class_id)
                         SQL.Query(cursor=db_conn.cursor(), query=query_string, params=params, fetch_results=False)
                     except MySQLError as err:
-                        ret_val["message"] = "FAIL: Could not create the classroom, error occurred."
+                        ret_val['msg'] = "FAIL: Could not create the classroom, a database error occurred."
+                        ret_val['status'] = "ERR_DB"
                     else:
             # Step 3: process and return data
-                        ret_val["message"] = f"SUCCESS: Created classroom {class_id}"
+                        ret_val['msg'] = f"SUCCESS: Created classroom {class_id}"
                     finally:
                         SQL.disconnectMySQL(db_conn)
                 else:
-                    ret_val["message"] = f"FAIL: Teacher does not have access to the classroom"
+                    ret_val['msg'] = f"FAIL: Teacher does not have access to the classroom"
+                    ret_val['status'] = "ERR_REQ"
             else:
-                ret_val["message"] = f"FAIL: Could not create classroom, {teacher_id} is not logged in"
+                ret_val['msg'] = f"FAIL: Could not create classroom, {teacher_id} is not logged in"
+                ret_val['status'] = "ERR_REQ"
             return ret_val
 
     class Student(Resource):
@@ -323,8 +348,11 @@ class ClassroomAPI:
 
         def get(self, player_id):
             ret_val : Dict[str,Any] = {
-                "classrooms":None,
-                "message":""
+                "type":"GET",
+                "val":None,
+                "msg":"",
+                "status":"SUCCESS",
+                "version":settings['VER']
             }
             # Step 1: get args and set up database.
             parser = reqparse.RequestParser()
@@ -342,24 +370,34 @@ class ClassroomAPI:
                         query_params = (player_id,)
                         results = SQL.Query(cursor=db_conn.cursor(), query=query_string, params=query_params, fetch_results=True)
                     except MySQLError as err:
-                        ret_val["message"] = "FAIL: Could not retrieve the student classrooms"
+                        ret_val['msg'] = "FAIL: Could not retrieve the student classrooms"
+                        ret_val['status'] = "ERR_DB"
                     else:
                         # Step 3: process and return player_data
                         if results != [] and results is not None:
-                            ret_val["classrooms"] = [result[0] for result in results]
-                            ret_val["message"] = f"SUCCESS: Retrieved classrooms for {player_id}"
+                            ret_val['val'] = [result[0] for result in results]
+                            ret_val['msg'] = f"SUCCESS: Retrieved classrooms for {player_id}"
                         else:
-                            ret_val["message"] = f"FAIL: Could not find {player_id}"
+                            ret_val['msg'] = f"FAIL: Could not find {player_id}"
+                            ret_val['status'] = "ERR_REQ"
                     finally:
                         SQL.disconnectMySQL(db_conn)
                 else:
-                    ret_val["message"] = f"FAIL: Teacher does not have access to {player_id}."
+                    ret_val['msg'] = f"FAIL: Teacher does not have access to {player_id}."
+                    ret_val['status'] = "ERR_REQ"
             else:
-                ret_val["message"] = f"FAIL: Could retrieve player classrooms, {args['teacher_id']} is not logged in"
+                ret_val['msg'] = f"FAIL: Could retrieve player classrooms, {args['teacher_id']} is not logged in"
+                ret_val['status'] = "ERR_REQ"
             return ret_val
         
         def put(self, player_id):
-            ret_val : Dict[str,str] = { "message" : "" }
+            ret_val : Dict[str,Any] = {
+                "type":"PUT",
+                "val":None,
+                "msg":"",
+                "status":"SUCCESS",
+                "version":settings['VER']
+            }
             # Step 1: get args and set up database.
             parser = reqparse.RequestParser()
             parser.add_argument("teacher_id")
@@ -380,14 +418,17 @@ class ClassroomAPI:
                         query_params = (player_id, args["class_id"])
                         SQL.Query(cursor=db_conn.cursor(), query=query_string, params=query_params, fetch_results=False)
                     except MySQLError as err:
-                        ret_val["message"] = "FAIL: Could not add student to classroom"
+                        ret_val['msg'] = "FAIL: Could not add student to classroom"
+                        ret_val['status'] = "ERR_DB"
                     else:
                         # Step 3: process and return player_data
-                        ret_val["message"] = f"SUCCESS: Added {player_id} to classroom"
+                        ret_val['msg'] = f"SUCCESS: Added {player_id} to classroom"
                     finally:
                         SQL.disconnectMySQL(db_conn)
                 else:
-                    ret_val["message"] = f"FAIL: Teacher does not have access to {player_id}."
+                    ret_val['msg'] = f"FAIL: Teacher does not have access to {player_id}."
+                    ret_val['status'] = "ERR_REQ"
             else:
-                ret_val["message"] = f"FAIL: Could not add student to classroom, {args['teacher_id']} is not logged in"
+                ret_val['msg'] = f"FAIL: Could not add student to classroom, {args['teacher_id']} is not logged in"
+                ret_val['status'] = "ERR_REQ"
             return ret_val

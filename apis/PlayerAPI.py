@@ -80,7 +80,13 @@ class PlayerAPI:
             :rtype: [type]
             """
             # Step 1: get id from SQL
-            ret_val : Dict[str,Any] = { "id":None, "message":"" }
+            ret_val : Dict[str,Any] = {
+                "type":"GET",
+                "val":None,
+                "msg":"",
+                "status":"SUCCESS",
+                "version":settings['VER']
+            }
 
             id_config = settings["DB_CONFIG"]["id_gen"]
             _dummy, id_conn = SQL.prepareDB(db_settings=id_config)
@@ -94,22 +100,31 @@ class PlayerAPI:
                             id = PlayerAPI.PlayerID._generateID(db_conn=id_conn, db_name=id_config["DB_NAME"])
                             count += 1
                 except MySQLError as err:
-                    ret_val["message"] = f"ERROR: Could not complete query to check if ID is unused, got error {err}"
+                    ret_val['msg'] = f"ERROR: Could not complete query to check if ID is unused, a database error occurred."
+                    ret_val['status'] = "ERR_DB"
                 else:
             # Step 2: process and return ID.
                     if id is not None and count < 1000:
-                        ret_val["id"] = id,
-                        ret_val["message"] = "SUCCESS: Loaded player from database."
+                        ret_val['val'] = id,
+                        ret_val['msg'] = "SUCCESS: Loaded player from database."
                     else:
-                        ret_val["message"] = "FAIL: Could not generate new player."
+                        ret_val['msg'] = "FAIL: Could not generate new player."
+                        ret_val['status'] = "ERR_SRV"
                 finally:
                     SQL.disconnectMySQL(id_conn)
             else:
-                ret_val["message"] = "FAIL: Could not load player, database unavailable!"
+                ret_val['msg'] = "FAIL: Could not load player, database unavailable!"
+                ret_val['status'] = "ERR_DB"
             return ret_val
 
         def put(self):
-            ret_val : Dict[str,str] = { "message" : ""}
+            ret_val : Dict[str,Any] = {
+                "type":"PUT",
+                "val":None,
+                "msg":"",
+                "status":"SUCCESS",
+                "version":settings['VER']
+            }
             # Step 1: get args
             parser = reqparse.RequestParser()
             parser.add_argument("player_id", type=str)
@@ -129,12 +144,14 @@ class PlayerAPI:
                     db_conn.commit()
             # Step 3: Report status
                 except MySQLError as err:
-                    ret_val["message"] = f"FAIL: Could not save new player to database, an error occurred."
+                    ret_val['msg'] = f"FAIL: Could not save new player to database, an error occurred."
+                    ret_val['status'] = "ERR_DB"
                     raise err
                 else:
-                    ret_val["message"] = f"SUCCESS: Saved new player to the database."
+                    ret_val['msg'] = f"SUCCESS: Saved new player to the database."
                 finally:
                     SQL.disconnectMySQL(db_conn)
             else:
-                ret_val["message"] = "FAIL: Could not save new player, database unavailable!"
+                ret_val['msg'] = "FAIL: Could not save new player, database unavailable!"
+                ret_val['status'] = "ERR_DB"
             return ret_val
