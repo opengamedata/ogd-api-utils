@@ -13,7 +13,7 @@ class t_GameStateAPI(TestCase):
 
     class t_GameState:
         def __init__(self):
-            self.TEST_PLAYER_ID = "test_player"
+            self.TEST_PLAYER_ID = "ImmortanJoe"
             self.TEST_GAME      = "AQUALAB"
 
         def test_home(self):
