@@ -18,5 +18,6 @@ settings = {
     },
     "OGD_CORE_PATH":"Path/To/opengamedata-core",
     "GOOGLE_CLIENT_ID":"client_id",
-    "DEBUG_LEVEL":"INFO"
+    "DEBUG_LEVEL":"INFO",
+    "VER":0
 }
