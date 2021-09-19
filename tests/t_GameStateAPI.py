@@ -8,8 +8,8 @@ class t_GameStateAPI(TestCase):
     def RunAll(self):
         t = t_GameStateAPI.t_GameState()
         t.test_home()
-        t.test_post()
         t.test_get()
+        t.test_post()
 
     class t_GameState:
         def __init__(self):
