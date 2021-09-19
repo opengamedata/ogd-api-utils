@@ -8,8 +8,6 @@ from mysql.connector.connection import MySQLConnection
 from config.config import settings
 
 import sys
-if not settings["OGD_CORE_PATH"] in sys.path:
-    sys.path.append(settings["OGD_CORE_PATH"])
 from interfaces.MySQLInterface import SQL
 
 class GameStateAPI:
@@ -46,8 +44,11 @@ class GameStateAPI:
             :rtype: Dict[str, str | None]
             """
             ret_val = {
-                "states":None,
-                "message":""
+                "type":"GET",
+                "val":None,
+                "msg":"",
+                "status":"SUCCESS",
+                "version":settings['VER']
             }
             # Step 1: get args
             parser = reqparse.RequestParser()
@@ -58,7 +59,7 @@ class GameStateAPI:
             offset = args['offset'] if args['offset'] is not None else 0
             # Step 2: get states from database.
             fd_config = settings["DB_CONFIG"]["fd_users"]
-            _dummy, db_conn = SQL.prepareDB(db_settings=fd_config)
+            tunnel, db_conn = SQL.prepareDB(db_settings=fd_config)
             if db_conn is not None:
                 query_string = f"SELECT `game_state` from {fd_config['DB_NAME']}.game_states\n\
                                  WHERE `player_id`=%s AND `game_id`=%s ORDER BY `save_time` DESC LIMIT %s, %s;"
@@ -67,20 +68,24 @@ class GameStateAPI:
                     states = SQL.Query(cursor=db_conn.cursor(), query=query_string, params=query_params, fetch_results=True)
             # Step 3: process and return states
                 except MySQLError as err:
-                    ret_val["message"] = "FAIL: Could not retrieve state(s), an error occurred!"
+                    ret_val['msg'] = "FAIL: Could not retrieve state(s), an error occurred!"
+                    ret_val['status'] = "ERR_DB"
                     raise err
                 else:
                     if len(states) == count:
-                        ret_val["states"] = [state[0][0] for state in states],
-                        ret_val["message"] = f"SUCCESS: Fake game state retrieved {count} states for your fake player ID: {player_id} and fake game {game_id}"
+                        ret_val['val'] = [str(state[0][0]) for state in states],
+                        ret_val['msg'] = f"SUCCESS: Retrieved {len(ret_val['val'])} states."
                     elif len(states) < count:
-                        ret_val["message"] = f"FAIL: No {game_id} states were found for player {player_id}"
+                        ret_val['msg'] = f"FAIL: No {game_id} states were found for player {player_id}"
+                        ret_val['status'] = "ERR_REQ"
                     else: # len(states) > count
-                        ret_val["message"] = f"FAIL: Error in retrieving states, to many states returned!"
+                        ret_val['msg'] = f"FAIL: Error in retrieving states, too many states returned!"
+                        ret_val['status'] = "ERR_SRV"
                 finally:
-                    SQL.disconnectMySQL(db_conn)
+                    SQL.disconnectMySQL(db=db_conn)
             else:
-                ret_val["message"] = "FAIL: Could not retrieve state(s), database unavailable!"
+                ret_val['status'] = "ERR_DB"
+                ret_val['msg'] = "FAIL: Could not retrieve state(s), database unavailable!"
             return ret_val
 
         def post(self, player_id, game_id):
@@ -98,7 +103,13 @@ class GameStateAPI:
             :return: A dictionary containing a 'message' describing the result, and a 'state' containing either the actual state variable if found, else None
             :rtype: Dict[str, str | None]
             """            
-            ret_val = {"message":""}
+            ret_val = {
+                "type":"POST",
+                "val":None,
+                "msg":"",
+                "status":"SUCCESS",
+                "version":settings["VER"]
+            }
             # Step 1: get args
             parser = reqparse.RequestParser()
             parser.add_argument("state", type=str)
@@ -116,12 +127,14 @@ class GameStateAPI:
                     db_conn.commit()
             # Step 3: Report status
                 except MySQLError as err:
-                    ret_val["message"] = "FAIL: Could not save state to the database, an error occurred!"
+                    ret_val['msg'] = "FAIL: Could not save state to the database, an error occurred!"
+                    ret_val['status'] = "ERR_DB"
                     raise err
                 else:
-                    ret_val["message"] = "SUCCESS: Saved state to the database."
+                    ret_val['msg'] = "SUCCESS: Saved state to the database."
                 finally:
                     SQL.disconnectMySQL(db_conn)
             else:
-                ret_val["message"] = "Could not save state, database unavailable!"
+                ret_val['msg'] = "Could not save state, database unavailable!"
+                ret_val['status'] = "ERR_DB"
             return ret_val
