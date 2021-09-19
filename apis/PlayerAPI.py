@@ -89,9 +89,9 @@ class PlayerAPI:
             }
 
             id_config = settings["DB_CONFIG"]["id_gen"]
-            _dummy, id_conn = SQL.prepareDB(db_settings=id_config)
+            _dummy, id_conn = SQL.ConnectDB(db_settings=id_config)
             fd_config = settings["DB_CONFIG"]["fd_users"]
-            _dummy, user_conn = SQL.prepareDB(db_settings=fd_config)
+            _dummy, user_conn = SQL.ConnectDB(db_settings=fd_config)
             if id_conn is not None:
                 try:
                     id = None
@@ -134,7 +134,7 @@ class PlayerAPI:
             name      = args['name']
             # Step 2: insert player into the database
             fd_config = settings["DB_CONFIG"]["fd_users"]
-            _dummy, db_conn = SQL.prepareDB(db_settings=fd_config)
+            _dummy, db_conn = SQL.ConnectDB(db_settings=fd_config)
             if db_conn is not None:
                 insert_query = f"""INSERT INTO {fd_config['DB_NAME']}.player_codes (`player_id`, `name`) VALUES (%s, %s)
                                  ON DUPLICATE KEY UPDATE `name`=%s;"""

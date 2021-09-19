@@ -171,7 +171,7 @@ class SimRTServer:
         cur_level: int
         idle_time: int
     
-        tunnel,db = SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
+        tunnel,db = SQL.ConnectDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
         try:
             cursor = db.cursor()
             # filt = f"`session_id`='{sess_id}' AND `event`='COMPLETE' AND `time_elapsed` < {sim_time}"
@@ -234,7 +234,7 @@ class SimRTServer:
     @staticmethod
     def getModelsBySessID(sess_id: str, game_id: str, sim_time: int, models):
         # start_time = datetime.now()
-        tunnel,db = SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
+        tunnel,db = SQL.ConnectDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
         try:
             prog = SimRTServer.getGameProgress(sess_id=sess_id, game_id=game_id, sim_time=sim_time)
             max_level = prog["max_level"]
@@ -306,7 +306,7 @@ class SimRTServer:
     def _fetchActiveSessions(game_id, require_player_id, class_id, sim_time):
         if SimRTServer.rt_settings["data_source"] == "DB":
             try:
-                tunnel,db = SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
+                tunnel,db = SQL.ConnectDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
                 #+++
                 start = datetime.now()
                 #---
@@ -340,7 +340,7 @@ class SimRTServer:
         session_data = []
         if SimRTServer.rt_settings["data_source"] == "DB":
             try:
-                tunnel,db = SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
+                tunnel,db = SQL.ConnectDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
                 utils.Logger.toFile(f"Getting all features for session {session_id}", logging.INFO)
                 cursor = db.cursor()
                 filt = f"`session_id`='{session_id}' AND `time_elapsed` < {sim_time}"

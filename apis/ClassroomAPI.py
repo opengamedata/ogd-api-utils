@@ -146,7 +146,7 @@ class ClassroomAPI:
             if id_token is not None:
             # Step 2: If token is valid, update database with whatever data we got
                 fd_config = settings["DB_CONFIG"]["fd_users"]
-                _dummy, db_conn = SQL.prepareDB(db_settings=fd_config)
+                _dummy, db_conn = SQL.ConnectDB(db_settings=fd_config)
                 teacher_id = ClassroomAPI.TeacherLogin._retrieveTeacher(db_conn=db_conn, db_name=fd_config["DB_NAME"], id_token=id_token)
                 if teacher_id is None:
                     teacher_id = ClassroomAPI.TeacherLogin._createTeacher(db_conn=db_conn, db_name=fd_config["DB_NAME"], id_token=id_token)
@@ -209,7 +209,7 @@ class ClassroomAPI:
             if "teacher_id" in session and (session['teacher_id'] == teacher_id):
                 # Step 1: Set up database and get the teacher info
                 fd_config = settings["DB_CONFIG"]["fd_users"]
-                _dummy, db_conn = SQL.prepareDB(db_settings=fd_config)
+                _dummy, db_conn = SQL.ConnectDB(db_settings=fd_config)
                 try:
                     teacher_query = f"""SELECT `given_name`, `family_name`, `email` from {fd_config['DB_NAME']}.teacher_codes
                                     WHERE `teacher_id`=%s LIMIT 1;"""
@@ -267,7 +267,7 @@ class ClassroomAPI:
             teacher_id = args["teacher_id"]
             if "teacher_id" in session and (session['teacher_id'] == teacher_id):
                 fd_config = settings["DB_CONFIG"]["fd_users"]
-                _dummy, db_conn = SQL.prepareDB(db_settings=fd_config)
+                _dummy, db_conn = SQL.ConnectDB(db_settings=fd_config)
             # Step 2: If teacher has the classroom, we can retrieve the list of students.
                 if db_conn is not None and ClassroomAPI.Teacher._hasClassroom(db_conn=db_conn, db_name=fd_config["DB_NAME"], teacher_id=teacher_id, class_id=class_id):
                     try:
@@ -304,7 +304,7 @@ class ClassroomAPI:
             teacher_id = args["teacher_id"]
             if "teacher_id" in session and (session['teacher_id'] == teacher_id):
                 fd_config = settings["DB_CONFIG"]["fd_users"]
-                _dummy, db_conn = SQL.prepareDB(db_settings=fd_config)
+                _dummy, db_conn = SQL.ConnectDB(db_settings=fd_config)
             # Step 2: If teacher does not have the classroom, we can add it.
                 if (db_conn is not None) and (not ClassroomAPI.Teacher._hasClassroom(db_conn=db_conn, db_name=fd_config["DB_NAME"], teacher_id=teacher_id, class_id=class_id)):
                     try:
@@ -360,7 +360,7 @@ class ClassroomAPI:
             args = parser.parse_args()
             if "teacher_id" in session and (session['teacher_id'] == args['teacher_id']):
                 fd_config = settings["DB_CONFIG"]["fd_users"]
-                _dummy, db_conn = SQL.prepareDB(db_settings=fd_config)
+                _dummy, db_conn = SQL.ConnectDB(db_settings=fd_config)
                 # Step 2: If teacher has student, then we can retrieve their name.
                 if db_conn is not None and ClassroomAPI.Teacher._hasStudent(db_conn=db_conn, db_name=fd_config["DB_NAME"], teacher_id=args["teacher_id"], student_id=player_id):
                     try:
@@ -405,7 +405,7 @@ class ClassroomAPI:
             args = parser.parse_args()
             if "teacher_id" in session and (session['teacher_id'] == args['teacher_id']):
                 fd_config = settings["DB_CONFIG"]["fd_users"]
-                _dummy, db_conn = SQL.prepareDB(db_settings=fd_config)
+                _dummy, db_conn = SQL.ConnectDB(db_settings=fd_config)
                 # Step 2: If teacher has student, then we can retrieve their name.
                 if      (db_conn is not None) \
                     and      ClassroomAPI.Teacher._hasStudent(  db_conn=db_conn, db_name=fd_config["DB_NAME"], teacher_id=args["teacher_id"], student_id=player_id) \

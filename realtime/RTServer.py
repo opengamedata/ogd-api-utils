@@ -185,7 +185,7 @@ class RTServer:
         #+++
         start = datetime.now()
         #---
-        tunnel,db = SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
+        tunnel,db = SQL.ConnectDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
         try:
             cursor = db.cursor()
             # filt = f"`session_id`='{sess_id}' AND `event`='COMPLETE'"
@@ -350,7 +350,7 @@ class RTServer:
             RTServer.db_settings["DB_HOST"]   = RTServer.rt_settings["DB_HOST"]
             RTServer.ssh_settings["SSH_HOST"] = RTServer.rt_settings["SSH_HOST"]
             try:
-                tunnel,db = SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
+                tunnel,db = SQL.ConnectDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
                 #+++
                 start = datetime.now()
                 #---
@@ -412,7 +412,7 @@ class RTServer:
         session_data : Union[List,        None] = None
         if RTServer.rt_settings["data_source"] == "DB":
             try:
-                tunnel,db = SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
+                tunnel,db = SQL.ConnectDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
                 utils.Logger.toStdOut(f"Getting all features for session {session_id}", logging.INFO)
                 cursor = db.cursor()
                 filt = f"`session_id`='{session_id}'"
