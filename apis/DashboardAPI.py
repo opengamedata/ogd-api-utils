@@ -9,8 +9,9 @@ from config.config import settings
 import sys
 if not settings["OGD_CORE_PATH"] in sys.path:
     sys.path.append(settings["OGD_CORE_PATH"])
-from interfaces.MySQLInterface import SQL
-from interfaces.BigQueryInterface import BigQueryInterface
+from interfaces.src.MySQLInterface import SQL
+from interfaces.src.BigQueryInterface import BigQueryInterface
+# from managers.PopulationProcessor import PopulationProcessor
 
 class DashboardAPI:
     @staticmethod
@@ -36,6 +37,7 @@ class DashboardAPI:
             parser.add_argument("end_date")
             parser.add_argument("metrics")
             args = parser.parse_args()
+            # pop_processor = PopulationProcessor()
             interface = BigQueryInterface(game_id=game_id, settings=settings)
             return {
 								"metrics":{i:f"fake {i}" for i in args['metrics']},

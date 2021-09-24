@@ -10,7 +10,7 @@ from config.config import settings
 import sys
 if not settings["OGD_CORE_PATH"] in sys.path:
     sys.path.append(settings["OGD_CORE_PATH"])
-from interfaces.MySQLInterface import SQL
+from interfaces.src.MySQLInterface import SQL
 
 class PlayerAPI:
     @staticmethod

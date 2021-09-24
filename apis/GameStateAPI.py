@@ -8,7 +8,9 @@ from mysql.connector.connection import MySQLConnection
 from config.config import settings
 
 import sys
-from interfaces.MySQLInterface import SQL
+if not settings["OGD_CORE_PATH"] in sys.path:
+    sys.path.append(settings["OGD_CORE_PATH"])
+from interfaces.src.MySQLInterface import SQL
 
 class GameStateAPI:
     """API for logging and retrieving game states.
@@ -73,7 +75,7 @@ class GameStateAPI:
                     raise err
                 else:
                     if len(states) == count:
-                        ret_val['val'] = [str(state[0][0]) for state in states],
+                        ret_val['val'] = [str(state[0]) for state in states]
                         ret_val['msg'] = f"SUCCESS: Retrieved {len(ret_val['val'])} states."
                     elif len(states) < count:
                         ret_val['msg'] = f"FAIL: No {game_id} states were found for player {player_id}"
