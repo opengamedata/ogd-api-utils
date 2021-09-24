@@ -9,6 +9,7 @@ class t_GameStateAPI(TestCase):
         t = t_GameStateAPI.t_GameState()
         t.test_home()
         t.test_get()
+        t.test_get_multi()
         t.test_post()
 
     class t_GameState:
@@ -31,6 +32,17 @@ class t_GameStateAPI(TestCase):
             url = f"{base}/player/{self.TEST_PLAYER_ID}/game/{self.TEST_GAME}/state"
             print(f"GET test at {url}")
             params = { 'count':1, 'offset':0 }
+            result = requests.get(url=url, params=params)
+            if result is not None:
+                print(f"Result of get:\n{result.text}")
+            else:
+                print(f"No response to GET request.")
+
+        def test_get_multi(self):
+            base = settings['EXTERN_SERVER']
+            url = f"{base}/player/{self.TEST_PLAYER_ID}/game/{self.TEST_GAME}/state"
+            print(f"GET test at {url}")
+            params = { 'count':3, 'offset':0 }
             result = requests.get(url=url, params=params)
             if result is not None:
                 print(f"Result of get:\n{result.text}")
