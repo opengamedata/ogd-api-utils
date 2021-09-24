@@ -1,5 +1,7 @@
 *__pycache__/*
-realtime/*
+realtime/
+tests/
+TestDriver.py
 .DS_Store
 .gitignore
 .gitmodules
