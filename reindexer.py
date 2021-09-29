@@ -1,10 +1,10 @@
 # Rudolph, the red-nosed reindexer...
+# global imports
 import argparse
 import json
 import logging
 import os
 import pandas as pd
-import utils
 import zipfile
 from pathlib import Path
 from typing import Dict
@@ -16,13 +16,14 @@ def meta_to_index(meta, data_dir):
     # raw_stat = os.stat(raw_csv_full_path)
     # sessions_stat = os.stat(sessions_csv_full_path)
     return {
-        "sessions_f"   :f"{data_dir}{meta['sessions_f'].split('/')[-1]}" if ('sessions_f' in meta.keys() and meta['sessions_f'] is not None) else None,
-        "raw_f"        :f"{data_dir}{meta['raw_f'].split('/')[-1]}" if ('raw_f' in meta.keys() and meta['raw_f'] is not None) else None,
-        "events_f"     :f"{data_dir}{meta['events_f'].split('/')[-1]}" if ('events_f' in meta.keys() and meta['events_f'] is not None) else None,
-        "start_date"   :meta['start_date'],
-        "end_date"     :meta['end_date'],
-        "date_modified":meta['date_modified'],
-        "sessions"     :meta['sessions']
+        "population_file" :f"{data_dir}{meta['population_file'].split('/')[-1]}" if ('population_file' in meta.keys() and meta['population_file'] is not None) else None,
+        "sessions_file"   :f"{data_dir}{meta['sessions_file'].split('/')[-1]}" if ('sessions_file' in meta.keys() and meta['sessions_file'] is not None) else None,
+        "raw_file"        :f"{data_dir}{meta['raw_file'].split('/')[-1]}" if ('raw_file' in meta.keys() and meta['raw_file'] is not None) else None,
+        "events_f"        :f"{data_dir}{meta['events_file'].split('/')[-1]}" if ('events_file' in meta.keys() and meta['events_file'] is not None) else None,
+        "start_date"    :meta['start_date'],
+        "end_date"      :meta['end_date'],
+        "date_modified" :meta['date_modified'],
+        "sessions"      :meta['sessions']
     }
 
 def index_meta(root:Path, name:str, indexed_files:Dict):
@@ -64,27 +65,30 @@ def index_zip(root:Path, name:str, indexed_files):
             with zipfile.ZipFile(file_path, 'r') as zip:
                 data = pd.read_csv(zip.open(f"{dataset_id}/{top[0]}.csv"), sep='\t')
                 session_ct = len(data.index)
-        utils.Logger.toStdOut(f"Indexing {file_path}", logging.INFO)
-        indexed_files[game_id][dataset_id] = \
-            {
-                "sessions_f"   :file_path if kind == 'session-features' else None,
-                "raw_f"        :file_path if kind == 'raw' else None,
-                "events_f"     :file_path if kind == 'events' else None,
-                "start_date"   :start_date,
-                "end_date"     :end_date,
-                "date_modified":None,
-                "sessions"     :session_ct
-            }
+        logging.log(msg=f"Indexing {file_path}", level=logging.INFO)
+        indexed_files[game_id][dataset_id] = {
+            "population_file" :file_path if kind == 'population-features' else None,
+            "sessions_file"   :file_path if kind == 'session-features' else None,
+            "raw_file"        :file_path if kind == 'raw' else None,
+            "events_file"     :file_path if kind == 'events' else None,
+            "start_date"   :start_date,
+            "end_date"     :end_date,
+            "date_modified":None,
+            "sessions"     :session_ct
+        }
     else:
-        if indexed_files[game_id][dataset_id]["sessions_f"] == None and kind == 'session-features':
-            utils.Logger.toStdOut(f"Updating index with {file_path}", logging.INFO)
-            indexed_files[game_id][dataset_id]["sessions_f"] = file_path
-        if indexed_files[game_id][dataset_id]["raw_f"] == None and kind == 'raw':
-            utils.Logger.toStdOut(f"Updating index with {file_path}", logging.INFO)
-            indexed_files[game_id][dataset_id]["raw_f"] = file_path
-        if indexed_files[game_id][dataset_id]["events_f"] == None and kind == 'events':
-            utils.Logger.toStdOut(f"Updating index with {file_path}", logging.INFO)
-            indexed_files[game_id][dataset_id]["events_f"] = file_path
+        if indexed_files[game_id][dataset_id]["population_file"] == None and kind == 'population-features':
+            logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
+            indexed_files[game_id][dataset_id]["population_file"] = file_path
+        if indexed_files[game_id][dataset_id]["sessions_file"] == None and kind == 'session-features':
+            logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
+            indexed_files[game_id][dataset_id]["sessions_file"] = file_path
+        if indexed_files[game_id][dataset_id]["raw_file"] == None and kind == 'raw':
+            logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
+            indexed_files[game_id][dataset_id]["raw_file"] = file_path
+        if indexed_files[game_id][dataset_id]["events_file"] == None and kind == 'events':
+            logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
+            indexed_files[game_id][dataset_id]["events_file"] = file_path
     return indexed_files
 
 def generate_index(walk_data):
@@ -95,15 +99,15 @@ def generate_index(walk_data):
             if not 'BACKUP' in root:
                 ext = name.split('.')[-1]
                 if (ext == 'meta'):
-                    utils.Logger.toStdOut(f"Indexing {os.path.join(root, name)}", logging.INFO)
+                    logging.log(msg=f"Indexing {os.path.join(root, name)}", level=logging.INFO)
                     indexed_files = index_meta(root, name, indexed_files)
                 elif (ext == 'zip'):
-                    utils.Logger.toStdOut(f"Reserving {os.path.join(root, name)}", logging.DEBUG)
+                    logging.log(msg=f"Reserving {os.path.join(root, name)}", level=logging.DEBUG)
                     zips.append((root, name))
                 else:
-                    utils.Logger.toStdOut(f"Doing nothing with {os.path.join(root, name)}", logging.DEBUG)
+                    logging.log(msg=f"Doing nothing with {os.path.join(root, name)}", level=logging.DEBUG)
             else:
-                utils.Logger.toStdOut(f"Doing nothing with {os.path.join(root, name)}", logging.DEBUG)
+                logging.log(msg=f"Doing nothing with {os.path.join(root, name)}", level=logging.DEBUG)
     for root,name in zips:
         indexed_files = index_zip(root, name, indexed_files)
     return indexed_files
@@ -112,11 +116,11 @@ arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument("-l", "--level", help="Set the logging level to DEBUG, INFO, or WARN", type=str, choices=['DEBUG', 'INFO', 'WARN'])
 args = arg_parser.parse_args()
 if args.level == 'WARN':
-    utils.Logger.std_logger.setLevel(logging.WARN)
+    logging.basicConfig(level=logging.WARN)
 elif args.level == 'INFO':
-    utils.Logger.std_logger.setLevel(logging.INFO)
+    logging.basicConfig(level=logging.INFO)
 elif args.level == 'DEBUG':
-    utils.Logger.std_logger.setLevel(logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG)
 data_dirs = os.walk("./data/")
 indexed_files = generate_index(data_dirs)
 # print(f"Final set of indexed files: {indexed_files}")
