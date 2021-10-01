@@ -9,17 +9,18 @@ import zipfile
 from pathlib import Path
 from typing import Dict
 
-def meta_to_index(meta, data_dir):
-    # just in case it didn't already end with a /
-    if not data_dir.endswith("/"):
-        data_dir = data_dir + "/"
+def meta_to_index(meta, data_dir:Path):
     # raw_stat = os.stat(raw_csv_full_path)
     # sessions_stat = os.stat(sessions_csv_full_path)
+    pop_file  = meta['population_file'].split('/')[-1] if ('population_file' in meta.keys() and meta['population_file'] is not None) else None
+    sess_file = meta['sessions_file'].split('/')[-1]   if ('sessions_file' in meta.keys()   and meta['sessions_file'] is not None)   else None
+    raw_file  = meta['raw_file'].split('/')[-1]        if ('raw_file' in meta.keys()        and meta['raw_file'] is not None)        else None
+    evt_file  = meta['events_file'].split('/')[-1]     if ('events_file' in meta.keys()     and meta['events_file'] is not None)     else None
     return {
-        "population_file" :f"{data_dir}{meta['population_file'].split('/')[-1]}" if ('population_file' in meta.keys() and meta['population_file'] is not None) else None,
-        "sessions_file"   :f"{data_dir}{meta['sessions_file'].split('/')[-1]}" if ('sessions_file' in meta.keys() and meta['sessions_file'] is not None) else None,
-        "raw_file"        :f"{data_dir}{meta['raw_file'].split('/')[-1]}" if ('raw_file' in meta.keys() and meta['raw_file'] is not None) else None,
-        "events_f"        :f"{data_dir}{meta['events_file'].split('/')[-1]}" if ('events_file' in meta.keys() and meta['events_file'] is not None) else None,
+        "population_file" :str(data_dir / pop_file)  if pop_file  is not None else None,
+        "sessions_file"   :str(data_dir / sess_file) if sess_file is not None else None,
+        "raw_file"        :str(data_dir / raw_file)  if raw_file  is not None else None,
+        "events_file"     :str(data_dir / evt_file)  if evt_file  is not None else None,
         "start_date"    :meta['start_date'],
         "end_date"      :meta['end_date'],
         "date_modified" :meta['date_modified'],
@@ -30,17 +31,16 @@ def index_meta(root:Path, name:str, indexed_files:Dict):
     next_meta = {}
     with open(root / name, 'r') as next_file:
         next_meta = json.load(next_file)
-    next_game = next_meta['game_id']
-    next_data_id = next_meta['dataset_id']
+    next_game  = next_meta['game_id']
+    next_id    = next_meta['dataset_id']
+    next_mod   = next_meta['date_modified']
     if not next_game in indexed_files.keys():
         indexed_files[next_game] = {}
-    # if we already indexed something with this dataset id, then only update if this one is newer.
-    # else, just stick this new meta in the index.
-    if next_data_id in indexed_files[next_game].keys():
-        if next_meta['date_modified'] > indexed_files[next_game][next_data_id]['date_modified']:
-            indexed_files[next_game][next_data_id] = meta_to_index(next_meta, root)
+    # if we already indexed something with this dataset id, and this was older, do nothing..
+    if next_id in indexed_files[next_game].keys() and next_mod < indexed_files[next_game][next_id]['date_modified']:
+        return indexed_files
     else:
-        indexed_files[next_game][next_data_id] = meta_to_index(next_meta, root)
+        indexed_files[next_game][next_id] = meta_to_index(next_meta, root)
     return indexed_files
 
 def index_zip(root:Path, name:str, indexed_files):
@@ -63,14 +63,14 @@ def index_zip(root:Path, name:str, indexed_files):
         session_ct = None
         if kind == "session-features":
             with zipfile.ZipFile(file_path, 'r') as zip:
-                data = pd.read_csv(zip.open(f"{dataset_id}/{top[0]}.csv"), sep='\t')
+                data = pd.read_csv(zip.open(f"{dataset_id}/{top[0]}.tsv"), sep='\t')
                 session_ct = len(data.index)
         logging.log(msg=f"Indexing {file_path}", level=logging.INFO)
         indexed_files[game_id][dataset_id] = {
-            "population_file" :file_path if kind == 'population-features' else None,
-            "sessions_file"   :file_path if kind == 'session-features' else None,
-            "raw_file"        :file_path if kind == 'raw' else None,
-            "events_file"     :file_path if kind == 'events' else None,
+            "population_file" :str(file_path) if kind == 'population-features' else None,
+            "sessions_file"   :str(file_path) if kind == 'session-features' else None,
+            "raw_file"        :str(file_path) if kind == 'raw' else None,
+            "events_file"     :str(file_path) if kind == 'events' else None,
             "start_date"   :start_date,
             "end_date"     :end_date,
             "date_modified":None,
@@ -79,16 +79,16 @@ def index_zip(root:Path, name:str, indexed_files):
     else:
         if indexed_files[game_id][dataset_id]["population_file"] == None and kind == 'population-features':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
-            indexed_files[game_id][dataset_id]["population_file"] = file_path
+            indexed_files[game_id][dataset_id]["population_file"] = str(file_path)
         if indexed_files[game_id][dataset_id]["sessions_file"] == None and kind == 'session-features':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
-            indexed_files[game_id][dataset_id]["sessions_file"] = file_path
+            indexed_files[game_id][dataset_id]["sessions_file"] = str(file_path)
         if indexed_files[game_id][dataset_id]["raw_file"] == None and kind == 'raw':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
-            indexed_files[game_id][dataset_id]["raw_file"] = file_path
+            indexed_files[game_id][dataset_id]["raw_file"] = str(file_path)
         if indexed_files[game_id][dataset_id]["events_file"] == None and kind == 'events':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
-            indexed_files[game_id][dataset_id]["events_file"] = file_path
+            indexed_files[game_id][dataset_id]["events_file"] = str(file_path)
     return indexed_files
 
 def generate_index(walk_data):
@@ -97,19 +97,20 @@ def generate_index(walk_data):
     for root, subdirs, files in walk_data:
         for name in files:
             if not 'BACKUP' in root:
+                root_path = Path(root)
                 ext = name.split('.')[-1]
                 if (ext == 'meta'):
-                    logging.log(msg=f"Indexing {os.path.join(root, name)}", level=logging.INFO)
-                    indexed_files = index_meta(root, name, indexed_files)
+                    logging.log(msg=f"Indexing {root_path / name}", level=logging.INFO)
+                    indexed_files = index_meta(root_path, name, indexed_files)
                 elif (ext == 'zip'):
-                    logging.log(msg=f"Reserving {os.path.join(root, name)}", level=logging.DEBUG)
-                    zips.append((root, name))
+                    logging.log(msg=f"Reserving {root_path / name}", level=logging.DEBUG)
+                    zips.append((root_path, name))
                 else:
-                    logging.log(msg=f"Doing nothing with {os.path.join(root, name)}", level=logging.DEBUG)
+                    logging.log(msg=f"Doing nothing with {root_path / name}", level=logging.DEBUG)
             else:
-                logging.log(msg=f"Doing nothing with {os.path.join(root, name)}", level=logging.DEBUG)
-    for root,name in zips:
-        indexed_files = index_zip(root, name, indexed_files)
+                logging.log(msg=f"Doing nothing with {root_path / name}", level=logging.DEBUG)
+    for root_path,name in zips:
+        indexed_files = index_zip(root_path, name, indexed_files)
     return indexed_files
 
 arg_parser = argparse.ArgumentParser()
