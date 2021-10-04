@@ -85,7 +85,6 @@ class PlayerAPI:
                 "val":None,
                 "msg":"",
                 "status":"SUCCESS",
-                "version":settings['VER']
             }
 
             id_config = settings["DB_CONFIG"]["id_gen"]
@@ -123,7 +122,6 @@ class PlayerAPI:
                 "val":None,
                 "msg":"",
                 "status":"SUCCESS",
-                "version":settings['VER']
             }
             # Step 1: get args
             parser = reqparse.RequestParser()

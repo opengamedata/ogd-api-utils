@@ -136,7 +136,6 @@ class ClassroomAPI:
                 "val":None,
                 "msg":"",
                 "status":"SUCCESS",
-                "version":settings['VER']
             }
             # Step 1: Get args and check token is valid
             parser = reqparse.RequestParser()
@@ -204,7 +203,6 @@ class ClassroomAPI:
                 "val":None,
                 "msg":"",
                 "status":"SUCCESS",
-                "version":settings['VER']
             }
             if "teacher_id" in session and (session['teacher_id'] == teacher_id):
                 # Step 1: Set up database and get the teacher info
@@ -258,7 +256,6 @@ class ClassroomAPI:
                 "val":None,
                 "msg":"",
                 "status":"SUCCESS",
-                "version":settings['VER']
             }
             # Step 1: Get args and set up database
             parser = reqparse.RequestParser()
@@ -295,7 +292,6 @@ class ClassroomAPI:
                 "val":None,
                 "msg":"",
                 "status":"SUCCESS",
-                "version":settings['VER']
             }
             # Step 1: Get args and set up database
             parser = reqparse.RequestParser()
@@ -352,7 +348,6 @@ class ClassroomAPI:
                 "val":None,
                 "msg":"",
                 "status":"SUCCESS",
-                "version":settings['VER']
             }
             # Step 1: get args and set up database.
             parser = reqparse.RequestParser()
@@ -396,7 +391,6 @@ class ClassroomAPI:
                 "val":None,
                 "msg":"",
                 "status":"SUCCESS",
-                "version":settings['VER']
             }
             # Step 1: get args and set up database.
             parser = reqparse.RequestParser()

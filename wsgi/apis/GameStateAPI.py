@@ -50,7 +50,6 @@ class GameStateAPI:
                 "val":None,
                 "msg":"",
                 "status":"SUCCESS",
-                "version":settings['VER']
             }
             # Step 1: get args
             parser = reqparse.RequestParser()
@@ -110,7 +109,6 @@ class GameStateAPI:
                 "val":None,
                 "msg":"",
                 "status":"SUCCESS",
-                "version":settings["VER"]
             }
             # Step 1: get args
             parser = reqparse.RequestParser()

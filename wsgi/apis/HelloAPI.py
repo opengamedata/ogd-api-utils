@@ -19,7 +19,6 @@ class HelloAPI:
                 "val":None,
                 "msg":"Hello! You GETted successfully!",
                 "status":"SUCCESS",
-                "version":settings['VER']
             }
             return ret_val
 
@@ -29,7 +28,6 @@ class HelloAPI:
                 "val":None,
                 "msg":"Hello! You POSTed successfully!",
                 "status":"SUCCESS",
-                "version":settings['VER']
             }
             return ret_val
 
@@ -39,7 +37,6 @@ class HelloAPI:
                 "val":None,
                 "msg":"Hello! You PUTted successfully!",
                 "status":"SUCCESS",
-                "version":settings['VER']
             }
             return ret_val
 
@@ -50,7 +47,6 @@ class HelloAPI:
                 "val":None,
                 "msg":f"Hello {name}! You GETted successfully!",
                 "status":"SUCCESS",
-                "version":settings['VER']
             }
             return ret_val
 
@@ -60,7 +56,6 @@ class HelloAPI:
                 "val":None,
                 "msg":f"Hello {name}! You POSTed successfully!",
                 "status":"SUCCESS",
-                "version":settings['VER']
             }
             return ret_val
 
@@ -70,6 +65,5 @@ class HelloAPI:
                 "val":None,
                 "msg":f"Hello {name}! You PUTted successfully!",
                 "status":"SUCCESS",
-                "version":settings['VER']
             }
             return ret_val
