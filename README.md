@@ -23,13 +23,45 @@ Lastly, at this point in time, the `<server_path>` is `https://fieldday-web.wcer
 ## Dashboard API
 
 ## GameState API
+
 ### Save and retrieve game states
+
 `<server_path>/player/<player_id>/game/<game_id>/state:`  
-`GET(int count = 1, int offset = 0)`
+`GET(int count = 1, int offset = 0)`  
+
+- Returns a list of game states, length == count, starting from the nth most-recent state, where n == offset, or a null value and an error message.
+
 `POST(str state)`
 
+- Attemps to save the state. Returns a null value and a success/error message.
+
 ## Hello API
-### Simple testing API.
+
+### Verify the API is alive
+
+`<server_path>/hello`  
+`GET()`
+
+- returns no value, and a success message  
+
+`POST()`
+
+- returns no value, and a success message
+
+`PUT()`
+
+- returns no value, and a success message
 
 
 ## Player API
+
+### Generate and save players
+
+`<server_path>/player`  
+`GET()`
+
+- returns an unused, randomized player name, or a null value and error message  
+
+`PUT(str player_id, str name = None)`
+
+- Returns no value, and either a success or error message  
