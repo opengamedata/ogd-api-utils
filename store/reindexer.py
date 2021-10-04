@@ -17,14 +17,15 @@ def meta_to_index(meta, data_dir:Path):
     raw_file  = meta['raw_file'].split('/')[-1]        if ('raw_file' in meta.keys()        and meta['raw_file'] is not None)        else None
     evt_file  = meta['events_file'].split('/')[-1]     if ('events_file' in meta.keys()     and meta['events_file'] is not None)     else None
     return {
-        "population_file" :str(data_dir / pop_file)  if pop_file  is not None else None,
-        "sessions_file"   :str(data_dir / sess_file) if sess_file is not None else None,
-        "raw_file"        :str(data_dir / raw_file)  if raw_file  is not None else None,
-        "events_file"     :str(data_dir / evt_file)  if evt_file  is not None else None,
-        "start_date"    :meta['start_date'],
-        "end_date"      :meta['end_date'],
-        "date_modified" :meta['date_modified'],
-        "sessions"      :meta['sessions']
+        "population_file" : str(data_dir / pop_file)  if pop_file  is not None else None,
+        "sessions_file"   : str(data_dir / sess_file) if sess_file is not None else None,
+        "raw_file"        : str(data_dir / raw_file)  if raw_file  is not None else None,
+        "events_file"     : str(data_dir / evt_file)  if evt_file  is not None else None,
+        "ogd_revision"    : meta['ogd_revision'],
+        "start_date"      : meta['start_date'],
+        "end_date"        : meta['end_date'],
+        "date_modified"   : meta['date_modified'],
+        "sessions"        : meta['sessions']
     }
 
 def index_meta(root:Path, name:str, indexed_files:Dict):
@@ -71,10 +72,11 @@ def index_zip(root:Path, name:str, indexed_files):
             "sessions_file"   :str(file_path) if kind == 'session-features' else None,
             "raw_file"        :str(file_path) if kind == 'raw' else None,
             "events_file"     :str(file_path) if kind == 'events' else None,
-            "start_date"   :start_date,
-            "end_date"     :end_date,
-            "date_modified":None,
-            "sessions"     :session_ct
+            "ogd_revision"    :None,
+            "start_date"      :start_date,
+            "end_date"        :end_date,
+            "date_modified"   :None,
+            "sessions"        :session_ct
         }
     else:
         if indexed_files[game_id][dataset_id]["population_file"] == None and kind == 'population-features':
