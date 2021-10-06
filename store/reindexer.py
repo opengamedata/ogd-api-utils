@@ -9,27 +9,27 @@ import zipfile
 from pathlib import Path
 from typing import Dict
 
-def meta_to_index(meta, data_dir:Path):
+def meta_to_index(meta:Dict, data_dir:Path):
     # raw_stat = os.stat(raw_csv_full_path)
     # sessions_stat = os.stat(sessions_csv_full_path)
-    pop_file  = meta['population_file'].split('/')[-1] if ('population_file' in meta.keys() and meta['population_file'] is not None) else None
-    sess_file = meta['sessions_file'].split('/')[-1]   if ('sessions_file' in meta.keys()   and meta['sessions_file'] is not None)   else None
-    raw_file  = meta['raw_file'].split('/')[-1]        if ('raw_file' in meta.keys()        and meta['raw_file'] is not None)        else None
-    evt_file  = meta['events_file'].split('/')[-1]     if ('events_file' in meta.keys()     and meta['events_file'] is not None)     else None
+    pop_file  = meta['population_file'].split('/')[-1] if meta.get("population_file") is not None else None
+    sess_file = meta['sessions_file'].split('/')[-1]   if meta.get('sessions_file')   is not None else None
+    raw_file  = meta['raw_file'].split('/')[-1]        if meta.get('raw_file')        is not None else None
+    evt_file  = meta['events_file'].split('/')[-1]     if meta.get('events_file')     is not None else None
     return {
         "population_file" : str(data_dir / pop_file)  if pop_file  is not None else None,
         "sessions_file"   : str(data_dir / sess_file) if sess_file is not None else None,
         "raw_file"        : str(data_dir / raw_file)  if raw_file  is not None else None,
         "events_file"     : str(data_dir / evt_file)  if evt_file  is not None else None,
-        "ogd_revision"    : meta['ogd_revision'],
-        "start_date"      : meta['start_date'],
-        "end_date"        : meta['end_date'],
-        "date_modified"   : meta['date_modified'],
-        "sessions"        : meta['sessions']
+        "ogd_revision"    : meta.get('ogd_revision', None),
+        "start_date"      : meta.get('start_date', None),
+        "end_date"        : meta.get('end_date', None),
+        "date_modified"   : meta.get('date_modified', None),
+        "sessions"        : meta.get('sessions', None)
     }
 
 def index_meta(root:Path, name:str, indexed_files:Dict):
-    next_meta = {}
+    next_meta : Dict = {}
     with open(root / name, 'r') as next_file:
         next_meta = json.load(next_file)
     next_game  = next_meta['game_id']
@@ -41,7 +41,7 @@ def index_meta(root:Path, name:str, indexed_files:Dict):
     if next_id in indexed_files[next_game].keys() and next_mod < indexed_files[next_game][next_id]['date_modified']:
         return indexed_files
     else:
-        indexed_files[next_game][next_id] = meta_to_index(next_meta, root)
+        indexed_files[next_game][next_id] = meta_to_index(meta=next_meta, data_dir=root)
     return indexed_files
 
 def index_zip(root:Path, name:str, indexed_files):
