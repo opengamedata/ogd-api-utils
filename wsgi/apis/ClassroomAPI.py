@@ -11,11 +11,7 @@ from mysql.connector.connection import MySQLConnection
 from typing import Any, Dict, Union
 # local imports
 from config.config import settings
-
-import sys
-if not settings["OGD_CORE_PATH"] in sys.path:
-    sys.path.append(settings["OGD_CORE_PATH"])
-from interfaces.src.MySQLInterface import SQL
+from ...opengamedata.interfaces.src.MySQLInterface import SQL
 
 class ClassroomAPI:
     @staticmethod

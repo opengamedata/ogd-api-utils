@@ -6,11 +6,7 @@ from mysql.connector import Error as MySQLError
 from mysql.connector.connection import MySQLConnection
 # Local imports
 from config.config import settings
-
-import sys
-if not settings["OGD_CORE_PATH"] in sys.path:
-    sys.path.append(settings["OGD_CORE_PATH"])
-from interfaces.src.MySQLInterface import SQL
+from ...opengamedata.interfaces.src.MySQLInterface import SQL
 
 class GameStateAPI:
     """API for logging and retrieving game states.
