@@ -69,15 +69,19 @@ class GameStateAPI:
                     ret_val['status'] = "ERR_DB"
                     raise err
                 else:
-                    if len(states) == count:
-                        ret_val['val'] = [str(state[0]) for state in states]
-                        ret_val['msg'] = f"SUCCESS: Retrieved {len(ret_val['val'])} states."
-                    elif len(states) < count:
-                        ret_val['msg'] = f"FAIL: No {game_id} states were found for player {player_id}"
-                        ret_val['status'] = "ERR_REQ"
-                    else: # len(states) > count
-                        ret_val['msg'] = f"FAIL: Error in retrieving states, too many states returned!"
-                        ret_val['status'] = "ERR_SRV"
+                    if states is not None:
+                        if len(states) == count:
+                            ret_val['val'] = [str(state[0]) for state in states]
+                            ret_val['msg'] = f"SUCCESS: Retrieved {len(ret_val['val'])} states."
+                        elif len(states) < count:
+                            ret_val['msg'] = f"FAIL: No {game_id} states were found for player {player_id}"
+                            ret_val['status'] = "ERR_REQ"
+                        else: # len(states) > count
+                            ret_val['msg'] = f"FAIL: Error in retrieving states, too many states returned!"
+                            ret_val['status'] = "ERR_SRV"
+                    else:
+                        ret_val['msg'] = f"FAIL: No {game_id} states could be retrieved"
+                        ret_val['status'] = "ERR_DB"
                 finally:
                     SQL.disconnectMySQL(db=db_conn)
             else:
