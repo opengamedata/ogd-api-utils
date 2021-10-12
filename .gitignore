@@ -1,5 +1,6 @@
 # Specific files to ignore
 wsgi/config/config.py
+tests/t_config.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
