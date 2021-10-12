@@ -3,9 +3,9 @@ settings = {
 }
 
 EnabledTests = {
-    "CLASS":False,
-    "DASH":False,
-    "GAME_STATE":False,
+    "CLASS":True,
+    "DASH":True,
+    "GAME_STATE":True,
     "HELLO":True,
     "PLAYER":True
 }
