@@ -8,13 +8,13 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 # Local imports
 from config.config import settings
-from ...opengamedata.games.WAVES.WaveExtractor import WaveExtractor
-from ...opengamedata.interfaces.src.MySQLInterface import SQL, MySQLInterface
-from ...opengamedata.interfaces.src.BigQueryInterface import BigQueryInterface
-from ...opengamedata.managers.PopulationProcessor import PopulationProcessor
-from ...opengamedata.managers.Request import Request, ExporterRange, ExporterFiles
-from ...opengamedata.schemas.GameSchema import GameSchema
-from ...opengamedata.schemas.TableSchema import TableSchema
+from ..opengamedata.games.WAVES.WaveExtractor import WaveExtractor
+from ..opengamedata.interfaces.src.MySQLInterface import SQL, MySQLInterface
+from ..opengamedata.interfaces.src.BigQueryInterface import BigQueryInterface
+from ..opengamedata.managers.PopulationProcessor import PopulationProcessor
+from ..opengamedata.managers.Request import Request, ExporterRange, ExporterFiles
+from ..opengamedata.schemas.GameSchema import GameSchema
+from ..opengamedata.schemas.TableSchema import TableSchema
 
 class DashboardAPI:
     @staticmethod

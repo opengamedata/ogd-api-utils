@@ -6,7 +6,7 @@ from mysql.connector import Error as MySQLError
 from mysql.connector.connection import MySQLConnection
 # Local imports
 from config.config import settings
-from ...opengamedata.interfaces.src.MySQLInterface import SQL
+from ..opengamedata.interfaces.src.MySQLInterface import SQL
 
 class GameStateAPI:
     """API for logging and retrieving game states.

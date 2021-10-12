@@ -11,7 +11,7 @@ from mysql.connector.connection import MySQLConnection
 from typing import Any, Dict, Union
 # local imports
 from config.config import settings
-from ...opengamedata.interfaces.src.MySQLInterface import SQL
+from ..opengamedata.interfaces.src.MySQLInterface import SQL
 
 class ClassroomAPI:
     @staticmethod
