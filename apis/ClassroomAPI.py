@@ -11,7 +11,7 @@ from mysql.connector.connection import MySQLConnection
 from typing import Any, Dict, Union
 # local imports
 from config.config import settings
-from opengamedata.interfaces.src.MySQLInterface import SQL
+from opengamedata.interfaces.MySQLInterface import SQL
 
 class ClassroomAPI:
     @staticmethod
@@ -51,7 +51,7 @@ class ClassroomAPI:
                     print(f"ERROR: Could not complete query to check if ID is unused, got error {err}")
                 else:
                     # print(f"GOT COUNT: {count}")
-                    if count[0][0] == 0:
+                    if count is not None and count[0][0] == 0:
                         return True
             return ret_val
 
@@ -94,9 +94,9 @@ class ClassroomAPI:
                     print(f"ERROR: Could not complete query, got error {err}")
             # Step 2: process and return teacher_id.
                 else:
-                    if len(teacher_id) == 1:
+                    if teacher_id is not None and len(teacher_id) == 1:
                         ret_val = teacher_id[0][0]
-                    elif len(teacher_id) == 0:
+                    elif teacher_id is not None and len(teacher_id) == 0:
                         print(f"ERROR: Could not retrieve teacher")
                     else:
                         print(f"ERROR: Somehow got multiple instances of teacher")
@@ -172,7 +172,7 @@ class ClassroomAPI:
                 except MySQLError as err:
                     print(f"ERROR: Could not complete query, got error {err}")
                 else:
-                    if teacher_has_classroom[0][0] != 0: # in this case, teacher_id and class_id match together
+                    if teacher_has_classroom is not None and teacher_has_classroom[0][0] != 0: # in this case, teacher_id and class_id match together
                         ret_val = True
             return ret_val
 
@@ -189,7 +189,7 @@ class ClassroomAPI:
                 except MySQLError as err:
                     print(f"ERROR: Could not complete query, got error {err}")
                 else:
-                    if teacher_has_student[0][0] != 0: # in this case, teacher_id and student_id match together
+                    if teacher_has_student is not None and teacher_has_student[0][0] != 0: # in this case, teacher_id and student_id match together
                         ret_val = True
             return ret_val
 

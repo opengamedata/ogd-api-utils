@@ -6,7 +6,7 @@ from mysql.connector.connection import MySQLConnection
 from typing import Any, Dict, List, Tuple, Union
 # local imports
 from config.config import settings
-from opengamedata.interfaces.src.MySQLInterface import SQL
+from opengamedata.interfaces.MySQLInterface import SQL
 
 class PlayerAPI:
     @staticmethod
@@ -61,7 +61,7 @@ class PlayerAPI:
                     print(f"ERROR: Could not complete query to check if ID is unused, got error {err}")
                 else:
                     # print(f"GOT COUNT: {count}")
-                    if count[0][0] == 0:
+                    if count is not None and count[0][0] == 0:
                         ret_val = True
             return ret_val
 
