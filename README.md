@@ -16,7 +16,7 @@ However, the script is named wsgi.py specifically because Flask is supposed to a
 
 Below is a listing of the current API calls available, in function format to indicate what the request parameters.
 For each API, there is also an api path, with path parameters in angle bracket (<, >) format.
-Lastly, at this point in time, the `<server_path>` is `https://fieldday-web.wcer.
+Lastly, at this point in time, the `<server_path>` is `https://fieldday-web.wcer.wisc.edu/opengamedata.wsgi`
 
 ## Classroom API
 
