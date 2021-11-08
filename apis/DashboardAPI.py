@@ -1,4 +1,7 @@
 # Global imports
+import logging
+import os
+import traceback
 from datetime import datetime, timedelta
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
@@ -8,13 +11,10 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 # Local imports
 from config.config import settings
-from opengamedata.games.WAVES.WaveExtractor import WaveExtractor
-from opengamedata.interfaces.MySQLInterface import SQL, MySQLInterface
+from opengamedata.interfaces.MySQLInterface import MySQLInterface
 from opengamedata.interfaces.BigQueryInterface import BigQueryInterface
-from opengamedata.managers.PopulationProcessor import PopulationProcessor
-from opengamedata.managers.Request import Request, ExporterRange, ExporterFiles
-from opengamedata.schemas.GameSchema import GameSchema
-from opengamedata.schemas.TableSchema import TableSchema
+from opengamedata.managers.ExportManager import ExportManager
+from opengamedata.managers.Request import Request, ExporterRange, ExporterTypes, ExporterLocations
 
 class DashboardAPI:
     @staticmethod
