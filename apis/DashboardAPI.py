@@ -1,10 +1,12 @@
 # Global imports
+import json
 import logging
 import os
 import traceback
 from datetime import datetime, timedelta
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
+from flask_restful.inputs import datetime_from_iso8601
 from mysql.connector import Error as MySQLError
 from mysql.connector.connection import MySQLConnection
 from pathlib import Path
@@ -36,6 +38,15 @@ class DashboardAPI:
     
     class Population(Resource):
         def get(self, game_id):
+            def _parse_list(list_str:str):
+                ret_val = None
+                if ("[" in list_str) and ("]" in list_str):
+                    start = list_str.index("[")
+                    end   = list_str.index("]")
+                    ret_val = list_str[start+1:end].split(",")
+                    print(f"found [ and ] in list, got range of '{list_str[start+1:end]}', and parsed to list: {ret_val}")
+                return ret_val
+
             print("Received population request.")
             ret_val : Dict[str,Any] = {
                 "type":"GET",
@@ -44,33 +55,35 @@ class DashboardAPI:
                 "status":"SUCCESS",
             }
 
+            _end_time   = datetime.now()
+            _start_time = _end_time-timedelta(hours=1)
             parser = reqparse.RequestParser()
-            parser.add_argument("start_datetime", type=datetime, help="Invalid starting date, defaulting to 1 hour ago.")
-            parser.add_argument("end_datetime", type=datetime, help="Invalid ending date, defaulting to present time.")
-            parser.add_argument("metrics", help="Got bad list of metric, defaulting to all.")
+            parser.add_argument("start_datetime", type=datetime_from_iso8601, required=False, default=_start_time, nullable=True, help="Invalid starting date, defaulting to 1 hour ago.")
+            parser.add_argument("end_datetime",   type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time.")
+            parser.add_argument("metrics",        type=str,                   required=False, default="[]",        nullable=True, help="Got bad list of metric, defaulting to all.")
             args : Dict[str, Any] = parser.parse_args()
-            _start_time = args.get('start_datetime') or datetime.now()-timedelta(hours=1)
-            _end_time   = args.get('end_datetime')   or datetime.now()
-            print("Parsed args.")
+            _start_time = args.get('start_datetime') or _start_time
+            _end_time   = args.get('end_datetime')   or _end_time
+            _metrics    = _parse_list(args.get('metrics') or "")
             try:
-                os.chdir("var/www/opengamedata/")
-                # set up interface and request
-                interface = MySQLInterface(game_id, settings=settings)
-                print("Set up interface.")
-                # interface = BigQueryInterface(game_id=game_id, settings=settings)
-                # _range = ExporterRange.FromDateRange(date_min=_yesterday, date_max=datetime.now(), source=interface)
-                _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=interface)
-                _exp_types = ExporterTypes(events=False, sessions=False, population=True)
-                _exp_locs = ExporterLocations(files=False, dict=True)
-                print("Set up request params.")
-                request = Request(interface=interface, range=_range, exporter_types=_exp_types, exporter_locs=_exp_locs)
-                print("Set up request object.")
-                # retrieve and process the data
-                export_mgr = ExportManager(settings=settings)
-                print("Set up export manager object.")
-                result = export_mgr.ExecuteRequest(request=request, game_id=game_id)
-                print("Ran export request.")
-                os.chdir("../../../../")
+                result = {}
+                if _metrics is not None:
+                    _metrics.reverse()
+                    print(f"Parsed args: start={_start_time} end={_end_time} metrics={_metrics}")
+                    _metrics.reverse()
+                    os.chdir("var/www/opengamedata/")
+                    # set up interface and request
+                    interface = MySQLInterface(game_id, settings=settings)
+                    # interface = BigQueryInterface(game_id=game_id, settings=settings)
+                    # _range = ExporterRange.FromDateRange(date_min=_yesterday, date_max=datetime.now(), source=interface)
+                    _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=interface)
+                    _exp_types = ExporterTypes(events=False, sessions=False, population=True)
+                    _exp_locs = ExporterLocations(files=False, dict=True)
+                    request = Request(interface=interface, range=_range, exporter_types=_exp_types, exporter_locs=_exp_locs)
+                    # retrieve and process the data
+                    export_mgr = ExportManager(settings=settings)
+                    result = export_mgr.ExecuteRequest(request=request, game_id=game_id, feature_overrides=_metrics)
+                    os.chdir("../../../../")
             except Exception as err:
                 ret_val['msg'] = f"ERROR: Unknown error while processing data"
                 ret_val['status'] = "ERR_SRV"
@@ -80,9 +93,11 @@ class DashboardAPI:
                 cols = []
                 vals = []
                 if 'population' in result:
-                    cols = result['population']['cols']
-                    vals = result['population']['vals']
-                ct = min(len(cols), len(vals))
-                ret_val['msg'] = "SUCCESS: Generated population features"
-                ret_val["val"] = {cols[i] : vals[i] for i in range(ct)}
+                    cols = [str(item) for item in result['population']['cols']]
+                    vals = [str(item) for item in result['population']['vals']]
+                    ct = min(len(cols), len(vals))
+                    ret_val['msg'] = "SUCCESS: Generated population features"
+                    ret_val["val"] = {cols[i] : vals[i] for i in range(ct)}
+                else:
+                    ret_val['msg'] = "FAIL: No population features"
             return ret_val
