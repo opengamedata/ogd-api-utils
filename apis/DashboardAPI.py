@@ -44,7 +44,6 @@ class DashboardAPI:
                     start = list_str.index("[")
                     end   = list_str.index("]")
                     ret_val = list_str[start+1:end].split(",")
-                    print(f"found [ and ] in list, got range of '{list_str[start+1:end]}', and parsed to list: {ret_val}")
                 return ret_val
 
             print("Received population request.")
@@ -67,14 +66,19 @@ class DashboardAPI:
             _metrics    = _parse_list(args.get('metrics') or "")
             try:
                 result = {}
-                if _metrics is not None:
-                    _metrics.reverse()
-                    print(f"Parsed args: start={_start_time} end={_end_time} metrics={_metrics}")
-                    _metrics.reverse()
+                src_map = settings['GAME_SOURCE_MAP'].get(game_id)
+                if _metrics is not None and src_map is not None:
                     os.chdir("var/www/opengamedata/")
                     # set up interface and request
-                    interface = MySQLInterface(game_id, settings=settings)
-                    # interface = BigQueryInterface(game_id=game_id, settings=settings)
+                    if src_map['interface'] == "MySQL":
+                        interface = MySQLInterface(game_id, settings=settings)
+                        print(f"Using MySQLInterface for {game_id}")
+                    elif src_map['interface'] == "BigQuery":
+                        interface = BigQueryInterface(game_id=game_id, settings=settings)
+                        print(f"Using BigQueryInterface for {game_id}")
+                    else:
+                        interface = MySQLInterface(game_id, settings=settings)
+                        print(f"Could not find a valid interface for {game_id}, defaulting to MySQL!")
                     # _range = ExporterRange.FromDateRange(date_min=_yesterday, date_max=datetime.now(), source=interface)
                     _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=interface)
                     _exp_types = ExporterTypes(events=False, sessions=False, population=True)
@@ -92,12 +96,13 @@ class DashboardAPI:
             else:
                 cols = []
                 vals = []
-                if 'population' in result:
+                if result.get('population') is not None:
                     cols = [str(item) for item in result['population']['cols']]
                     vals = [str(item) for item in result['population']['vals']]
                     ct = min(len(cols), len(vals))
                     ret_val['msg'] = "SUCCESS: Generated population features"
                     ret_val["val"] = {cols[i] : vals[i] for i in range(ct)}
                 else:
-                    ret_val['msg'] = "FAIL: No population features"
+                    ret_val['msg'] = "FAIL: No valid population features"
+                    ret_val['status'] = "ERR_REQ"
             return ret_val
