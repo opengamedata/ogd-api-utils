@@ -24,9 +24,28 @@ class DashboardAPI:
         api = Api(app)
         api.add_resource(DashboardAPI.Player, '/player/<player_id>/metrics')
         api.add_resource(DashboardAPI.Population, '/game/<game_id>/metrics')
+    
+    @staticmethod
+    def _parse_list(list_str:str):
+        ret_val = None
+        if ("[" in list_str) and ("]" in list_str):
+            start = list_str.index("[")
+            end   = list_str.index("]")
+            ret_val = list_str[start+1:end].split(",")
+        return ret_val
 
     class Player(Resource):
         def get(self, player_id):
+            print("Received player request.")
+            ret_val : Dict[str,Any] = {
+                "type":"GET",
+                "val":None,
+                "msg":"",
+                "status":"SUCCESS",
+            }
+            _end_time   : datetime = datetime.now()
+            _start_time : datetime = _end_time-timedelta(hours=1)
+
             parser = reqparse.RequestParser()
             parser.add_argument("teacher_id")
             parser.add_argument("metrics")
@@ -38,14 +57,6 @@ class DashboardAPI:
     
     class Population(Resource):
         def get(self, game_id):
-            def _parse_list(list_str:str):
-                ret_val = None
-                if ("[" in list_str) and ("]" in list_str):
-                    start = list_str.index("[")
-                    end   = list_str.index("]")
-                    ret_val = list_str[start+1:end].split(",")
-                return ret_val
-
             print("Received population request.")
             ret_val : Dict[str,Any] = {
                 "type":"GET",
@@ -53,9 +64,9 @@ class DashboardAPI:
                 "msg":"",
                 "status":"SUCCESS",
             }
+            _end_time   : datetime = datetime.now()
+            _start_time : datetime = _end_time-timedelta(hours=1)
 
-            _end_time   = datetime.now()
-            _start_time = _end_time-timedelta(hours=1)
             parser = reqparse.RequestParser()
             parser.add_argument("start_datetime", type=datetime_from_iso8601, required=False, default=_start_time, nullable=True, help="Invalid starting date, defaulting to 1 hour ago.")
             parser.add_argument("end_datetime",   type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time.")
@@ -63,7 +74,7 @@ class DashboardAPI:
             args : Dict[str, Any] = parser.parse_args()
             _start_time = args.get('start_datetime') or _start_time
             _end_time   = args.get('end_datetime')   or _end_time
-            _metrics    = _parse_list(args.get('metrics') or "")
+            _metrics    = DashboardAPI._parse_list(args.get('metrics') or "")
             try:
                 result = {}
                 src_map = settings['GAME_SOURCE_MAP'].get(game_id)
