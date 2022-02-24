@@ -170,11 +170,11 @@ class DashboardAPI:
                     vals = [str(item) for item in result['population']['vals']]
                     ct = min(len(cols), len(vals))
                     ret_val.RequestSucceeded(
-                        msg="SUCCESS: Generated population features",
+                        msg="SUCCESS: Generated features for given sessions",
                         val={cols[i] : vals[i] for i in range(ct)}
                     )
                 else:
-                    ret_val.RequestErrored("FAIL: No valid population features")
+                    ret_val.RequestErrored("FAIL: No valid session features")
             return ret_val.ToDict()
     
     class Session(Resource):
@@ -209,10 +209,10 @@ class DashboardAPI:
                     vals = [str(item) for item in result['population']['vals']]
                     ct = min(len(cols), len(vals))
                     ret_val.RequestSucceeded(
-                        msg="SUCCESS: Generated population features",
+                        msg="SUCCESS: Generated features for the given session",
                         val={cols[i] : vals[i] for i in range(ct)}
                     )
                 else:
-                    ret_val.RequestErrored("FAIL: No valid population features")
+                    ret_val.RequestErrored("FAIL: No valid session features")
             return ret_val.ToDict()
     
