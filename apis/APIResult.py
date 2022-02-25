@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Union
 
 class RESTType(Enum):
     GET = 1
