@@ -20,8 +20,14 @@ from opengamedata.managers.ExportManager import ExportManager
 from opengamedata.managers.Request import Request, ExporterRange, ExporterTypes, ExporterLocations
 
 class DashboardAPI:
+    """Class to define an API for the developer/designer dashboard"""
     @staticmethod
     def register(app:Flask):
+        """Sets up the dashboard api in a flask app.
+
+        :param app: _description_
+        :type app: Flask
+        """
         api = Api(app)
         api.add_resource(DashboardAPI.Population, '/game/<game_id>/metrics')
         api.add_resource(DashboardAPI.SessionList, '/game/<game_id>/sessions/')
@@ -30,6 +36,13 @@ class DashboardAPI:
     
     @staticmethod
     def parse_list(list_str:str) -> Union[List[Any], None]:
+        """Simple utility to parse a string containing a bracketed list into a Python list.
+
+        :param list_str: _description_
+        :type list_str: str
+        :return: _description_
+        :rtype: Union[List[Any], None]
+        """
         ret_val = None
         if ("[" in list_str) and ("]" in list_str):
             start = list_str.index("[")
@@ -39,6 +52,13 @@ class DashboardAPI:
 
     @staticmethod
     def gen_interface(game_id):
+        """Utility to set up an Interface object for use by the API, given a game_id.
+
+        :param game_id: _description_
+        :type game_id: _type_
+        :return: _description_
+        :rtype: _type_
+        """
         ret_val = None
         src_map = settings['GAME_SOURCE_MAP'].get(game_id)
         if src_map is not None:
@@ -55,7 +75,15 @@ class DashboardAPI:
         return ret_val
 
     class Population(Resource):
+        """Class for handling requests for population-level features."""
         def get(self, game_id):
+            """Handles a GET request for population-level features.
+
+            :param game_id: _description_
+            :type game_id: _type_
+            :return: _description_
+            :rtype: _type_
+            """
             print("Received population request.")
             ret_val = APIResult.Default(req_type=RESTType.GET)
             _end_time   : datetime = datetime.now()
@@ -103,7 +131,15 @@ class DashboardAPI:
             return ret_val.ToDict()
 
     class SessionList(Resource):
+        """Class for handling requests for a list of sessions over a date range."""
         def get(self, game_id):
+            """Handles a GET request for a list of sessions.
+
+            :param game_id: _description_
+            :type game_id: _type_
+            :return: _description_
+            :rtype: _type_
+            """
             print("Received session list request.")
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
@@ -137,7 +173,15 @@ class DashboardAPI:
             return ret_val.ToDict()
 
     class Sessions(Resource):
+        """Class for handling requests for session-level features, given a list of session ids."""
         def get(self, game_id):
+            """Handles a GET request for session-level features for a list of sessions.
+
+            :param game_id: _description_
+            :type game_id: _type_
+            :return: _description_
+            :rtype: _type_
+            """
             print("Received session request.")
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
@@ -167,8 +211,8 @@ class DashboardAPI:
                 print(traceback.format_exc())
             else:
                 if result.get('sessions') is not None:
-                    cols = [str(item) for item in result['population']['cols']]
-                    vals = [str(item) for item in result['population']['vals']]
+                    cols = [str(item) for item in result['sessions']['cols']]
+                    vals = [str(item) for item in result['sessions']['vals']]
                     ct = min(len(cols), len(vals))
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for given sessions",
@@ -179,7 +223,17 @@ class DashboardAPI:
             return ret_val.ToDict()
     
     class Session(Resource):
+        """Class for handling requests for session-level features, given a session id."""
         def get(self, game_id, session_id):
+            """Handles a GET request for session-level features of a single Session.
+
+            :param game_id: _description_
+            :type game_id: _type_
+            :param session_id: _description_
+            :type session_id: _type_
+            :return: _description_
+            :rtype: _type_
+            """
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
             parser = reqparse.RequestParser()
@@ -206,8 +260,8 @@ class DashboardAPI:
                 print(traceback.format_exc())
             else:
                 if result.get('sessions') is not None:
-                    cols = [str(item) for item in result['population']['cols']]
-                    vals = [str(item) for item in result['population']['vals']]
+                    cols = [str(item) for item in result['sessions']['cols']]
+                    vals = [str(item) for item in result['sessions']['vals']]
                     ct = min(len(cols), len(vals))
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for the given session",
