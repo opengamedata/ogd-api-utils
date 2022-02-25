@@ -211,12 +211,9 @@ class DashboardAPI:
                 print(traceback.format_exc())
             else:
                 if result.get('sessions') is not None:
-                    cols = [str(item) for item in result['sessions']['cols']]
-                    vals = [str(item) for item in result['sessions']['vals']]
-                    ct = min(len(cols), len(vals))
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for given sessions",
-                        val={cols[i] : vals[i] for i in range(ct)}
+                        val=result['sessions']
                     )
                 else:
                     ret_val.RequestErrored("FAIL: No valid session features")
@@ -260,12 +257,9 @@ class DashboardAPI:
                 print(traceback.format_exc())
             else:
                 if result.get('sessions') is not None:
-                    cols = [str(item) for item in result['sessions']['cols']]
-                    vals = [str(item) for item in result['sessions']['vals']]
-                    ct = min(len(cols), len(vals))
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for the given session",
-                        val={cols[i] : vals[i] for i in range(ct)}
+                        val=result['sessions']
                     )
                 else:
                     ret_val.RequestErrored("FAIL: No valid session features")
