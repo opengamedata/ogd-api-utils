@@ -61,6 +61,7 @@ class DashboardAPI:
             _end_time   : datetime = datetime.now()
             _start_time : datetime = _end_time-timedelta(hours=1)
 
+            # TODO: figure out how to make this use the default and print "help" part to server log, or maybe append to return message, instead of sending back as the only response from the server and dying here.
             parser = reqparse.RequestParser()
             parser.add_argument("start_datetime", type=datetime_from_iso8601, required=False, default=_start_time, nullable=True, help="Invalid starting date, defaulting to 1 hour ago.")
             parser.add_argument("end_datetime",   type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time.")
@@ -74,12 +75,12 @@ class DashboardAPI:
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
-                interface = DashboardAPI.gen_interface(game_id=game_id)
-                if _metrics is not None and interface is not None:
-                    _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=interface)
+                _interface = DashboardAPI.gen_interface(game_id=game_id)
+                if _metrics is not None and _interface is not None:
+                    _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=_interface)
                     _exp_types = ExporterTypes(events=False, sessions=False, population=True)
                     _exp_locs = ExporterLocations(files=False, dict=True)
-                    request = Request(interface=interface, range=_range, exporter_types=_exp_types, exporter_locs=_exp_locs)
+                    request = Request(interface=_interface, range=_range, exporter_types=_exp_types, exporter_locs=_exp_locs)
                     # retrieve and process the data
                     export_mgr = ExportManager(settings=settings)
                     result = export_mgr.ExecuteRequest(request=request, game_id=game_id, feature_overrides=_metrics)
@@ -119,9 +120,9 @@ class DashboardAPI:
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
-                interface = DashboardAPI.gen_interface(game_id=game_id)
-                if interface is not None:
-                    _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=interface)
+                _interface = DashboardAPI.gen_interface(game_id=game_id)
+                if _interface is not None:
+                    _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=_interface)
                     result["ids"] = _range.GetIDs()
                 os.chdir("../../../../")
             except Exception as err:
@@ -150,12 +151,12 @@ class DashboardAPI:
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
-                interface = DashboardAPI.gen_interface(game_id=game_id)
-                if _metrics is not None and _session_ids is not None and interface is not None:
-                    _range = ExporterRange.FromIDs(ids=_session_ids, source=interface)
+                _interface = DashboardAPI.gen_interface(game_id=game_id)
+                if _metrics is not None and _session_ids is not None and _interface is not None:
+                    _range = ExporterRange.FromIDs(ids=_session_ids, source=_interface)
                     _exp_types = ExporterTypes(events=False, sessions=True, population=False)
                     _exp_locs = ExporterLocations(files=False, dict=True)
-                    request = Request(interface=interface, range=_range, exporter_types=_exp_types, exporter_locs=_exp_locs)
+                    request = Request(interface=_interface, range=_range, exporter_types=_exp_types, exporter_locs=_exp_locs)
                     # retrieve and process the data
                     export_mgr = ExportManager(settings=settings)
                     result = export_mgr.ExecuteRequest(request=request, game_id=game_id, feature_overrides=_metrics)
@@ -189,12 +190,12 @@ class DashboardAPI:
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
-                interface = DashboardAPI.gen_interface(game_id=game_id)
-                if _metrics is not None and interface is not None:
-                    _range = ExporterRange.FromIDs(ids=[session_id], source=interface)
+                _interface = DashboardAPI.gen_interface(game_id=game_id)
+                if _metrics is not None and _interface is not None:
+                    _range = ExporterRange.FromIDs(ids=[session_id], source=_interface)
                     _exp_types = ExporterTypes(events=False, sessions=True, population=False)
                     _exp_locs = ExporterLocations(files=False, dict=True)
-                    request = Request(interface=interface, range=_range, exporter_types=_exp_types, exporter_locs=_exp_locs)
+                    request = Request(interface=_interface, range=_range, exporter_types=_exp_types, exporter_locs=_exp_locs)
                     # retrieve and process the data
                     export_mgr = ExportManager(settings=settings)
                     result = export_mgr.ExecuteRequest(request=request, game_id=game_id, feature_overrides=_metrics)
