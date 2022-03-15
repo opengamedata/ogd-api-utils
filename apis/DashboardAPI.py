@@ -137,7 +137,8 @@ class DashboardAPI:
             _end_time   = args.get('end_datetime')   or _end_time
             _start_time = args.get('start_datetime') or _start_time
             _metrics    = DashboardAPI.parse_list(args.get('metrics') or "")
-            current_app.logger.debug(f"Metrics list received from request: {_metrics}")
+            current_app.logger.debug(f"Metrics list received from request: {args.get('metrics')}")
+            current_app.logger.debug(f"Metrics list parsed: {args.get('metrics')}")
 
             try:
                 result = {}
