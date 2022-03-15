@@ -1,4 +1,5 @@
 import sys
+import logging
 from flask import Flask
 # Local imports
 from config.config import settings
@@ -6,6 +7,7 @@ if not settings['OGD_CORE_PATH'] in sys.path:
     sys.path.append(settings['OGD_CORE_PATH'])
 
 application = Flask(__name__)
+application.logger.setLevel(logging.INFO)
 application.secret_key = b'thisisafakesecretkey'
 
 try:
