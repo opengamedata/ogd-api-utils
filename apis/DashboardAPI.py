@@ -154,6 +154,7 @@ class DashboardAPI:
                     # retrieve and process the data
                     export_mgr = ExportManager(settings=settings)
                     result = export_mgr.ExecuteRequest(request=request)
+                    current_app.logger.debug(f"raw ExecuteRequest result: {json.dumps(result)}")
                 os.chdir("../../../../")
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: Unknown error while processing data")
