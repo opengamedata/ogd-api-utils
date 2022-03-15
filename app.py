@@ -13,35 +13,35 @@ application.secret_key = b'thisisafakesecretkey'
 try:
     from apis.ClassroomAPI import ClassroomAPI
 except ImportError as err:
-    application.logger .warning("Could not import Classroom API")
+    application.logger.warning("Could not import Classroom API", stack_info=True)
 else:
     ClassroomAPI.register(application)
 
 try:
     from apis.DashboardAPI import DashboardAPI
 except ImportError as err:
-    application.logger.warning("Could not import Dashboard API")
+    application.logger.warning("Could not import Dashboard API", stack_info=True)
 else:
     DashboardAPI.register(application)
 
 try:
     from apis.GameStateAPI import GameStateAPI
 except ImportError as err:
-    application.logger.warning("Could not import GameStateAPI API")
+    application.logger.warning("Could not import GameStateAPI API", stack_info=True)
 else:
     GameStateAPI.register(application)
 
 try:
     from apis.HelloAPI import HelloAPI
 except ImportError as err:
-    application.logger.warning("Could not import Hello API")
+    application.logger.warning("Could not import Hello API", stack_info=True)
 else:
     HelloAPI.register(application)
 
 try:
     from apis.PlayerAPI import PlayerAPI
 except ImportError as err:
-    application.logger.warning("Could not import Player API")
+    application.logger.warning("Could not import Player API", stack_info=True)
 else:
     PlayerAPI.register(application)
 
