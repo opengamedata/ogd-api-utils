@@ -15,8 +15,8 @@ from apis.APIResult import APIResult, RESTType, ResultStatus
 from opengamedata.interfaces.MySQLInterface import MySQLInterface
 from opengamedata.interfaces.BigQueryInterface import BigQueryInterface
 from opengamedata.managers.ExportManager import ExportManager
-from opengamedata.managers.Request import Request, ExporterRange, ExporterTypes, ExporterLocations
 from opengamedata.schemas.GameSchema import GameSchema
+from opengamedata.schemas.Request import Request, ExporterRange, ExporterTypes, ExporterLocations
 
 class DashboardAPI:
     """Class to define an API for the developer/designer dashboard"""
