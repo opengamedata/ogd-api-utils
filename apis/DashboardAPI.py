@@ -1,14 +1,12 @@
 # Global imports
 import json
-import logging
 import os
 import traceback
 from datetime import datetime, timedelta
 from flask import Flask
+from flask import current_app
 from flask_restful import Resource, Api, reqparse
 from flask_restful.inputs import datetime_from_iso8601
-from mysql.connector import Error as MySQLError
-from mysql.connector.connection import MySQLConnection
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 # Local imports
@@ -124,7 +122,7 @@ class DashboardAPI:
             :return: _description_
             :rtype: _type_
             """
-            print("Received population request.")
+            current_app.logger.info("Received population request.")
             ret_val = APIResult.Default(req_type=RESTType.GET)
             _end_time   : datetime = datetime.now()
             _start_time : datetime = _end_time-timedelta(hours=1)
@@ -139,6 +137,7 @@ class DashboardAPI:
             _end_time   = args.get('end_datetime')   or _end_time
             _start_time = args.get('start_datetime') or _start_time
             _metrics    = DashboardAPI.parse_list(args.get('metrics') or "")
+            current_app.logger.debug(f"Metrics list received from request: {_metrics}")
 
             try:
                 result = {}
@@ -146,7 +145,7 @@ class DashboardAPI:
                 _interface = DashboardAPI.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
                     _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=_interface)
-                    _exp_types = ExporterTypes(events=False, sessions=False, population=True)
+                    _exp_types = ExporterTypes(events=False, sessions=False, players=False, population=True)
                     _exp_locs = ExporterLocations(files=False, dict=True)
                     request = Request(interface=_interface, range=_range,
                                       exporter_types=_exp_types, exporter_locs=_exp_locs,
@@ -241,7 +240,7 @@ class DashboardAPI:
                 _interface = DashboardAPI.gen_interface(game_id=game_id)
                 if _metrics is not None and _player_ids is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(ids=_player_ids, source=_interface)
-                    _exp_types = ExporterTypes(events=False, sessions=True, population=False)
+                    _exp_types = ExporterTypes(events=False, sessions=False, players=True, population=False)
                     _exp_locs = ExporterLocations(files=False, dict=True)
                     request = Request(interface=_interface, range=_range,
                                       exporter_types=_exp_types, exporter_locs=_exp_locs,
@@ -290,7 +289,7 @@ class DashboardAPI:
                 _interface = DashboardAPI.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(ids=[player_id], source=_interface)
-                    _exp_types = ExporterTypes(events=False, sessions=True, population=False)
+                    _exp_types = ExporterTypes(events=False, sessions=False, players=True, population=False)
                     _exp_locs = ExporterLocations(files=False, dict=True)
                     request = Request(interface=_interface, range=_range,
                                       exporter_types=_exp_types, exporter_locs=_exp_locs,
@@ -382,7 +381,7 @@ class DashboardAPI:
                 _interface = DashboardAPI.gen_interface(game_id=game_id)
                 if _metrics is not None and _session_ids is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(ids=_session_ids, source=_interface)
-                    _exp_types = ExporterTypes(events=False, sessions=True, population=False)
+                    _exp_types = ExporterTypes(events=False, sessions=True, players=False, population=False)
                     _exp_locs = ExporterLocations(files=False, dict=True)
                     request = Request(interface=_interface, range=_range,
                                       exporter_types=_exp_types, exporter_locs=_exp_locs,
@@ -431,7 +430,7 @@ class DashboardAPI:
                 _interface = DashboardAPI.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(ids=[session_id], source=_interface)
-                    _exp_types = ExporterTypes(events=False, sessions=True, population=False)
+                    _exp_types = ExporterTypes(events=False, sessions=True, players=False, population=False)
                     _exp_locs = ExporterLocations(files=False, dict=True)
                     request = Request(interface=_interface, range=_range,
                                       exporter_types=_exp_types, exporter_locs=_exp_locs,
