@@ -138,13 +138,14 @@ class DashboardAPI:
             _start_time = args.get('start_datetime') or _start_time
             _metrics    = DashboardAPI.parse_list(args.get('metrics') or "")
             current_app.logger.debug(f"Metrics list received from request: {args.get('metrics')}")
-            current_app.logger.debug(f"Metrics list parsed: {args.get('metrics')}")
+            current_app.logger.debug(f"Metrics list parsed: {_metrics}")
 
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
                 _interface = DashboardAPI.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
+                    current_app.logger.debug(f"Made it into clause for doing request.")
                     _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=_interface)
                     _exp_types = ExporterTypes(events=False, sessions=False, players=False, population=True)
                     _exp_locs = ExporterLocations(files=False, dict=True)
@@ -155,7 +156,11 @@ class DashboardAPI:
                     # retrieve and process the data
                     export_mgr = ExportManager(settings=settings)
                     result = export_mgr.ExecuteRequest(request=request)
-                    current_app.logger.debug(f"raw ExecuteRequest result: {json.dumps(result)}")
+                elif _metrics is None:
+                    current_app.logger.warning("_metrics was None")
+                elif _interface is None:
+                    current_app.logger.warning("_interface was None")
+                current_app.logger.debug(f"raw ExecuteRequest result: {json.dumps(result)}")
                 os.chdir("../../../../")
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: Unknown error while processing data")
