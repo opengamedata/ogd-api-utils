@@ -265,12 +265,13 @@ class DashboardAPI:
                 print(f"Got exception: {str(err)}")
                 print(traceback.format_exc())
             else:
-                if result.get('sessions') is not None:
+                if result.get('players') is not None:
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for given sessions",
-                        val=result['sessions']
+                        val=result['players']
                     )
                 else:
+                    current_app.logger.debug(f"Couldn't find anything in result[players], result was:\n{result}")
                     ret_val.RequestErrored("FAIL: No valid session features")
             return ret_val.ToDict()
     
@@ -324,6 +325,7 @@ class DashboardAPI:
                         val=result['player']
                     )
                 else:
+                    current_app.logger.debug(f"Couldn't find anything in result[player], result was:\n{result}")
                     ret_val.RequestErrored("FAIL: No valid session features")
             return ret_val.ToDict()
     
@@ -420,6 +422,7 @@ class DashboardAPI:
                         val=result['sessions']
                     )
                 else:
+                    current_app.logger.debug(f"Couldn't find anything in result[sessions], result was:\n{result}")
                     ret_val.RequestErrored("FAIL: No valid session features")
             return ret_val.ToDict()
     
@@ -467,13 +470,13 @@ class DashboardAPI:
                 print(f"Got exception: {str(err)}")
                 print(traceback.format_exc())
             else:
-                if result.get('sessions') is not None:
+                if result.get('session') is not None:
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for the given session",
                         val=result['session']
                     )
                 else:
-                    current_app.logger.debug(f"Couldn't find anything in sessions, result was:\n{result}")
+                    current_app.logger.debug(f"Couldn't find anything in result[session], result was:\n{result}")
                     ret_val.RequestErrored("FAIL: No valid session features")
             return ret_val.ToDict()
     
