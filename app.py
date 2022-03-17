@@ -7,7 +7,7 @@ if not settings['OGD_CORE_PATH'] in sys.path:
     sys.path.append(settings['OGD_CORE_PATH'])
 
 application = Flask(__name__)
-application.logger.setLevel(logging.INFO)
+application.logger.setLevel(settings['DEBUG_LEVEL'])
 application.secret_key = b'thisisafakesecretkey'
 
 try:
