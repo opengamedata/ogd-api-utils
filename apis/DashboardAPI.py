@@ -160,7 +160,6 @@ class DashboardAPI:
                     current_app.logger.warning("_metrics was None")
                 elif _interface is None:
                     current_app.logger.warning("_interface was None")
-                current_app.logger.debug(f"raw ExecuteRequest result: {json.dumps(result)}")
                 os.chdir("../../../../")
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: Unknown error while processing data")
@@ -256,6 +255,10 @@ class DashboardAPI:
                     # retrieve and process the data
                     export_mgr = ExportManager(settings=settings)
                     result = export_mgr.ExecuteRequest(request=request)
+                elif _metrics is None:
+                    current_app.logger.warning("_metrics was None")
+                elif _interface is None:
+                    current_app.logger.warning("_interface was None")
                 os.chdir("../../../../")
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: Unknown error while processing data")
@@ -397,6 +400,10 @@ class DashboardAPI:
                     # retrieve and process the data
                     export_mgr = ExportManager(settings=settings)
                     result = export_mgr.ExecuteRequest(request=request)
+                elif _metrics is None:
+                    current_app.logger.warning("_metrics was None")
+                elif _interface is None:
+                    current_app.logger.warning("_interface was None")
                 os.chdir("../../../../")
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: Unknown error while processing data")
@@ -446,6 +453,10 @@ class DashboardAPI:
                     # retrieve and process the data
                     export_mgr = ExportManager(settings=settings)
                     result = export_mgr.ExecuteRequest(request=request)
+                elif _metrics is None:
+                    current_app.logger.warning("_metrics was None")
+                elif _interface is None:
+                    current_app.logger.warning("_interface was None")
                 os.chdir("../../../../")
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: Unknown error while processing data")
@@ -458,6 +469,7 @@ class DashboardAPI:
                         val=result['sessions']
                     )
                 else:
+                    current_app.logger.debug(f"Couldn't find anything in sessions, result was:\n{result}")
                     ret_val.RequestErrored("FAIL: No valid session features")
             return ret_val.ToDict()
     
