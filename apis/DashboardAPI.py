@@ -308,16 +308,20 @@ class DashboardAPI:
                     # retrieve and process the data
                     export_mgr = ExportManager(settings=settings)
                     result = export_mgr.ExecuteRequest(request=request)
+                elif _metrics is None:
+                    current_app.logger.warning("_metrics was None")
+                elif _interface is None:
+                    current_app.logger.warning("_interface was None")
                 os.chdir("../../../../")
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: Unknown error while processing data")
                 print(f"Got exception: {str(err)}")
                 print(traceback.format_exc())
             else:
-                if result.get('sessions') is not None:
+                if result.get('player') is not None:
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for the given session",
-                        val=result['sessions']
+                        val=result['player']
                     )
                 else:
                     ret_val.RequestErrored("FAIL: No valid session features")
@@ -466,7 +470,7 @@ class DashboardAPI:
                 if result.get('sessions') is not None:
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for the given session",
-                        val=result['sessions']
+                        val=result['session']
                     )
                 else:
                     current_app.logger.debug(f"Couldn't find anything in sessions, result was:\n{result}")
