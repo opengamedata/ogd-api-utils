@@ -27,6 +27,14 @@ else:
     DashboardAPI.register(application)
 
 try:
+    from apis.PlayerAPI import PlayerAPI
+except ImportError as err:
+    application.logger.warning("Could not import Player API:")
+    application.logger.exception(err)
+else:
+    PlayerAPI.register(application)
+
+try:
     from apis.GameStateAPI import GameStateAPI
 except ImportError as err:
     application.logger.warning("Could not import GameStateAPI API:")
