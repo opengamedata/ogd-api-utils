@@ -7,16 +7,11 @@ from flask import Flask
 from flask import current_app
 from flask_restful import Resource, Api, reqparse
 from flask_restful.inputs import datetime_from_iso8601
-from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
 # Local imports
 from apis.APIResult import APIResult, RESTType, ResultStatus
 from apis import APIUtils
 from config.config import settings
-from opengamedata.interfaces.MySQLInterface import MySQLInterface
-from opengamedata.interfaces.BigQueryInterface import BigQueryInterface
 from opengamedata.managers.ExportManager import ExportManager
-from opengamedata.schemas.GameSchema import GameSchema
 from opengamedata.schemas.Request import Request, ExporterRange, ExporterTypes, ExporterLocations
 
 class PlayerAPI:
