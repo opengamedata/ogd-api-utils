@@ -8,11 +8,11 @@ from typing import Any, Dict, List, Tuple, Union
 from config.config import settings
 from opengamedata.interfaces.MySQLInterface import SQL
 
-class PlayerAPI:
+class PlayerIDAPI:
     @staticmethod
     def register(app:Flask):
         api = Api(app)
-        api.add_resource(PlayerAPI.PlayerID, '/player/')
+        api.add_resource(PlayerIDAPI.PlayerID, '/player/')
 
     class PlayerID(Resource):
         @staticmethod
@@ -91,8 +91,8 @@ class PlayerAPI:
                 try:
                     id = None
                     count = 0
-                    while (not PlayerAPI.PlayerID._unusedID(db_conn=user_conn, db_name=fd_config["DB_NAME"], player_id=id)) and (count < 1000):
-                            id = PlayerAPI.PlayerID._generateID(db_conn=id_conn, db_name=id_config["DB_NAME"])
+                    while (not PlayerIDAPI.PlayerID._unusedID(db_conn=user_conn, db_name=fd_config["DB_NAME"], player_id=id)) and (count < 1000):
+                            id = PlayerIDAPI.PlayerID._generateID(db_conn=id_conn, db_name=id_config["DB_NAME"])
                             count += 1
                 except MySQLError as err:
                     ret_val['msg'] = f"ERROR: Could not complete query to check if ID is unused, a database error occurred."
