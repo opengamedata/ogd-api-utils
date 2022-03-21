@@ -10,6 +10,7 @@ from flask_restful.inputs import datetime_from_iso8601
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 # Local imports
+from apis import APIUtils
 from config.config import settings
 from apis.APIResult import APIResult, RESTType, ResultStatus
 from opengamedata.interfaces.MySQLInterface import MySQLInterface
@@ -36,46 +37,6 @@ class DashboardAPI:
         api.add_resource(DashboardAPI.SessionList, '/game/<game_id>/sessions/')
         api.add_resource(DashboardAPI.Sessions, '/game/<game_id>/sessions/metrics')
         api.add_resource(DashboardAPI.Session, '/game/<game_id>/session/<session_id>/metrics')
-    
-    @staticmethod
-    def parse_list(list_str:str) -> Union[List[Any], None]:
-        """Simple utility to parse a string containing a bracketed list into a Python list.
-
-        :param list_str: _description_
-        :type list_str: str
-        :return: _description_
-        :rtype: Union[List[Any], None]
-        """
-        ret_val = None
-        if ("[" in list_str) and ("]" in list_str):
-            start = list_str.index("[")
-            end   = list_str.index("]")
-            ret_val = list_str[start+1:end].split(",")
-        return ret_val
-
-    @staticmethod
-    def gen_interface(game_id):
-        """Utility to set up an Interface object for use by the API, given a game_id.
-
-        :param game_id: _description_
-        :type game_id: _type_
-        :return: _description_
-        :rtype: _type_
-        """
-        ret_val = None
-        src_map = settings['GAME_SOURCE_MAP'].get(game_id)
-        if src_map is not None:
-            # set up interface and request
-            if src_map['interface'] == "MySQL":
-                ret_val = MySQLInterface(game_id, settings=settings)
-                print(f"Using MySQLInterface for {game_id}")
-            elif src_map['interface'] == "BigQuery":
-                ret_val = BigQueryInterface(game_id=game_id, settings=settings)
-                print(f"Using BigQueryInterface for {game_id}")
-            else:
-                ret_val = MySQLInterface(game_id, settings=settings)
-                print(f"Could not find a valid interface for {game_id}, defaulting to MySQL!")
-        return ret_val
 
     class FeatureList(Resource):
         """Class for getting a full list of features for a given game."""
@@ -136,14 +97,14 @@ class DashboardAPI:
 
             _end_time   = args.get('end_datetime')   or _end_time
             _start_time = args.get('start_datetime') or _start_time
-            _metrics    = DashboardAPI.parse_list(args.get('metrics') or "")
+            _metrics    = APIUtils.parse_list(args.get('metrics') or "")
             current_app.logger.debug(f"Metrics list received from request: {args.get('metrics')}")
             current_app.logger.debug(f"Metrics list parsed: {_metrics}")
 
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
-                _interface = DashboardAPI.gen_interface(game_id=game_id)
+                _interface = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
                     current_app.logger.debug(f"Made it into clause for doing request.")
                     _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=_interface)
@@ -204,7 +165,7 @@ class DashboardAPI:
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
-                _interface = DashboardAPI.gen_interface(game_id=game_id)
+                _interface = APIUtils.gen_interface(game_id=game_id)
                 if _interface is not None:
                     _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=_interface)
                     result["ids"] = _range.GetIDs()
@@ -238,12 +199,12 @@ class DashboardAPI:
             parser.add_argument("metrics")
             args = parser.parse_args()
 
-            _metrics     = DashboardAPI.parse_list(args.get('metrics') or "")
-            _player_ids = DashboardAPI.parse_list(args.get('player_ids') or "[]")
+            _metrics     = APIUtils.parse_list(args.get('metrics') or "")
+            _player_ids = APIUtils.parse_list(args.get('player_ids') or "[]")
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
-                _interface = DashboardAPI.gen_interface(game_id=game_id)
+                _interface = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _player_ids is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(ids=_player_ids, source=_interface)
                     _exp_types = ExporterTypes(events=False, sessions=False, players=True, population=False)
@@ -293,11 +254,11 @@ class DashboardAPI:
             parser.add_argument("metrics")
             args = parser.parse_args()
 
-            _metrics    = DashboardAPI.parse_list(args.get('metrics') or "")
+            _metrics    = APIUtils.parse_list(args.get('metrics') or "")
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
-                _interface = DashboardAPI.gen_interface(game_id=game_id)
+                _interface = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(ids=[player_id], source=_interface)
                     _exp_types = ExporterTypes(events=False, sessions=False, players=True, population=False)
@@ -355,7 +316,7 @@ class DashboardAPI:
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
-                _interface = DashboardAPI.gen_interface(game_id=game_id)
+                _interface = APIUtils.gen_interface(game_id=game_id)
                 if _interface is not None:
                     _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=_interface)
                     result["ids"] = _range.GetIDs()
@@ -389,12 +350,12 @@ class DashboardAPI:
             parser.add_argument("metrics")
             args = parser.parse_args()
 
-            _metrics     = DashboardAPI.parse_list(args.get('metrics') or "")
-            _session_ids = DashboardAPI.parse_list(args.get('session_ids') or "[]")
+            _metrics     = APIUtils.parse_list(args.get('metrics') or "")
+            _session_ids = APIUtils.parse_list(args.get('session_ids') or "[]")
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
-                _interface = DashboardAPI.gen_interface(game_id=game_id)
+                _interface = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _session_ids is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(ids=_session_ids, source=_interface)
                     _exp_types = ExporterTypes(events=False, sessions=True, players=False, population=False)
@@ -444,11 +405,11 @@ class DashboardAPI:
             parser.add_argument("metrics")
             args = parser.parse_args()
 
-            _metrics    = DashboardAPI.parse_list(args.get('metrics') or "")
+            _metrics    = APIUtils.parse_list(args.get('metrics') or "")
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
-                _interface = DashboardAPI.gen_interface(game_id=game_id)
+                _interface = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(ids=[session_id], source=_interface)
                     _exp_types = ExporterTypes(events=False, sessions=True, players=False, population=False)
