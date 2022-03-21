@@ -43,12 +43,12 @@ else:
     HelloAPI.register(application)
 
 try:
-    from apis.PlayerAPI import PlayerAPI
+    from apis.PlayerIDAPI import PlayerIDAPI
 except ImportError as err:
     application.logger.warning("Could not import Player API:")
     application.logger.exception(err)
 else:
-    PlayerAPI.register(application)
+    PlayerIDAPI.register(application)
 
 @application.route("/")
 def home() -> str:
