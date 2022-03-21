@@ -35,6 +35,14 @@ else:
     PlayerAPI.register(application)
 
 try:
+    from apis.SessionAPI import SessionAPI
+except ImportError as err:
+    application.logger.warning("Could not import Session API:")
+    application.logger.exception(err)
+else:
+    SessionAPI.register(application)
+
+try:
     from apis.GameStateAPI import GameStateAPI
 except ImportError as err:
     application.logger.warning("Could not import GameStateAPI API:")
@@ -53,7 +61,7 @@ else:
 try:
     from apis.PlayerIDAPI import PlayerIDAPI
 except ImportError as err:
-    application.logger.warning("Could not import Player API:")
+    application.logger.warning("Could not import Player ID API:")
     application.logger.exception(err)
 else:
     PlayerIDAPI.register(application)
