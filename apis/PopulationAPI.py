@@ -7,7 +7,7 @@ from flask import Flask
 from flask import current_app
 from flask_restful import Resource, Api, reqparse
 from flask_restful.inputs import datetime_from_iso8601
-from typing import Union
+from typing import Any, Dict, Union
 # Local imports
 from apis.APIResult import APIResult, RESTType, ResultStatus
 from apis import APIUtils
