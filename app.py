@@ -1,5 +1,4 @@
 import sys
-import logging
 from flask import Flask
 # Local imports
 from config.config import settings
@@ -10,59 +9,63 @@ application = Flask(__name__)
 application.logger.setLevel(settings['DEBUG_LEVEL'])
 application.secret_key = b'thisisafakesecretkey'
 
+def _logImportErr(msg:str, err:ImportError):
+    application.logger.warning(msg)
+    application.logger.exception(err)
+
 try:
     from apis.ClassroomAPI import ClassroomAPI
 except ImportError as err:
-    application.logger.warning("Could not import Classroom API:")
-    application.logger.exception(err)
+    _logImportErr(msg="Could not import Classroom API:", err=err)
 else:
     ClassroomAPI.register(application)
 
 try:
     from apis.DashboardAPI import DashboardAPI
 except ImportError as err:
-    application.logger.warning("Could not import Dashboard API:")
-    application.logger.exception(err)
+    _logImportErr(msg="Could not import Dashboard API:", err=err)
 else:
     DashboardAPI.register(application)
 
 try:
+    from apis.PopulationAPI import PopulationAPI
+except ImportError as err:
+    _logImportErr(msg="Could not import Population API:", err=err)
+else:
+    PopulationAPI.register(application)
+
+try:
     from apis.PlayerAPI import PlayerAPI
 except ImportError as err:
-    application.logger.warning("Could not import Player API:")
-    application.logger.exception(err)
+    _logImportErr(msg="Could not import Player API:", err=err)
 else:
     PlayerAPI.register(application)
 
 try:
     from apis.SessionAPI import SessionAPI
 except ImportError as err:
-    application.logger.warning("Could not import Session API:")
-    application.logger.exception(err)
+    _logImportErr(msg="Could not import Session API:", err=err)
 else:
     SessionAPI.register(application)
 
 try:
     from apis.GameStateAPI import GameStateAPI
 except ImportError as err:
-    application.logger.warning("Could not import GameStateAPI API:")
-    application.logger.exception(err)
+    _logImportErr(msg="Could not import GameState API:", err=err)
 else:
     GameStateAPI.register(application)
 
 try:
     from apis.HelloAPI import HelloAPI
 except ImportError as err:
-    application.logger.warning("Could not import Hello API:")
-    application.logger.exception(err)
+    _logImportErr(msg="Could not import Hello API:", err=err)
 else:
     HelloAPI.register(application)
 
 try:
     from apis.PlayerIDAPI import PlayerIDAPI
 except ImportError as err:
-    application.logger.warning("Could not import Player ID API:")
-    application.logger.exception(err)
+    _logImportErr(msg="Could not import Player ID API:", err=err)
 else:
     PlayerIDAPI.register(application)
 
@@ -75,6 +78,5 @@ def home() -> str:
     """
     return "Home"
     
-
 # if __name__ == '__main__':
 # 	application.run(debug=True)
