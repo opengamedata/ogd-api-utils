@@ -62,8 +62,8 @@ class PlayerAPI:
                     result["ids"] = _range.GetIDs()
                 os.chdir("../../../../")
             except Exception as err:
-                ret_val.ServerErrored(f"ERROR: Unknown error while processing data")
-                print(f"Got exception: {str(err)}")
+                ret_val.ServerErrored(f"ERROR: Unknown error while processing PlayerList request")
+                print(f"Got exception for PlayerList request:\ngame={game_id}\n{str(err)}")
                 print(traceback.format_exc())
             else:
                 if result.get('ids') is not None:
@@ -113,8 +113,8 @@ class PlayerAPI:
                     current_app.logger.warning("_interface was None")
                 os.chdir("../../../../")
             except Exception as err:
-                ret_val.ServerErrored(f"ERROR: Unknown error while processing data")
-                print(f"Got exception: {str(err)}")
+                ret_val.ServerErrored(f"ERROR: Unknown error while processing Players request")
+                print(f"Got exception for Players request:\ngame={game_id}\n{str(err)}")
                 print(traceback.format_exc())
             else:
                 if result.get('players') is not None:
@@ -167,8 +167,8 @@ class PlayerAPI:
                     current_app.logger.warning("_interface was None")
                 os.chdir("../../../../")
             except Exception as err:
-                ret_val.ServerErrored(f"ERROR: Unknown error while processing data")
-                print(f"Got exception: {str(err)}")
+                ret_val.ServerErrored(f"ERROR: Unknown error while processing Player request")
+                print(f"Got exception for Player request:\ngame={game_id}, player={player_id}\nerror={str(err)}")
                 print(traceback.format_exc())
             else:
                 if result.get('player') is not None:

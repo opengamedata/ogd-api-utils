@@ -56,8 +56,8 @@ class DashboardAPI:
                         feature_list.append(name)
                 os.chdir("../../../../")
             except Exception as err:
-                ret_val.ServerErrored(f"ERROR: Unknown error while attempting to get metric list")
-                print(f"Got exception: {str(err)}")
+                ret_val.ServerErrored(f"ERROR: Unknown error while processing FeatureList request")
+                print(f"Got exception for FeatureList request:\ngame={game_id}\n{str(err)}")
                 print(traceback.format_exc())
             else:
                 if feature_list != []:
@@ -116,8 +116,8 @@ class DashboardAPI:
                     current_app.logger.warning("_interface was None")
                 os.chdir("../../../../")
             except Exception as err:
-                ret_val.ServerErrored(f"ERROR: Unknown error while processing data")
-                print(f"Got exception: {str(err)}")
+                ret_val.ServerErrored(f"ERROR: Unknown error while processing Population request")
+                print(f"Got exception for Population request:\ngame={game_id}\n{str(err)}")
                 print(traceback.format_exc())
             else:
                 if result.get('population') is not None:
