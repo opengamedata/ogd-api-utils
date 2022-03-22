@@ -13,8 +13,7 @@ from typing import Any, Dict, List, Tuple, Union
 from apis import APIUtils
 from config.config import settings
 from apis.APIResult import APIResult, RESTType, ResultStatus
-from opengamedata.interfaces.MySQLInterface import MySQLInterface
-from opengamedata.interfaces.BigQueryInterface import BigQueryInterface
+from opengamedata.interfaces.DataInterface import DataInterface
 from opengamedata.managers.ExportManager import ExportManager
 from opengamedata.schemas.GameSchema import GameSchema
 from opengamedata.schemas.Request import Request, ExporterRange, ExporterTypes, ExporterLocations
@@ -98,7 +97,7 @@ class DashboardAPI:
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
-                _interface = APIUtils.gen_interface(game_id=game_id)
+                _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
                     current_app.logger.debug(f"Made it into clause for doing request.")
                     _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=_interface)

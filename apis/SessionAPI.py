@@ -7,10 +7,12 @@ from flask import Flask
 from flask import current_app
 from flask_restful import Resource, Api, reqparse
 from flask_restful.inputs import datetime_from_iso8601
+from typing import Union
 # Local imports
 from apis.APIResult import APIResult, RESTType, ResultStatus
 from apis import APIUtils
 from config.config import settings
+from opengamedata.interfaces.DataInterface import DataInterface
 from opengamedata.managers.ExportManager import ExportManager
 from opengamedata.schemas.Request import Request, ExporterRange, ExporterTypes, ExporterLocations
 
@@ -55,7 +57,7 @@ class SessionAPI:
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
-                _interface = APIUtils.gen_interface(game_id=game_id)
+                _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _interface is not None:
                     _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=_interface)
                     result["ids"] = _range.GetIDs()
@@ -94,7 +96,7 @@ class SessionAPI:
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
-                _interface = APIUtils.gen_interface(game_id=game_id)
+                _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _session_ids is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(ids=_session_ids, source=_interface)
                     _exp_types = ExporterTypes(events=False, sessions=True, players=False, population=False)
@@ -148,7 +150,7 @@ class SessionAPI:
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
-                _interface = APIUtils.gen_interface(game_id=game_id)
+                _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(ids=[session_id], source=_interface)
                     _exp_types = ExporterTypes(events=False, sessions=True, players=False, population=False)
