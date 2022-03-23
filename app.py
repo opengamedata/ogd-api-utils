@@ -9,9 +9,9 @@ application = Flask(__name__)
 application.logger.setLevel(settings['DEBUG_LEVEL'])
 application.secret_key = b'thisisafakesecretkey'
 
-def _logImportErr(msg:str, err:ImportError):
+def _logImportErr(msg:str, error:ImportError):
     application.logger.warning(msg)
-    application.logger.exception(err)
+    application.logger.exception(error)
 
 try:
     from apis.ClassroomAPI import ClassroomAPI
