@@ -1,10 +1,10 @@
-# global imports
+# import libraries
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
 from mysql.connector import Error as MySQLError
 from mysql.connector.connection import MySQLConnection
 from typing import Any, Dict, List, Tuple, Union
-# local imports
+# import locals
 from config.config import settings
 from opengamedata.interfaces.MySQLInterface import SQL
 

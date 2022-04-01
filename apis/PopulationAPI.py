@@ -1,4 +1,4 @@
-# Global imports
+# import libraries
 import json
 import os
 import traceback
@@ -8,7 +8,7 @@ from flask import current_app
 from flask_restful import Resource, Api, reqparse
 from flask_restful.inputs import datetime_from_iso8601
 from typing import Any, Dict, Union
-# Local imports
+# import locals
 from apis.APIResult import APIResult, RESTType, ResultStatus
 from apis import APIUtils
 from config.config import settings

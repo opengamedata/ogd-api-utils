@@ -1,5 +1,5 @@
 # Rudolph, the red-nosed reindexer...
-# global imports
+# import libraries
 import argparse
 import json
 import logging

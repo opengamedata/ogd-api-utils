@@ -1,8 +1,8 @@
-# Global imports
+# import libraries
 import json
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
-# Local imports
+# import locals
 from config.config import settings
 
 class HelloAPI:

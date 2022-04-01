@@ -1,7 +1,7 @@
-# Global imports
+# import libraries
 import json
 from typing import Any, List, Union
-# Local imports
+# import locals
 from config.config import settings
 from opengamedata.interfaces.MySQLInterface import MySQLInterface
 from opengamedata.interfaces.BigQueryInterface import BigQueryInterface
