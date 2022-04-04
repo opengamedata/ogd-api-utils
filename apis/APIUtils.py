@@ -1,5 +1,6 @@
 # import libraries
 import json
+from flask import current_app
 from typing import Any, List, Union
 # import locals
 from config.config import settings
@@ -35,11 +36,11 @@ def gen_interface(game_id):
         # set up interface and request
         if src_map['interface'] == "MySQL":
             ret_val = MySQLInterface(game_id, settings=settings)
-            print(f"Using MySQLInterface for {game_id}")
+            current_app.logger.info(f"Using MySQLInterface for {game_id}")
         elif src_map['interface'] == "BigQuery":
             ret_val = BigQueryInterface(game_id=game_id, settings=settings)
-            print(f"Using BigQueryInterface for {game_id}")
+            current_app.logger.info(f"Using BigQueryInterface for {game_id}")
         else:
             ret_val = MySQLInterface(game_id, settings=settings)
-            print(f"Could not find a valid interface for {game_id}, defaulting to MySQL!")
+            current_app.logger.warning(f"Could not find a valid interface for {game_id}, defaulting to MySQL!")
     return ret_val
