@@ -53,15 +53,12 @@ class PopulationAPI:
             _end_time   = args.get('end_datetime')   or _end_time
             _start_time = args.get('start_datetime') or _start_time
             _metrics    = APIUtils.parse_list(args.get('metrics') or "")
-            current_app.logger.debug(f"Metrics list received from request: {args.get('metrics')}")
-            current_app.logger.debug(f"Metrics list parsed: {_metrics}")
 
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
-                    current_app.logger.debug(f"Made it into clause for doing request.")
                     _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=_interface)
                     _exp_types = ExporterTypes(events=False, sessions=False, players=False, population=True)
                     _exp_locs = ExporterLocations(files=False, dict=True)
