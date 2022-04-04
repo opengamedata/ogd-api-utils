@@ -15,18 +15,18 @@ from sshtunnel import SSHTunnelForwarder
 # # import local files
 import utils
 from config.config import settings
-from extractors.Extractor import Extractor
-from extractors.CrystalExtractor import CrystalExtractor
-from extractors.WaveExtractor import WaveExtractor
-from extractors.LakelandExtractor import LakelandExtractor
-from schemas.TableSchema import TableSchema
-from interfaces.MySQLInterface import MySQLInterface, SQL
-from managers.SessionProcessor import SessionProcessor
-from models.Model import ModelInputType
+from opengamedata.extractors.Extractor import Extractor
+from opengamedata.extractors.CrystalExtractor import CrystalExtractor
+from opengamedata.extractors.WaveExtractor import WaveExtractor
+from opengamedata.extractors.LakelandExtractor import LakelandExtractor
+from opengamedata.schemas.TableSchema import TableSchema
+from opengamedata.interfaces.MySQLInterface import MySQLInterface, SQL
+from opengamedata.managers.SessionProcessor import SessionProcessor
+from opengamedata.models.Model import ModelInputType
 # from models.Model import *
 from realtime.ModelManager import ModelManager
-from managers.Request import Request, ExporterFiles, ExporterRange
-from schemas.GameSchema import GameSchema
+from opengamedata.schemas.Request import Request, ExporterLocations, ExporterRange, IDMode
+from opengamedata.schemas.GameSchema import GameSchema
 
 ## Class to handle API calls for the realtime page.
 #  Defines a bunch of static handler functions, one for each valid API call.
@@ -108,7 +108,7 @@ class RTServer:
         if features is not None and type(features) == str:
             features = features.split(",")
         interface = MySQLInterface(game_id=game_id, settings=settings)
-        range = ExporterRange.FromIDs(ids=[int(sess_id)], source=interface)
+        range = ExporterRange.FromIDs(source=interface, ids=[int(sess_id)], IDMode.SESSION)
         files = ExporterFiles(False, False, False)
         request = Request(interface=interface, range=range, exporter_files=files)
         #request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
@@ -270,7 +270,7 @@ class RTServer:
             # Retrieve data for the session, before we start looping over all sessions.
             start_time = datetime.now()
             interface = MySQLInterface(game_id=game_id, settings=settings)
-            range = ExporterRange.FromIDs(ids=[int(sess_id)], source=interface)
+            range = ExporterRange.FromIDs(source=interface, ids=[int(sess_id)], id_mode=IDMode.SESSION)
             files = ExporterFiles(False, False, False)
             request = Request(interface=interface, range=range, exporter_files=files)
             #request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
