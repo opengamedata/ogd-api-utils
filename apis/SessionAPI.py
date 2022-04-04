@@ -63,9 +63,9 @@ class SessionAPI:
                     result["ids"] = _range.GetIDs()
                 os.chdir("../../../../")
             except Exception as err:
-                ret_val.ServerErrored(f"ERROR: Unknown error while processing SessionList request")
-                print(f"Got exception for SessionList request:\ngame={game_id}\n{str(err)}")
-                print(traceback.format_exc())
+                ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing SessionList request")
+                current_app.logger.error(f"Got exception for SessionList request:\ngame={game_id}\n{str(err)}")
+                current_app.logger.error(traceback.format_exc())
             else:
                 if result.get('ids') is not None:
                     ret_val.RequestSucceeded(msg="SUCCESS: Got ID list for given date range", val=result['ids'])
@@ -114,9 +114,9 @@ class SessionAPI:
                     current_app.logger.warning("_interface was None")
                 os.chdir("../../../../")
             except Exception as err:
-                ret_val.ServerErrored(f"ERROR: Unknown error while processing Sessions request")
-                print(f"Got exception for Sessions request:\ngame={game_id}\n{str(err)}")
-                print(traceback.format_exc())
+                ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing Sessions request")
+                current_app.logger.error(f"Got exception for Sessions request:\ngame={game_id}\n{str(err)}")
+                current_app.logger.error(traceback.format_exc())
             else:
                 if result.get('sessions') is not None:
                     ret_val.RequestSucceeded(
@@ -168,9 +168,9 @@ class SessionAPI:
                     current_app.logger.warning("_interface was None")
                 os.chdir("../../../../")
             except Exception as err:
-                ret_val.ServerErrored(f"ERROR: Unknown error while processing Session request")
-                print(f"Got exception for Session request:\ngame={game_id}, player={session_id}\n{str(err)}")
-                print(traceback.format_exc())
+                ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing Session request")
+                current_app.logger.error(f"Got exception for Session request:\ngame={game_id}, player={session_id}\n{str(err)}")
+                current_app.logger.error(traceback.format_exc())
             else:
                 if result.get('session') is not None:
                     ret_val.RequestSucceeded(
