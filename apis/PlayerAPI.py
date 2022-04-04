@@ -14,7 +14,7 @@ from apis import APIUtils
 from config.config import settings
 from opengamedata.interfaces.DataInterface import DataInterface
 from opengamedata.managers.ExportManager import ExportManager
-from opengamedata.schemas.Request import Request, ExporterRange, ExporterTypes, ExporterLocations
+from opengamedata.schemas.Request import Request, ExporterRange, ExporterTypes, ExporterLocations, IDMode
 
 class PlayerAPI:
     """Class to define an API for the developer/designer dashboard"""
@@ -40,7 +40,7 @@ class PlayerAPI:
             :return: _description_
             :rtype: _type_
             """
-            print("Received player list request.")
+            current_app.logger.info(f"Received request for {game_id} player list.")
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
             _end_time   : datetime = datetime.now()
@@ -59,7 +59,7 @@ class PlayerAPI:
                 os.chdir("var/www/opengamedata/")
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _interface is not None:
-                    _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=_interface)
+                    _range = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
                     result["ids"] = _range.GetIDs()
                 os.chdir("../../../../")
             except Exception as err:
@@ -83,7 +83,7 @@ class PlayerAPI:
             :return: _description_
             :rtype: _type_
             """
-            print("Received players request.")
+            current_app.logger.info(f"Received request for {game_id} players.")
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
             parser = reqparse.RequestParser()
@@ -98,7 +98,7 @@ class PlayerAPI:
                 os.chdir("var/www/opengamedata/")
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _player_ids is not None and _interface is not None:
-                    _range = ExporterRange.FromIDs(ids=_player_ids, source=_interface)
+                    _range = ExporterRange.FromIDs(source=_interface, ids=_player_ids, id_mode=IDMode.PLAYER)
                     _exp_types = ExporterTypes(events=False, sessions=False, players=True, population=False)
                     _exp_locs = ExporterLocations(files=False, dict=True)
                     request = Request(interface=_interface, range=_range,
@@ -135,25 +135,26 @@ class PlayerAPI:
 
             :param game_id: _description_
             :type game_id: _type_
-            :param session_id: _description_
-            :type session_id: _type_
+            :param player_id: _description_
+            :type player_id: _type_
             :return: _description_
             :rtype: _type_
             """
-            print("Received player request.")
+            current_app.logger.info(f"Received request for {game_id} player {player_id}.")
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
             parser = reqparse.RequestParser()
             parser.add_argument("metrics", type=str, required=False, default="[]", nullable=True, help="Got bad list of metrics, defaulting to all.")
             args : Dict[str, Any] = parser.parse_args()
 
-            _metrics    = APIUtils.parse_list(args.get('metrics') or "")
+            current_app.logger.debug(f"Unparsed 'metrics' list from args: {args.get('metrics')}")
+            _metrics = APIUtils.parse_list(args.get('metrics') or "")
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
-                    _range = ExporterRange.FromIDs(ids=[player_id], source=_interface)
+                    _range = ExporterRange.FromIDs(source=_interface, ids=[player_id], id_mode=IDMode.PLAYER)
                     _exp_types = ExporterTypes(events=False, sessions=False, players=True, population=False)
                     _exp_locs = ExporterLocations(files=False, dict=True)
                     request = Request(interface=_interface, range=_range,

@@ -59,7 +59,7 @@ class PopulationAPI:
                 os.chdir("var/www/opengamedata/")
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
-                    _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=_interface)
+                    _range = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
                     _exp_types = ExporterTypes(events=False, sessions=False, players=False, population=True)
                     _exp_locs = ExporterLocations(files=False, dict=True)
                     request = Request(interface=_interface, range=_range,

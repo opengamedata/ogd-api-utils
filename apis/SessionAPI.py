@@ -14,7 +14,7 @@ from apis import APIUtils
 from config.config import settings
 from opengamedata.interfaces.DataInterface import DataInterface
 from opengamedata.managers.ExportManager import ExportManager
-from opengamedata.schemas.Request import Request, ExporterRange, ExporterTypes, ExporterLocations
+from opengamedata.schemas.Request import Request, ExporterRange, ExporterTypes, ExporterLocations, IDMode
 
 class SessionAPI:
     """Class to define an API for the developer/designer dashboard"""
@@ -59,7 +59,7 @@ class SessionAPI:
                 os.chdir("var/www/opengamedata/")
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _interface is not None:
-                    _range = ExporterRange.FromDateRange(date_min=_start_time, date_max=_end_time, source=_interface)
+                    _range = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
                     result["ids"] = _range.GetIDs()
                 os.chdir("../../../../")
             except Exception as err:
@@ -98,7 +98,7 @@ class SessionAPI:
                 os.chdir("var/www/opengamedata/")
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _session_ids is not None and _interface is not None:
-                    _range = ExporterRange.FromIDs(ids=_session_ids, source=_interface)
+                    _range = ExporterRange.FromIDs(source=_interface, ids=_session_ids, id_mode=IDMode.SESSION)
                     _exp_types = ExporterTypes(events=False, sessions=True, players=False, population=False)
                     _exp_locs = ExporterLocations(files=False, dict=True)
                     request = Request(interface=_interface, range=_range,
@@ -152,7 +152,7 @@ class SessionAPI:
                 os.chdir("var/www/opengamedata/")
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
-                    _range = ExporterRange.FromIDs(ids=[session_id], source=_interface)
+                    _range = ExporterRange.FromIDs(source=_interface, ids=[session_id], id_mode=IDMode.SESSION)
                     _exp_types = ExporterTypes(events=False, sessions=True, players=False, population=False)
                     _exp_locs = ExporterLocations(files=False, dict=True)
                     request = Request(interface=_interface, range=_range,
