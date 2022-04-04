@@ -7,7 +7,7 @@ from flask import Flask
 from flask import current_app
 from flask_restful import Resource, Api, reqparse
 from flask_restful.inputs import datetime_from_iso8601
-from typing import Union
+from typing import Any, Dict, Union
 # import locals
 from apis.APIResult import APIResult, RESTType, ResultStatus
 from apis import APIUtils
@@ -49,10 +49,11 @@ class PlayerAPI:
             parser = reqparse.RequestParser()
             parser.add_argument("start_datetime", type=datetime_from_iso8601, required=False, default=_start_time, nullable=True, help="Invalid starting date, defaulting to 1 hour ago.")
             parser.add_argument("end_datetime",   type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time.")
-            args = parser.parse_args()
+            args : Dict[str, Any] = parser.parse_args()
 
             _end_time   = args.get('end_datetime')   or _end_time
             _start_time = args.get('start_datetime') or _start_time
+
             try:
                 result = {}
                 os.chdir("var/www/opengamedata/")
@@ -86,8 +87,8 @@ class PlayerAPI:
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
             parser = reqparse.RequestParser()
-            parser.add_argument("player_ids")
-            parser.add_argument("metrics")
+            parser.add_argument("player_ids", type=str, required=False, default="[]", nullable=True, help="Got bad list of player ids, defaulting to [].")
+            parser.add_argument("metrics",    type=str, required=False, default="[]", nullable=True, help="Got bad list of metrics, defaulting to all.")
             args = parser.parse_args()
 
             _metrics     = APIUtils.parse_list(args.get('metrics') or "")
@@ -143,8 +144,8 @@ class PlayerAPI:
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
             parser = reqparse.RequestParser()
-            parser.add_argument("metrics")
-            args = parser.parse_args()
+            parser.add_argument("metrics", type=str, required=False, default="[]", nullable=True, help="Got bad list of metrics, defaulting to all.")
+            args : Dict[str, Any] = parser.parse_args()
 
             _metrics    = APIUtils.parse_list(args.get('metrics') or "")
             try:

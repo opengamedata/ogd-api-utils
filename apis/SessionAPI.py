@@ -87,8 +87,8 @@ class SessionAPI:
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
             parser = reqparse.RequestParser()
-            parser.add_argument("session_ids")
-            parser.add_argument("metrics")
+            parser.add_argument("session_ids", type=str, required=False, default="[]", nullable=True, help="Got bad list of session ids, defaulting to [].")
+            parser.add_argument("metrics",    type=str, required=False, default="[]", nullable=True, help="Got bad list of metrics, defaulting to all.")
             args = parser.parse_args()
 
             _metrics     = APIUtils.parse_list(args.get('metrics') or "")
@@ -143,7 +143,7 @@ class SessionAPI:
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
             parser = reqparse.RequestParser()
-            parser.add_argument("metrics")
+            parser.add_argument("metrics", type=str, required=False, default="[]", nullable=True, help="Got bad list of metrics, defaulting to all.")
             args = parser.parse_args()
 
             _metrics    = APIUtils.parse_list(args.get('metrics') or "")
