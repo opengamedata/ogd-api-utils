@@ -1,8 +1,8 @@
-# global imports
+# import libraries
 import requests
 from datetime import datetime
 from unittest import TestCase
-# local imports
+# import locals
 from tests.t_config import settings
 
 class t_DashboardAPI(TestCase):

@@ -1,6 +1,6 @@
 import sys
 from flask import Flask
-# Local imports
+# import locals
 from config.config import settings
 if not settings['OGD_CORE_PATH'] in sys.path:
     sys.path.append(settings['OGD_CORE_PATH'])

@@ -1,4 +1,4 @@
-# global imports
+# import libraries
 import uuid
 from os import stat
 from flask import Flask, session
@@ -9,7 +9,7 @@ from google.auth.exceptions import GoogleAuthError
 from mysql.connector import Error as MySQLError
 from mysql.connector.connection import MySQLConnection
 from typing import Any, Dict, Union
-# local imports
+# import locals
 from config.config import settings
 from opengamedata.interfaces.MySQLInterface import SQL
 
