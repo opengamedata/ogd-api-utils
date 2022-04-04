@@ -40,7 +40,7 @@ class PlayerAPI:
             :return: _description_
             :rtype: _type_
             """
-            print("Received session list request.")
+            print("Received player list request.")
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
             _end_time   : datetime = datetime.now()
@@ -62,9 +62,9 @@ class PlayerAPI:
                     result["ids"] = _range.GetIDs()
                 os.chdir("../../../../")
             except Exception as err:
-                ret_val.ServerErrored(f"ERROR: Unknown error while processing PlayerList request")
-                print(f"Got exception for PlayerList request:\ngame={game_id}\n{str(err)}")
-                print(traceback.format_exc())
+                ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing PlayerList request")
+                current_app.logger.error(f"Got exception for PlayerList request:\ngame={game_id}\n{str(err)}")
+                current_app.logger.error(traceback.format_exc())
             else:
                 if result.get('ids') is not None:
                     ret_val.RequestSucceeded(msg="SUCCESS: Got ID list for given date range", val=result['ids'])
@@ -82,7 +82,7 @@ class PlayerAPI:
             :return: _description_
             :rtype: _type_
             """
-            print("Received session request.")
+            print("Received players request.")
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
             parser = reqparse.RequestParser()
@@ -113,9 +113,9 @@ class PlayerAPI:
                     current_app.logger.warning("_interface was None")
                 os.chdir("../../../../")
             except Exception as err:
-                ret_val.ServerErrored(f"ERROR: Unknown error while processing Players request")
-                print(f"Got exception for Players request:\ngame={game_id}\n{str(err)}")
-                print(traceback.format_exc())
+                ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing Players request")
+                current_app.logger.error(f"Got exception for Players request:\ngame={game_id}\n{str(err)}")
+                current_app.logger.error(traceback.format_exc())
             else:
                 if result.get('players') is not None:
                     ret_val.RequestSucceeded(
@@ -139,6 +139,7 @@ class PlayerAPI:
             :return: _description_
             :rtype: _type_
             """
+            print("Received player request.")
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
             parser = reqparse.RequestParser()
@@ -167,9 +168,9 @@ class PlayerAPI:
                     current_app.logger.warning("_interface was None")
                 os.chdir("../../../../")
             except Exception as err:
-                ret_val.ServerErrored(f"ERROR: Unknown error while processing Player request")
-                print(f"Got exception for Player request:\ngame={game_id}, player={player_id}\nerror={str(err)}")
-                print(traceback.format_exc())
+                ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing Player request")
+                current_app.logger.error(f"Got exception for Player request:\ngame={game_id}, player={player_id}\nerror={str(err)}")
+                current_app.logger.error(traceback.format_exc())
             else:
                 if result.get('player') is not None:
                     ret_val.RequestSucceeded(
