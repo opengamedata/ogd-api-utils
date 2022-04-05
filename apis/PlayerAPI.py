@@ -14,7 +14,8 @@ from apis import APIUtils
 from config.config import settings
 from opengamedata.interfaces.DataInterface import DataInterface
 from opengamedata.managers.ExportManager import ExportManager
-from opengamedata.schemas.Request import Request, ExporterRange, ExporterTypes, ExporterLocations, IDMode
+from opengamedata.schemas.IDMode import IDMode
+from opengamedata.schemas.Request import Request, ExporterRange, ExporterTypes, ExporterLocations
 
 class PlayerAPI:
     """Class to define an API for the developer/designer dashboard"""
