@@ -16,7 +16,8 @@ import traceback
 from datetime import datetime
 # import local files
 import utils
-from managers.Request import Request, ExporterFiles, ExporterRange
+from opengamedata.schemas.Request import Request, ExporterLocations
+from opengamedata.schemas.ExporterRange import ExporterRange
 from realtime.RTServer import RTServer
 from realtime.SimRTServer import SimRTServer
 
