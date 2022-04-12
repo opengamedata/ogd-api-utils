@@ -54,22 +54,20 @@ class SessionAPI:
 
             _end_time   = args.get('end_datetime')   or _end_time
             _start_time = args.get('start_datetime') or _start_time
+            _range : Union[ExporterRange, None] = None
             try:
-                result = {}
                 os.chdir("var/www/opengamedata/")
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _interface is not None:
                     _range = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
-                    result["ids"] = _range.GetIDs()
                 os.chdir("../../../../")
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing SessionList request")
                 current_app.logger.error(f"Got exception for SessionList request:\ngame={game_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
-                val = result.get('ids')
-                if val is not None:
-                    ret_val.RequestSucceeded(msg="SUCCESS: Got ID list for given date range", val=val)
+                if _range is not None:
+                    ret_val.RequestSucceeded(msg="SUCCESS: Got ID list for given date range", val=_range.IDs)
                 else:
                     ret_val.RequestErrored("FAIL: Did not find IDs in the given date range")
             return ret_val.ToDict()
