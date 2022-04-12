@@ -68,8 +68,9 @@ class PlayerAPI:
                 current_app.logger.error(f"Got exception for PlayerList request:\ngame={game_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
-                if result.get('ids') is not None:
-                    ret_val.RequestSucceeded(msg="SUCCESS: Got ID list for given date range", val=result['ids'])
+                val = result.get('ids')
+                if val is not None:
+                    ret_val.RequestSucceeded(msg="SUCCESS: Got ID list for given date range", val=val)
                 else:
                     ret_val.RequestErrored("FAIL: Did not find IDs in the given date range")
             return ret_val.ToDict()
@@ -119,10 +120,11 @@ class PlayerAPI:
                 current_app.logger.error(f"Got exception for Players request:\ngame={game_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
-                if result.get('players') is not None:
+                val = result.get('players')
+                if val is not None:
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for given sessions",
-                        val=result['players']
+                        val=val
                     )
                 else:
                     current_app.logger.debug(f"Couldn't find anything in result[players], result was:\n{result}")
@@ -175,10 +177,11 @@ class PlayerAPI:
                 current_app.logger.error(f"Got exception for Player request:\ngame={game_id}, player={player_id}\nerror={str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
-                if result.get('player') is not None:
+                val = result.get('players')
+                if val is not None:
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for the given session",
-                        val=result['player']
+                        val=val
                     )
                 else:
                     current_app.logger.debug(f"Couldn't find anything in result[player], result was:\n{result}")

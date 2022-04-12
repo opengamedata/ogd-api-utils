@@ -79,9 +79,10 @@ class PopulationAPI:
                 print(f"Got exception for Population request:\ngame={game_id}\n{str(err)}")
                 print(traceback.format_exc())
             else:
-                if result.get('population') is not None:
-                    cols = [str(item) for item in result['population']['cols']]
-                    vals = [str(item) for item in result['population']['vals']]
+                val = result.get('population')
+                if val is not None:
+                    cols = [str(item) for item in val['cols']]
+                    vals = [str(item) for item in val['vals']]
                     ct = min(len(cols), len(vals))
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated population features",
