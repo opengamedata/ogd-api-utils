@@ -6,7 +6,7 @@ from typing import Any, List, Union
 from config.config import settings
 from opengamedata.interfaces.MySQLInterface import MySQLInterface
 from opengamedata.interfaces.BigQueryInterface import BigQueryInterface
-    
+
 def parse_list(list_str:str) -> Union[List[Any], None]:
     """Simple utility to parse a string containing a bracketed list into a Python list.
 
