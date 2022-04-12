@@ -1,21 +1,54 @@
-from enum import Enum
+from enum import IntEnum
 from typing import Any
 
-class RESTType(Enum):
+class RESTType(IntEnum):
+    """Simple enumerated type to track type of a REST request.
+    """
     GET = 1
     POST = 2
     PUT = 3
 
-class ResultStatus(Enum):
+    def __str__(self):
+        """Stringify function for RESTTypes.
+
+        :return: Simple string version of the name of a RESTType
+        :rtype: _type_
+        """
+        if self.value == RESTType.GET:
+            return "GET"
+        elif self.value == RESTType.POST:
+            return "POST"
+        elif self.value == RESTType.PUT:
+            return "PUT"
+        else:
+            return "INVALID"
+
+class ResultStatus(IntEnum):
+    """Simple enumerated type to track the status of an API request result.
+    """
     NONE = 1
     SUCCESS = 2
     ERR_SRV = 3
     ERR_REQ = 4
 
-class APIResult:
-    RESTtoString = {1:"GET", 2:"POST", 3:"PUT"}
-    StatusString = {1:"DID_NOTHING", 2:"SUCCESS", 3:"ERR_SRV", 4:"ERR_REQ"}
+    def __str__(self):
+        """Stringify function for ResultStatus objects.
 
+        :return: Simple string version of the name of a ResultStatus
+        :rtype: _type_
+        """
+        if self.value == ResultStatus.NONE:
+            return "NONE"
+        elif self.value == ResultStatus.SUCCESS:
+            return "SUCCESS"
+        elif self.value == ResultStatus.ERR_SRV:
+            return "SERVER ERROR"
+        elif self.value == ResultStatus.ERR_REQ:
+            return "REQUEST ERROR"
+        else:
+            return "INVALID"
+
+class APIResult:
     def __init__(self, req_type:RESTType, val:Any, msg:str, status:ResultStatus):
         self._type   : RESTType     = req_type
         self._val    : Any          = val
@@ -46,10 +79,10 @@ class APIResult:
 
     def ToDict(self):
         return {
-            "type"   : APIResult.RESTtoString[self._type.value],
+            "type"   : str(self._type),
             "val"    : self._val,
             "msg"    : self._msg,
-            "status" : APIResult.StatusString[self._status.value]
+            "status" : str(self._status)
         }
 
     def Type(self):
