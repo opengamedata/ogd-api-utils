@@ -4,9 +4,9 @@ from unittest import TestCase
 # import locals
 from tests.t_config import settings
 
-class t_PlayerAPI(TestCase):
+class t_PlayerIDAPI(TestCase):
     def RunAll(self):
-        t = t_PlayerAPI.t_Player()
+        t = t_PlayerIDAPI.t_Player()
         t.test_home()
         t.test_put()
         t.test_get()
