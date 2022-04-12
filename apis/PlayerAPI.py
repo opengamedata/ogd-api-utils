@@ -61,7 +61,7 @@ class PlayerAPI:
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _interface is not None:
                     _range = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
-                    result["ids"] = _range.GetIDs()
+                    result["ids"] = _range.IDs
                 os.chdir("../../../../")
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing PlayerList request")
