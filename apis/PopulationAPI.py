@@ -1,3 +1,5 @@
+"""Module for the Population API code
+"""
 # import libraries
 import os
 import traceback

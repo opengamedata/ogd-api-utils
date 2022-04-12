@@ -1,3 +1,5 @@
+"""Module for the Dashboard API code
+"""
 # import libraries
 import os
 import traceback

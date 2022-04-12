@@ -1,5 +1,6 @@
+"""Module for the Session API code
+"""
 # import libraries
-import json
 import os
 import traceback
 from datetime import datetime, timedelta

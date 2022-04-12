@@ -1,5 +1,6 @@
+"""Module for the Player API code
+"""
 # import libraries
-import json
 import os
 import traceback
 from datetime import datetime, timedelta
