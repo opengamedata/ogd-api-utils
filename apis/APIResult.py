@@ -85,26 +85,50 @@ class APIResult:
             "status" : str(self._status)
         }
 
-    def Type(self):
+    @property
+    def Type(self) -> RESTType:
+        """Property for the type of REST request
+
+        :return: A RESTType representing the type of REST request
+        :rtype: _type_
+        """
         return self._type
-
-    def Value(self):
-        return self._val
-
-    def Message(self):
-        return self._msg
-
-    def Status(self):
-        return self._status
-
-    def SetType(self, new_type:RESTType):
+    @Type.setter
+    def Type(self, new_type:RESTType):
         self._type = new_type
 
-    def SetValue(self, new_val:Any):
+    @property
+    def Value(self) -> Any:
+        """Property for the value of the request result.
+
+        :return: Some value, of any type, returned from the request.
+        :rtype: Any
+        """
+        return self._val
+    @Value.setter
+    def Value(self, new_val:Any):
         self._val = new_val
 
-    def SetMessage(self, new_msg:str):
+    @property
+    def Message(self) -> str:
+        """Property for the message associated with a request result.
+
+        :return: A string message giving details on the result of the request.
+        :rtype: str
+        """
+        return self._msg
+    @Message.setter
+    def Message(self, new_msg:str):
         self._msg = new_msg
 
-    def SetStatus(self, new_status:ResultStatus):
+    @property
+    def Status(self) -> ResultStatus:
+        """Property for the status of the request.
+
+        :return: A ResultStatus indicating whether request is/was successful, incomplete, failed, etc.
+        :rtype: ResultStatus
+        """
+        return self._status
+    @Status.setter
+    def Status(self, new_status:ResultStatus):
         self._status = new_status
