@@ -5,6 +5,8 @@ from unittest import TestCase
 from tests.t_config import settings
 
 class t_PlayerIDAPI(TestCase):
+    """Testbed class for the PlayerID API.
+    """
     def RunAll(self):
         t = t_PlayerIDAPI.t_Player()
         t.test_home()
