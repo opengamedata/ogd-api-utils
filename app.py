@@ -21,6 +21,13 @@ else:
     ClassroomAPI.register(application)
 
 try:
+    from apis.CodingAPI import CodingAPI
+except ImportError as err:
+    _logImportErr(msg="Could not import Coding API:", err=err)
+else:
+    CodingAPI.register(application)
+
+try:
     from apis.DashboardAPI import DashboardAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Dashboard API:", err=err)
