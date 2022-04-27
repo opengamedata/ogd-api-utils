@@ -4,8 +4,7 @@
 import os
 import traceback
 from datetime import datetime, timedelta
-from flask import Flask
-from flask import current_app
+from flask import Flask, current_app
 from flask_restful import Resource, Api, reqparse
 from flask_restful.inputs import datetime_from_iso8601
 from typing import Any, Dict, Union
