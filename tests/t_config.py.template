@@ -4,6 +4,7 @@ settings = {
 
 EnabledTests = {
     "CLASS":True,
+    "CODE":True,
     "DASH":True,
     "GAME_STATE":True,
     "HELLO":True,
