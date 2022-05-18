@@ -24,20 +24,6 @@ class CodingAPI:
 
     class CodeList(Resource):
         def get(self, game_id:str):
-            """GET request for a player's game state.
-            Located at <server_addr>/player/<player_id>/game/<game_id>/state
-            Optionally takes 'count' and 'offset' as request parameters.
-            Count controls the number of states to retrieve.
-            Offset allows the retrieved states to be offset from the latest state.
-                For example, count=1, offset=0 will retrieve the most recent state
-                count=1, offset=1 will retrieve the second-most recent state
-
-            :param game_id: A game id string. Retrieved from <player_id> in the API request URL
-            :type game_id: str
-            :raises err: If a mysqlerror occurs, it will be raised up a level after setting an error message in the API call return value.
-            :return: A dictionary containing a 'message' describing the result, and a 'state' containing either the actual state variable if found, else None
-            :rtype: Dict[str, str | None]
-            """
             ret_val = {
                 "type":"GET",
                 "val":None,
@@ -50,20 +36,6 @@ class CodingAPI:
 
     class Code(Resource):
         def post(self, game_id, player_id, session_id, index, code):
-            """POST request to store a player's game state.
-            Located at <server_addr>/player/<player_id>/game/<game_id>/state
-            Takes 'state' as request parameter.
-            The state should be a string, encoding state in whatever way is convenient to the client program.
-            No formatting of the string is enforced from the database side of things.
-
-            :param player_id: A player id string. Retrieved from <player_id> in the API request URL
-            :type player_id: str
-            :param game_id: A game id string. Retrieved from <player_id> in the API request URL
-            :type game_id: str
-            :raises err: If a mysqlerror occurs, it will be raised up a level after setting an error message in the API call return value.
-            :return: A dictionary containing a 'message' describing the result, and a 'state' containing either the actual state variable if found, else None
-            :rtype: Dict[str, str | None]
-            """            
             ret_val = {
                 "type":"POST",
                 "val":None,

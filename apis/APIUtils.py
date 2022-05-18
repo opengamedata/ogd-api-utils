@@ -4,6 +4,7 @@ from flask import current_app
 from typing import Any, List, Union
 # import locals
 from config.config import settings
+import opengamedata.utils
 from opengamedata.interfaces.MySQLInterface import MySQLInterface
 from opengamedata.interfaces.BigQueryInterface import BigQueryInterface
 
