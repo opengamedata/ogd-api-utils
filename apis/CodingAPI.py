@@ -1,10 +1,21 @@
+# import standard libraries
+import os
+import traceback
+from typing import Any, Dict, Optional
+# import 3rd-party libraries
 from flask import Flask, current_app
 from flask_restful import Resource, Api, reqparse
 from mysql.connector import Error as MySQLError
 from mysql.connector.connection import MySQLConnection
 # import locals
+from apis.APIResult import APIResult, RESTType, ResultStatus
+from apis import APIUtils
 from config.config import settings
-from opengamedata.interfaces.MySQLInterface import SQL
+from opengamedata.coding.Code import Code
+from opengamedata.coding.Coder import Coder
+from opengamedata.interfaces.CodingInterface import CodingInterface
+from opengamedata.schemas.IDMode import IDMode
+from opengamedata.schemas.Request import Request, ExporterRange, ExporterTypes, ExporterLocations
 
 class CodingAPI:
     """API for logging and retrieving game states.
@@ -19,8 +30,19 @@ class CodingAPI:
     @staticmethod
     def register(app:Flask):
         api = Api(app)
-        api.add_resource(CodingAPI.CodeList, '/coding/game/<game_id>/codes')
-        api.add_resource(CodingAPI.Code, '/coding/game/<game_id>/player/<player_id>/session/<session_id>/index/<index>/code/<code>/')
+        api.add_resource(CodingAPI.CodeList,  '/coding/game/<game_id>/codewords')
+        api.add_resource(CodingAPI.CoderList, '/coding/game/<game_id>/coders')
+        api.add_resource(CodingAPI.Code,      '/coding/game/<game_id>/player/<player_id>/session/<session_id>/code/<code>/')
+
+    class CoderList(Resource):
+        def get(self, game_id:str):
+            current_app.logger.info(f"Received request for {game_id} players.")
+            ret_val = APIResult.Default(req_type=RESTType.POST)
+
+
+            ret_val['val'] = ["Code1", "Code2", "Code3"]
+            ret_val['msg'] = f"SUCCESS: Got a (fake) list of codes for {game_id}"
+            return ret_val.ToDict()
 
     class CodeList(Resource):
         def get(self, game_id:str):
@@ -35,20 +57,35 @@ class CodingAPI:
             return ret_val
 
     class Code(Resource):
-        def post(self, game_id, player_id, session_id, index, code):
-            ret_val = {
-                "type":"POST",
-                "val":None,
-                "msg":"",
-                "status":"SUCCESS",
-            }
+        def post(self, game_id, player_id, session_id, code):
+            current_app.logger.info(f"Received request for {game_id} players.")
+            ret_val = APIResult.Default(req_type=RESTType.POST)
             # Step 1: get args
             parser = reqparse.RequestParser()
-            parser.add_argument("coder", type=str)
-            parser.add_argument("notes", type=str)
-            args = parser.parse_args()
-            coder = args['coder']
-            notes = args['notes']
-            ret_val['msg'] = f"SUCCESS: Received code."
-            current_app.logger.error(f"Got code through API:\ngame={game_id}, player_id={player_id}, session_id={session_id}, index={index}, code={code}, coder={coder}, notes={notes}")
-            return ret_val
+            parser.add_argument("indices", type=str, required=True, default="[]")
+            parser.add_argument("coder",   type=str, required=True, default="default")
+            parser.add_argument("notes",   type=str, required=False)
+            args : Dict[str, Any] = parser.parse_args()
+
+            _indices = APIUtils.parse_list(args.get('indices') or "[]")
+            _events = []
+            if _indices is not None:
+                _events = [Code.EventID(sess_id=session_id, index=idx) for idx in _indices]
+            try:
+                _success = False
+                os.chdir("var/www/opengamedata/")
+                _interface : Optional[CodingInterface] = APIUtils.gen_coding_interface(game_id=game_id)
+                if _interface is not None:
+                    _success = _interface.CreateCode(code=code, coder_id=args.get('coder'), events=_events, notes=args.get('notes', None))
+                os.chdir("../../../../")
+            except Exception as err:
+                ret_val.ServerErrored(f"ERROR: {type(err).__name__} exception while processing Code request")
+                current_app.logger.error(f"Got exception while processing Code request:\ngame={game_id}\n{str(err)}")
+                current_app.logger.error(traceback.format_exc())
+            else:
+                if _success:
+                    ret_val.RequestSucceeded(msg=f"SUCCESS: Added code with {len(_events)} events to database.", val=_success)
+                else:
+                    ret_val.RequestErrored(msg="FAIL: Unable to store code to database.")
+                    ret_val.Value = _success
+            return ret_val.ToDict()
