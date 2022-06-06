@@ -1,5 +1,10 @@
+import json
 from enum import IntEnum
 from typing import Any
+
+from grpc import Status
+# Import local files
+import opengamedata.schemas.RequestResult as RequestResult
 
 class RESTType(IntEnum):
     """Simple enumerated type to track type of a REST request.
@@ -76,6 +81,18 @@ class APIResult:
         self._status = ResultStatus.SUCCESS
         self._msg = msg
         self._val = val
+
+    @staticmethod
+    def FromRequestResult(result:RequestResult.RequestResult, req_type:RESTType):
+        _status : ResultStatus
+        if result.Status == RequestResult.ResultStatus.SUCCESS:
+            _status = ResultStatus.SUCCESS 
+        elif result.Status == RequestResult.ResultStatus.FAILURE:
+            _status = ResultStatus.ERR_REQ
+        else:
+            _status = ResultStatus.ERR_SRV
+        ret_val = APIResult(req_type=req_type, val=result.ValuesDict, msg=result.Message, status=_status)
+        return ret_val
 
     def ToDict(self):
         return {
