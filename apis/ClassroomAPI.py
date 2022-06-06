@@ -112,11 +112,11 @@ class ClassroomAPI:
                     query_string = f"""UPDATE {db_name}.teacher_codes
                                     SET `given_name`=%s, `family_name`=%s, `email`=%s
                                     WHERE `google_sub`=%s"""
-                    given_name  = id_token["given_name"] if "given_name" in id_token.keys() else None
-                    family_name = id_token["family_name"] if "family_name" in id_token.keys() else None
-                    email       = id_token["email"] if "email" in id_token.keys() else None
+                    given_name   = id_token["given_name"] if "given_name" in id_token.keys() else None
+                    family_name  = id_token["family_name"] if "family_name" in id_token.keys() else None
+                    email        = id_token["email"] if "email" in id_token.keys() else None
                     query_params = (given_name, family_name, email, id_token['sub'])
-                    teacher_id = SQL.Query(cursor=db_conn.cursor(), query=query_string, params=query_params, fetch_results=True)
+                    teacher_id   = SQL.Query(cursor=db_conn.cursor(), query=query_string, params=query_params, fetch_results=True)
             # Step 3: process and return states
                 except MySQLError as err:
                     print(f"ERROR: Could not complete query, got error {err}")
