@@ -100,7 +100,7 @@ class PlayerAPI:
                 os.chdir("var/www/opengamedata/")
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _player_ids is not None and _interface is not None:
-                    _range = ExporterRange.FromIDs(source=_interface, ids=_player_ids, id_mode=IDMode.PLAYER)
+                    _range = ExporterRange.FromIDs(source=_interface, ids=_player_ids, id_mode=IDMode.USER)
                     _exp_types = ExporterTypes(events=False, sessions=False, players=True, population=False)
                     _exp_locs = ExporterLocations(files=False, dict=True)
                     request = Request(interface=_interface, range=_range,
@@ -157,7 +157,7 @@ class PlayerAPI:
                 os.chdir("var/www/opengamedata/")
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
-                    _range = ExporterRange.FromIDs(source=_interface, ids=[player_id], id_mode=IDMode.PLAYER)
+                    _range = ExporterRange.FromIDs(source=_interface, ids=[player_id], id_mode=IDMode.USER)
                     _exp_types = ExporterTypes(events=False, sessions=False, players=True, population=False)
                     _exp_locs = ExporterLocations(files=False, dict=True)
                     request = Request(interface=_interface, range=_range,
