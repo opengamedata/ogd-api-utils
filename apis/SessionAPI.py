@@ -16,6 +16,7 @@ from config.config import settings
 from opengamedata.interfaces.DataInterface import DataInterface
 from opengamedata.managers.ExportManager import ExportManager
 from opengamedata.schemas.Request import Request, ExporterRange, ExporterTypes, ExporterLocations, IDMode
+from opengamedata.schemas.RequestResult import RequestResult
 
 class SessionAPI:
     """Class to define an API for the developer/designer dashboard"""

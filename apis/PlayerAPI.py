@@ -16,6 +16,7 @@ from opengamedata.interfaces.DataInterface import DataInterface
 from opengamedata.managers.ExportManager import ExportManager
 from opengamedata.schemas.IDMode import IDMode
 from opengamedata.schemas.Request import Request, ExporterRange, ExporterTypes, ExporterLocations
+from opengamedata.schemas.RequestResult import RequestResult
 
 class PlayerAPI:
     """Class to define an API for the developer/designer dashboard"""
@@ -96,7 +97,7 @@ class PlayerAPI:
             _metrics    = APIUtils.parse_list(args.get('metrics') or "")
             _player_ids = APIUtils.parse_list(args.get('player_ids') or "[]")
             try:
-                result = {}
+                result : RequestResult
                 os.chdir("var/www/opengamedata/")
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _player_ids is not None and _interface is not None:
@@ -120,7 +121,7 @@ class PlayerAPI:
                 current_app.logger.error(f"Got exception for Players request:\ngame={game_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
-                val = result.get('players')
+                val = result.Players.ToDict()
                 if val is not None:
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for given sessions",

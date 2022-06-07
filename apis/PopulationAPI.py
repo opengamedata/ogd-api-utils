@@ -16,6 +16,7 @@ from config.config import settings
 from opengamedata.interfaces.DataInterface import DataInterface
 from opengamedata.managers.ExportManager import ExportManager
 from opengamedata.schemas.Request import Request, ExporterRange, ExporterTypes, ExporterLocations
+from opengamedata.schemas.RequestResult import RequestResult
 
 class PopulationAPI:
     """Class to define an API for the developer/designer dashboard"""
@@ -56,7 +57,7 @@ class PopulationAPI:
             _metrics    = APIUtils.parse_list(args.get('metrics') or "")
 
             try:
-                result = {}
+                result : RequestResult = RequestResult(msg="No Export")
                 os.chdir("var/www/opengamedata/")
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
@@ -80,7 +81,7 @@ class PopulationAPI:
                 print(f"Got exception for Population request:\ngame={game_id}\n{str(err)}")
                 print(traceback.format_exc())
             else:
-                val = result.get('population')
+                val = result.Population.ToDict()
                 if val is not None:
                     cols = [str(item) for item in val['cols']]
                     vals = [str(item) for item in val['vals']]
