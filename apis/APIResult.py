@@ -98,6 +98,10 @@ class APIResult:
         :rtype: Any
         """
         return self._val
+    @Value.setter
+    def Value(self, new_val:Any):
+        self._val = new_val
+
 
     @property
     def Message(self) -> str:
