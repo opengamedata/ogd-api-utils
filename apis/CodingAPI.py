@@ -14,9 +14,6 @@ from config.config import settings
 from opengamedata.coding.Code import Code
 from opengamedata.coding.Coder import Coder
 from opengamedata.interfaces.CodingInterface import CodingInterface
-from opengamedata.schemas.IDMode import IDMode
-from opengamedata.schemas.Request import Request, ExporterRange, ExporterTypes, ExporterLocations
-from opengamedata.schemas.RequestResult import RequestResult
 
 class CodingAPI:
     """API for logging and retrieving game states.
