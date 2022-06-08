@@ -39,28 +39,20 @@ class CodingAPI:
         def get(self, game_id:str):
             current_app.logger.info(f"Received request for {game_id} players.")
             ret_val = APIResult.Default(req_type=RESTType.POST)
-
-
-            ret_val['val'] = ["Code1", "Code2", "Code3"]
-            ret_val['msg'] = f"SUCCESS: Got a (fake) list of codes for {game_id}"
+            ret_val.RequestSucceeded(msg=f"SUCCESS: Got a (fake) list of codes for {game_id}", val=["Code1", "Code2", "Code3"])
             return ret_val.ToDict()
 
     class CodeList(Resource):
         def get(self, game_id:str):
-            ret_val = {
-                "type":"GET",
-                "val":None,
-                "msg":"",
-                "status":"SUCCESS",
-            }
-            ret_val['val'] = ["Code1", "Code2", "Code3"]
-            ret_val['msg'] = f"SUCCESS: Got a (fake) list of codes for {game_id}"
+            ret_val = APIResult.Default(req_type=RESTType.POST)
+            ret_val.RequestSucceeded(msg=f"SUCCESS: Created a (fake) list of codes for {game_id}", val=["Code1", "Code2", "Code3"])
             return ret_val
 
     class Code(Resource):
         def post(self, game_id, player_id, session_id, code):
             current_app.logger.info(f"Received request for {game_id} players.")
             ret_val = APIResult.Default(req_type=RESTType.POST)
+
             # Step 1: get args
             parser = reqparse.RequestParser()
             parser.add_argument("indices", type=str, required=True, default="[]")
@@ -77,7 +69,7 @@ class CodingAPI:
                 os.chdir("var/www/opengamedata/")
                 _interface : Optional[CodingInterface] = APIUtils.gen_coding_interface(game_id=game_id)
                 if _interface is not None:
-                    _success = _interface.CreateCode(code=code, coder_id=args.get('coder'), events=_events, notes=args.get('notes', None))
+                    _success = _interface.CreateCode(code=code, coder_id=args.get('coder', "default"), events=_events, notes=args.get('notes', None))
                 os.chdir("../../../../")
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: {type(err).__name__} exception while processing Code request")
