@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from flask import Flask, current_app
 from flask_restful import Resource, Api, reqparse
 from flask_restful.inputs import datetime_from_iso8601
-from typing import Any, Dict, Union
+from typing import Any, Dict, Optional, Union
 # import locals
 from apis.APIResult import APIResult, RESTType, ResultStatus
 from apis import APIUtils
@@ -97,9 +97,9 @@ class PlayerAPI:
             _metrics    = APIUtils.parse_list(args.get('metrics') or "")
             _player_ids = APIUtils.parse_list(args.get('player_ids') or "[]")
             try:
-                result : RequestResult
+                result : RequestResult = RequestResult(msg="Empty result")
                 os.chdir("var/www/opengamedata/")
-                _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
+                _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _player_ids is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(source=_interface, ids=_player_ids, id_mode=IDMode.USER)
                     _exp_types = ExporterTypes(events=False, sessions=False, players=True, population=False)
@@ -154,7 +154,7 @@ class PlayerAPI:
             current_app.logger.debug(f"Unparsed 'metrics' list from args: {args.get('metrics')}")
             _metrics = APIUtils.parse_list(args.get('metrics') or "")
             try:
-                result = {}
+                result : RequestResult = RequestResult(msg="Empty result")
                 os.chdir("var/www/opengamedata/")
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
@@ -178,7 +178,7 @@ class PlayerAPI:
                 current_app.logger.error(f"Got exception for Player request:\ngame={game_id}, player={player_id}\nerror={str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
-                val = result.get('players')
+                val = result.Players.ToDict()
                 if val is not None:
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for the given session",

@@ -8,7 +8,7 @@ from flask import Flask
 from flask import current_app
 from flask_restful import Resource, Api, reqparse
 from flask_restful.inputs import datetime_from_iso8601
-from typing import Union
+from typing import Optional, Union
 # import locals
 from apis.APIResult import APIResult, RESTType, ResultStatus
 from apis import APIUtils
@@ -95,7 +95,7 @@ class SessionAPI:
             _metrics     = APIUtils.parse_list(args.get('metrics') or "")
             _session_ids = APIUtils.parse_list(args.get('session_ids') or "[]")
             try:
-                result = {}
+                result : RequestResult = RequestResult(msg="Empty result")
                 os.chdir("var/www/opengamedata/")
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _session_ids is not None and _interface is not None:
@@ -119,7 +119,7 @@ class SessionAPI:
                 current_app.logger.error(f"Got exception for Sessions request:\ngame={game_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
-                val = result.get('sessions')
+                val = result.Sessions.ToDict()
                 if val is not None:
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for given sessions",
@@ -150,7 +150,7 @@ class SessionAPI:
 
             _metrics    = APIUtils.parse_list(args.get('metrics') or "")
             try:
-                result = {}
+                result : RequestResult = RequestResult(msg="Empty result")
                 os.chdir("var/www/opengamedata/")
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
@@ -174,7 +174,7 @@ class SessionAPI:
                 current_app.logger.error(f"Got exception for Session request:\ngame={game_id}, player={session_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
-                val = result.get('sessions')
+                val = result.Sessions.ToDict()
                 if val is not None:
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for the given session",
