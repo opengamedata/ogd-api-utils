@@ -13,11 +13,13 @@ def meta_to_index(meta:Dict, data_dir:Path):
     # raw_stat = os.stat(raw_csv_full_path)
     # sessions_stat = os.stat(sessions_csv_full_path)
     pop_file  = meta['population_file'].split('/')[-1] if meta.get("population_file") is not None else None
+    play_file = meta['players_file'].split('/')[-1]    if meta.get('players_file')    is not None else None
     sess_file = meta['sessions_file'].split('/')[-1]   if meta.get('sessions_file')   is not None else None
     raw_file  = meta['raw_file'].split('/')[-1]        if meta.get('raw_file')        is not None else None
     evt_file  = meta['events_file'].split('/')[-1]     if meta.get('events_file')     is not None else None
     return {
         "population_file" : str(data_dir / pop_file)  if pop_file  is not None else None,
+        "players_file"    : str(data_dir / play_file) if play_file is not None else None,
         "sessions_file"   : str(data_dir / sess_file) if sess_file is not None else None,
         "raw_file"        : str(data_dir / raw_file)  if raw_file  is not None else None,
         "events_file"     : str(data_dir / evt_file)  if evt_file  is not None else None,
@@ -69,6 +71,7 @@ def index_zip(root:Path, name:str, indexed_files):
         logging.log(msg=f"Indexing {file_path}", level=logging.INFO)
         indexed_files[game_id][dataset_id] = {
             "population_file" :str(file_path) if kind == 'population-features' else None,
+            "players_file"    :str(file_path) if kind == 'player-features' else None,
             "sessions_file"   :str(file_path) if kind == 'session-features' else None,
             "raw_file"        :str(file_path) if kind == 'raw' else None,
             "events_file"     :str(file_path) if kind == 'events' else None,
@@ -82,6 +85,9 @@ def index_zip(root:Path, name:str, indexed_files):
         if indexed_files[game_id][dataset_id]["population_file"] == None and kind == 'population-features':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
             indexed_files[game_id][dataset_id]["population_file"] = str(file_path)
+        if indexed_files[game_id][dataset_id]["players_file"] == None and kind == 'player-features':
+            logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
+            indexed_files[game_id][dataset_id]["players_file"] = str(file_path)
         if indexed_files[game_id][dataset_id]["sessions_file"] == None and kind == 'session-features':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
             indexed_files[game_id][dataset_id]["sessions_file"] = str(file_path)
@@ -98,8 +104,8 @@ def generate_index(walk_data):
     zips = []
     for root, subdirs, files in walk_data:
         for name in files:
+            root_path = Path(root)
             if not 'BACKUP' in root:
-                root_path = Path(root)
                 ext = name.split('.')[-1]
                 if (ext == 'meta'):
                     logging.log(msg=f"Indexing {root_path / name}", level=logging.INFO)
