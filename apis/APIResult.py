@@ -4,7 +4,7 @@ from typing import Any
 
 from grpc import Status
 # Import local files
-import opengamedata.schemas.RequestResult as RequestResult
+import opengamedata.ogd_requests.RequestResult as RequestResult
 
 class RESTType(IntEnum):
     """Simple enumerated type to track type of a REST request.
@@ -26,7 +26,7 @@ class RESTType(IntEnum):
         elif self.value == RESTType.PUT:
             return "PUT"
         else:
-            return "INVALID"
+            return "INVALID REST TYPE"
 
 class ResultStatus(IntEnum):
     """Simple enumerated type to track the status of an API request result.
@@ -51,7 +51,7 @@ class ResultStatus(IntEnum):
         elif self.value == ResultStatus.ERR_REQ:
             return "REQUEST ERROR"
         else:
-            return "INVALID"
+            return "INVALID STATUS TYPE"
 
 class APIResult:
     def __init__(self, req_type:RESTType, val:Any, msg:str, status:ResultStatus):
@@ -59,6 +59,9 @@ class APIResult:
         self._val    : Any          = val
         self._msg    : str          = msg
         self._status : ResultStatus = status
+
+    def __str__(self):
+        return f"{self.Type.name} request: {self.Status}\n{self.Message}\nValues: {self.Value}"
 
     @staticmethod
     def Default(req_type:RESTType):

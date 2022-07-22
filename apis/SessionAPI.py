@@ -43,7 +43,7 @@ class SessionAPI:
             :return: _description_
             :rtype: _type_
             """
-            print("Received session list request.")
+            current_app.logger.info("Received session list request.")
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
             _end_time   : datetime = datetime.now()
@@ -84,7 +84,7 @@ class SessionAPI:
             :return: _description_
             :rtype: _type_
             """
-            print("Received session request.")
+            current_app.logger.info("Received sessions request.")
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
             parser = reqparse.RequestParser()
@@ -142,6 +142,7 @@ class SessionAPI:
             :return: _description_
             :rtype: _type_
             """
+            current_app.logger.info("Received session request.")
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
             parser = reqparse.RequestParser()

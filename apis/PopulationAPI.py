@@ -55,6 +55,7 @@ class PopulationAPI:
             _end_time   = args.get('end_datetime')   or _end_time
             _start_time = args.get('start_datetime') or _start_time
             _metrics    = APIUtils.parse_list(args.get('metrics') or "")
+            current_app.logger.info(f"Requested metrics: {_metrics}")
 
             try:
                 result : RequestResult = RequestResult(msg="No Export")
