@@ -22,4 +22,3 @@ deploy-indexer:
 update-submodules:
 	git submodule update --remote
 	git add opengamedata/
-	git commit -m "Update submodule from remote upstream"
