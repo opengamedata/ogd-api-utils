@@ -1,11 +1,15 @@
 import sys
 from flask import Flask
-# import locals
-from config.config import settings
-if not settings['OGD_CORE_PATH'] in sys.path:
-    sys.path.append(settings['OGD_CORE_PATH'])
 
 application = Flask(__name__)
+
+# import locals
+from config.config import settings
+_ogd_core = settings['OGD_CORE_PATH']
+if not _ogd_core in sys.path:
+    sys.path.append(settings['OGD_CORE_PATH'])
+    application.logger.info(f"Added {_ogd_core} to path.")
+
 application.logger.setLevel(settings['DEBUG_LEVEL'])
 application.secret_key = b'thisisafakesecretkey'
 
