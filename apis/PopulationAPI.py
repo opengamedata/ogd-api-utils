@@ -34,6 +34,7 @@ class PopulationAPI:
         """Class for handling requests for population-level features."""
         def get(self, game_id):
             """Handles a GET request for population-level features.
+            Gives back a dictionary of the APIResult, with the val being a dictionary of columns to values for the given population.
 
             :param game_id: _description_
             :type game_id: _type_
@@ -83,14 +84,13 @@ class PopulationAPI:
                 print(f"Got exception for Population request:\ngame={game_id}\n{str(err)}")
                 print(traceback.format_exc())
             else:
-                val = result.Population.ToDict()
-                if val is not None:
-                    cols = [str(item) for item in val['cols']]
-                    vals = [str(item) for item in val['vals']]
-                    ct = min(len(cols), len(vals))
+                cols = result.Population.Columns
+                pop  = result.Population.Values[0]
+                ct = min(len(cols), len(pop))
+                if ct > 0:
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated population features",
-                        val={cols[i] : vals[i] for i in range(ct)}
+                        val={cols[i] : pop[i] for i in range(ct)}
                     )
                 else:
                     ret_val.RequestErrored("FAIL: No valid population features")

@@ -136,6 +136,7 @@ class PlayerAPI:
         """Class for handling requests for session-level features, given a session id."""
         def get(self, game_id, player_id):
             """Handles a GET request for session-level features of a single Session.
+            Gives back a dictionary of the APIResult, with the val being a dictionary of columns to values for the given player.
 
             :param game_id: _description_
             :type game_id: _type_
@@ -178,15 +179,13 @@ class PlayerAPI:
                 current_app.logger.error(f"Got exception for Player request:\ngame={game_id}, player={player_id}\nerror={str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
-                val = result.Players.ToDict()
-                current_app.logger.info(f"In PlayerAPI, result was:\n{[item[0] for item in val['vals']]}")
-                if val is not None:
-                    cols = [str(item) for item in val['cols']]
-                    vals = [str(item) for item in val['vals']]
-                    ct = min(len(cols), len(vals))
+                cols   = result.Players.Columns
+                player = result.Players.Values[0]
+                ct = min(len(cols), len(player))
+                if ct > 0:
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for the given session",
-                        val={cols[i] : vals[i] for i in range(ct)}
+                        val={cols[i] : player[i] for i in range(ct)}
                     )
                 else:
                     current_app.logger.warn(f"Couldn't find anything in result[player], result was:\n{result}")
