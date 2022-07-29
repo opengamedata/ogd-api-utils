@@ -8,7 +8,7 @@ from flask import Flask
 from flask import current_app
 from flask_restful import Resource, Api, reqparse
 from flask_restful.inputs import datetime_from_iso8601
-from typing import Any, Dict, Union
+from typing import Any, Dict, Optional
 # import locals
 from apis.APIResult import APIResult, RESTType, ResultStatus
 from apis import APIUtils
@@ -55,12 +55,13 @@ class PopulationAPI:
             _end_time   = args.get('end_datetime')   or _end_time
             _start_time = args.get('start_datetime') or _start_time
             _metrics    = APIUtils.parse_list(args.get('metrics') or "")
+            current_app.logger.info(f"metrics argument: {args.get('metrics')}")
             current_app.logger.info(f"Requested metrics: {_metrics}")
 
             try:
                 result : RequestResult = RequestResult(msg="No Export")
                 os.chdir("var/www/opengamedata/")
-                _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
+                _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
                     _range = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
                     _exp_types = ExporterTypes(events=False, sessions=False, players=False, population=True)

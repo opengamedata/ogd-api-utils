@@ -156,7 +156,7 @@ class PlayerAPI:
             try:
                 result : RequestResult = RequestResult(msg="Empty result")
                 os.chdir("var/www/opengamedata/")
-                _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
+                _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(source=_interface, ids=[player_id], id_mode=IDMode.USER)
                     _exp_types = ExporterTypes(events=False, sessions=False, players=True, population=False)
@@ -180,9 +180,12 @@ class PlayerAPI:
             else:
                 val = result.Players.ToDict()
                 if val is not None:
+                    cols = [str(item) for item in val['cols']]
+                    vals = [str(item) for item in val['vals']]
+                    ct = min(len(cols), len(vals))
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for the given session",
-                        val=val
+                        val={cols[i] : vals[i] for i in range(ct)}
                     )
                 else:
                     current_app.logger.debug(f"Couldn't find anything in result[player], result was:\n{result}")
