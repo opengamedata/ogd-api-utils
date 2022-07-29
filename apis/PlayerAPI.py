@@ -179,6 +179,7 @@ class PlayerAPI:
                 current_app.logger.error(traceback.format_exc())
             else:
                 val = result.Players.ToDict()
+                current_app.logger.info(f"In PlayerAPI, result was:\n{[item[0] for item in val['vals']]}")
                 if val is not None:
                     cols = [str(item) for item in val['cols']]
                     vals = [str(item) for item in val['vals']]
@@ -188,6 +189,6 @@ class PlayerAPI:
                         val={cols[i] : vals[i] for i in range(ct)}
                     )
                 else:
-                    current_app.logger.debug(f"Couldn't find anything in result[player], result was:\n{result}")
+                    current_app.logger.warn(f"Couldn't find anything in result[player], result was:\n{result}")
                     ret_val.RequestErrored("FAIL: No valid session features")
             return ret_val.ToDict()

@@ -176,6 +176,7 @@ class SessionAPI:
                 current_app.logger.error(traceback.format_exc())
             else:
                 val = result.Sessions.ToDict()
+                current_app.logger.info(f"In SessionAPI, result was:\n{val}")
                 if val is not None:
                     cols = [str(item) for item in val['cols']]
                     vals = [str(item) for item in val['vals']]
