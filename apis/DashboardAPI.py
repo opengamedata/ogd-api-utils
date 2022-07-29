@@ -41,10 +41,10 @@ class DashboardAPI:
                 feature_list = []
                 os.chdir("var/www/opengamedata/")
                 _schema = GameSchema(schema_name=f"{game_id}.json")
-                for name,percount in _schema.percount_features().items():
+                for name,percount in _schema.PerCountFeatures.items():
                     if percount.get('enabled', False):
                         feature_list.append(name)
-                for name,aggregate in _schema.aggregate_features().items():
+                for name,aggregate in _schema.AggregateFeatures.items():
                     if aggregate.get('enabled', False):
                         feature_list.append(name)
                 os.chdir("../../../../")
