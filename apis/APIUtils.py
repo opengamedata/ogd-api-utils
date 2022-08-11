@@ -1,9 +1,7 @@
 # import libraries
-import json
 from flask import current_app
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional
 # import locals
-import opengamedata.utils
 from config.config import settings
 from opengamedata.interfaces.CodingInterface import CodingInterface
 from opengamedata.interfaces.DataInterface import DataInterface
