@@ -56,43 +56,43 @@ class PopulationAPI:
             _end_time   = args.get('end_datetime')   or _end_time
             _start_time = args.get('start_datetime') or _start_time
             _metrics    = APIUtils.parse_list(args.get('metrics') or "")
-            current_app.logger.info(f"metrics argument: {args.get('metrics')}")
-            current_app.logger.info(f"Requested metrics: {_metrics}")
 
             try:
                 result : RequestResult = RequestResult(msg="No Export")
                 os.chdir("var/www/opengamedata/")
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
-                    _range = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
+                    _range     = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
                     _exp_types = ExporterTypes(events=False, sessions=False, players=False, population=True)
-                    _exp_locs = ExporterLocations(files=False, dict=True)
-                    request = Request(interface=_interface, range=_range,
-                                      exporter_types=_exp_types, exporter_locs=_exp_locs,
-                                      feature_overrides=_metrics
+                    _exp_locs  = ExporterLocations(files=False, dict=True)
+                    request    = Request(interface=_interface,      range=_range,
+                                         exporter_types=_exp_types, exporter_locs=_exp_locs,
+                                         feature_overrides=_metrics
                     )
                     # retrieve and process the data
+                    current_app.logger.info(f"Processing population request {request}...")
                     export_mgr = ExportManager(settings=settings)
                     result = export_mgr.ExecuteRequest(request=request)
+                    current_app.logger.info(f"Result: {result.Message}")
                 elif _metrics is None:
                     current_app.logger.warning("_metrics was None")
                 elif _interface is None:
                     current_app.logger.warning("_interface was None")
                 os.chdir("../../../../")
             except Exception as err:
-                ret_val.ServerErrored(f"ERROR: Unknown error while processing Population request")
-                print(f"Got exception for Population request:\ngame={game_id}\n{str(err)}")
-                print(traceback.format_exc())
+                ret_val.ServerErrored(f"Unknown error while processing Population request")
+                current_app.logger.error(f"Got exception for Population request:\ngame={game_id}\n{str(err)}\n{traceback.format_exc()}")
             else:
+
                 cols = result.Population.Columns
                 pop  = result.Population.Values[0]
                 ct = min(len(cols), len(pop))
                 if ct > 0:
                     ret_val.RequestSucceeded(
-                        msg="SUCCESS: Generated population features",
+                        msg="Generated population features",
                         val={cols[i] : pop[i] for i in range(ct)}
                     )
                 else:
-                    ret_val.RequestErrored("FAIL: No valid population features")
+                    ret_val.RequestErrored("No valid population features")
             return ret_val.ToDict()
     
