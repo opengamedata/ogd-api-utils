@@ -126,15 +126,15 @@ class APIResult:
 
     def RequestErrored(self, msg:str):
         self._status = ResultStatus.ERR_REQ
-        self._msg = msg
+        self._msg = f"ERROR: {msg}"
 
     def ServerErrored(self, msg:str):
         self._status = ResultStatus.ERR_SRV
-        self._msg = msg
+        self._msg = f"SERVER ERROR: {msg}"
 
     def RequestSucceeded(self, msg:str, val:Any):
         self._status = ResultStatus.SUCCESS
-        self._msg = msg
+        self._msg = f"SUCCESS: {msg}"
         self._val = val
 
     def ToDict(self):
