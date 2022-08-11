@@ -1,5 +1,24 @@
+# import standard libraries
 import sys
+from logging.config import dictConfig
+# import 3rd-party libraries
 from flask import Flask
+
+dictConfig({
+    'version': 1,
+    'formatters': {'default': {
+        'format': '%(levelname)s in %(module)s: %(message)s',
+    }},
+    'handlers': {'wsgi': {
+        'class': 'logging.StreamHandler',
+        'stream': 'ext://flask.logging.wsgi_errors_stream',
+        'formatter': 'default'
+    }},
+    'root': {
+        'level': 'INFO',
+        'handlers': ['wsgi']
+    }
+})
 
 application = Flask(__name__)
 
