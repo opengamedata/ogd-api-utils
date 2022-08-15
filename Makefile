@@ -1,10 +1,11 @@
 .PHONY: deploy
 
-deploy-server:
-	rsync -vrc ./* fieldday-web.ad.education.wisc.edu:/var/www/wsgi-bin --exclude-from rsync-exclude;
-	ssh -t fieldday-web.ad.education.wisc.edu sudo /sbin/service httpd restart
+update-submodules:
+	git submodule foreach git pull origin deploy
+	git add opengamedata
+	git commit -m "Update ogd-core submodule from upstream"
 
-deploy-ogd:
+deploy-server:
 	rsync -vrc ./* fieldday-web.ad.education.wisc.edu:/var/www/wsgi-bin --exclude-from rsync-exclude;
 	ssh -t fieldday-web.ad.education.wisc.edu sudo /sbin/service httpd restart
 
