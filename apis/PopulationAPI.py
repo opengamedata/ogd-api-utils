@@ -15,8 +15,9 @@ from apis import APIUtils
 from config.config import settings
 from opengamedata.interfaces.DataInterface import DataInterface
 from opengamedata.managers.ExportManager import ExportManager
-from opengamedata.ogd_requests.Request import Request, ExporterRange, ExporterTypes, ExporterLocations
+from opengamedata.ogd_requests.Request import Request, ExporterRange
 from opengamedata.ogd_requests.RequestResult import RequestResult
+from opengamedata.schemas.ExportMode import ExportMode
 
 class PopulationAPI:
     """Class to define an API for the developer/designer dashboard"""
@@ -63,10 +64,9 @@ class PopulationAPI:
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
                     _range     = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
-                    _exp_types = ExporterTypes(events=False, sessions=False, players=False, population=True)
-                    _exp_locs  = ExporterLocations(files=False, dict=True)
+                    _exp_types = set([ExportMode.POPULATION])
                     request    = Request(interface=_interface,      range=_range,
-                                         exporter_types=_exp_types, exporter_locs=_exp_locs,
+                                         exporter_modes=_exp_types, exporter_locs=[],
                                          feature_overrides=_metrics
                     )
                     # retrieve and process the data

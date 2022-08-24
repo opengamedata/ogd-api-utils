@@ -15,7 +15,8 @@ from config.config import settings
 from opengamedata.interfaces.DataInterface import DataInterface
 from opengamedata.managers.ExportManager import ExportManager
 from opengamedata.schemas.IDMode import IDMode
-from opengamedata.ogd_requests.Request import Request, ExporterRange, ExporterTypes, ExporterLocations
+from opengamedata.schemas.ExportMode import ExportMode
+from opengamedata.ogd_requests.Request import Request, ExporterRange
 from opengamedata.ogd_requests.RequestResult import RequestResult
 
 class PlayerAPI:
@@ -101,12 +102,11 @@ class PlayerAPI:
                 os.chdir("var/www/opengamedata/")
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _player_ids is not None and _interface is not None:
-                    _range = ExporterRange.FromIDs(source=_interface, ids=_player_ids, id_mode=IDMode.USER)
-                    _exp_types = ExporterTypes(events=False, sessions=False, players=True, population=False)
-                    _exp_locs = ExporterLocations(files=False, dict=True)
-                    request = Request(interface=_interface, range=_range,
-                                      exporter_types=_exp_types, exporter_locs=_exp_locs,
-                                      feature_overrides=_metrics
+                    _range     = ExporterRange.FromIDs(source=_interface, ids=_player_ids, id_mode=IDMode.USER)
+                    _exp_types = set([ExportMode.PLAYER])
+                    request    = Request(interface=_interface,      range=_range,
+                                         exporter_modes=_exp_types, exporter_locs=[],
+                                         feature_overrides=_metrics
                     )
                     # retrieve and process the data
                     export_mgr = ExportManager(settings=settings)
@@ -160,11 +160,10 @@ class PlayerAPI:
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(source=_interface, ids=[player_id], id_mode=IDMode.USER)
-                    _exp_types = ExporterTypes(events=False, sessions=False, players=True, population=False)
-                    _exp_locs = ExporterLocations(files=False, dict=True)
-                    request = Request(interface=_interface, range=_range,
-                                      exporter_types=_exp_types, exporter_locs=_exp_locs,
-                                      feature_overrides=_metrics
+                    _exp_types = set([ExportMode.POPULATION])
+                    request    = Request(interface=_interface,      range=_range,
+                                         exporter_modes=_exp_types, exporter_locs=[],
+                                         feature_overrides=_metrics
                     )
                     # retrieve and process the data
                     export_mgr = ExportManager(settings=settings)
