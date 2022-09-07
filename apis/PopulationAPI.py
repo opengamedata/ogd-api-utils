@@ -14,6 +14,7 @@ from apis.APIResult import APIResult, RESTType, ResultStatus
 from apis import APIUtils
 from config.config import settings
 from opengamedata.interfaces.DataInterface import DataInterface
+from opengamedata.interfaces.outerfaces.DictionaryOuterface import DictionaryOuterface
 from opengamedata.managers.ExportManager import ExportManager
 from opengamedata.ogd_requests.Request import Request, ExporterRange
 from opengamedata.ogd_requests.RequestResult import RequestResult
@@ -60,13 +61,15 @@ class PopulationAPI:
 
             try:
                 result : RequestResult = RequestResult(msg="No Export")
+                values_dict = {}
                 os.chdir("var/www/opengamedata/")
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
                     _range     = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
                     _exp_types = set([ExportMode.POPULATION])
+                    _outerface = DictionaryOuterface(game_id=game_id, out_dict=values_dict)
                     request    = Request(interface=_interface,      range=_range,
-                                         exporter_modes=_exp_types, exporter_locs=[],
+                                         exporter_modes=_exp_types, exporter_locs=[_outerface],
                                          feature_overrides=_metrics
                     )
                     # retrieve and process the data
@@ -83,9 +86,8 @@ class PopulationAPI:
                 ret_val.ServerErrored(f"Unknown error while processing Population request")
                 current_app.logger.error(f"Got exception for Population request:\ngame={game_id}\n{str(err)}\n{traceback.format_exc()}")
             else:
-
-                cols = result.Population.Columns
-                pop  = result.Population.Values[0]
+                cols = values_dict.get(["populations"], {}).get(["cols"], [])
+                pop  = values_dict.get(["populations"], {}).get(["vals"], [])[0]
                 ct = min(len(cols), len(pop))
                 if ct > 0:
                     ret_val.RequestSucceeded(

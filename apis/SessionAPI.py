@@ -14,6 +14,7 @@ from apis.APIResult import APIResult, RESTType, ResultStatus
 from apis import APIUtils
 from config.config import settings
 from opengamedata.interfaces.DataInterface import DataInterface
+from opengamedata.interfaces.outerfaces.DictionaryOuterface import DictionaryOuterface
 from opengamedata.managers.ExportManager import ExportManager
 from opengamedata.ogd_requests.Request import Request, ExporterRange, IDMode
 from opengamedata.ogd_requests.RequestResult import RequestResult
@@ -97,13 +98,15 @@ class SessionAPI:
             _session_ids = APIUtils.parse_list(args.get('session_ids') or "[]")
             try:
                 result : RequestResult = RequestResult(msg="Empty result")
+                values_dict = {}
                 os.chdir("var/www/opengamedata/")
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _session_ids is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(source=_interface, ids=_session_ids, id_mode=IDMode.SESSION)
                     _exp_types = set([ExportMode.SESSION])
+                    _outerface = DictionaryOuterface(game_id=game_id, out_dict=values_dict)
                     request    = Request(interface=_interface,      range=_range,
-                                         exporter_modes=_exp_types, exporter_locs=[],
+                                         exporter_modes=_exp_types, exporter_locs=[_outerface],
                                          feature_overrides=_metrics
                     )
                     # retrieve and process the data
@@ -119,7 +122,7 @@ class SessionAPI:
                 current_app.logger.error(f"Got exception for Sessions request:\ngame={game_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
-                val = result.Sessions.ToDict()
+                val = values_dict.get(["sessions"])
                 if val is not None:
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for given sessions",
@@ -153,13 +156,15 @@ class SessionAPI:
             _metrics    = APIUtils.parse_list(args.get('metrics') or "")
             try:
                 result : RequestResult = RequestResult(msg="Empty result")
+                values_dict = {}
                 os.chdir("var/www/opengamedata/")
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(source=_interface, ids=[session_id], id_mode=IDMode.SESSION)
                     _exp_types = set([ExportMode.SESSION])
+                    _outerface = DictionaryOuterface(game_id=game_id, out_dict=values_dict)
                     request    = Request(interface=_interface,      range=_range,
-                                         exporter_modes=_exp_types, exporter_locs=[],
+                                         exporter_modes=_exp_types, exporter_locs=[_outerface],
                                          feature_overrides=_metrics
                     )
                     # retrieve and process the data
@@ -175,8 +180,8 @@ class SessionAPI:
                 current_app.logger.error(f"Got exception for Session request:\ngame={game_id}, player={session_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
-                cols = result.Sessions.Columns
-                sess = result.Sessions.Values[0]
+                cols   = values_dict.get(["sessions"], {}).get(["cols"], [])
+                sess = values_dict.get(["sessions"], {}).get(["vals"], [])[0]
                 ct = min(len(cols), len(sess))
                 if ct > 0:
                     ret_val.RequestSucceeded(

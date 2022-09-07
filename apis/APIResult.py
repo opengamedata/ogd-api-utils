@@ -81,7 +81,7 @@ class APIResult:
             _status = ResultStatus.ERR_REQ
         else:
             _status = ResultStatus.ERR_SRV
-        ret_val = APIResult(req_type=req_type, val=result.ValuesDict, msg=result.Message, status=_status)
+        ret_val = APIResult(req_type=req_type, val=None, msg=result.Message, status=_status)
         return ret_val
 
     @property
