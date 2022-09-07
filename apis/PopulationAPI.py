@@ -86,8 +86,9 @@ class PopulationAPI:
                 ret_val.ServerErrored(f"Unknown error while processing Population request")
                 current_app.logger.error(f"Got exception for Population request:\ngame={game_id}\n{str(err)}\n{traceback.format_exc()}")
             else:
-                cols = values_dict.get(["populations"], {}).get(["cols"], [])
-                pop  = values_dict.get(["populations"], {}).get(["vals"], [])[0]
+                current_app.logger.info(f"The values_dict:\n{values_dict}")
+                cols = values_dict.get("populations", {}).get("cols", [])
+                pop  = values_dict.get("populations", {}).get("vals", [])[0]
                 ct = min(len(cols), len(pop))
                 if ct > 0:
                     ret_val.RequestSucceeded(

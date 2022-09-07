@@ -124,7 +124,7 @@ class PlayerAPI:
                 current_app.logger.error(f"Got exception for Players request:\ngame={game_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
-                val = values_dict.get(["players"])
+                val = values_dict.get("players")
                 if val is not None:
                     ret_val.RequestSucceeded(
                         msg="SUCCESS: Generated features for given sessions",
@@ -183,8 +183,8 @@ class PlayerAPI:
                 current_app.logger.error(f"Got exception for Player request:\ngame={game_id}, player={player_id}\nerror={str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
-                cols   = values_dict.get(["players"], {}).get(["cols"], [])
-                player = values_dict.get(["players"], {}).get(["vals"], [])[0]
+                cols   = values_dict.get("players", {}).get("cols", [])
+                player = values_dict.get("players", {}).get("vals", [])[0]
                 ct = min(len(cols), len(player))
                 if ct > 0:
                     ret_val.RequestSucceeded(
