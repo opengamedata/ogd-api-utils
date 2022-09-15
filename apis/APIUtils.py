@@ -1,6 +1,6 @@
 # import libraries
 from flask import current_app
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional
 # import locals
 from config.config import settings
 from opengamedata.interfaces.CodingInterface import CodingInterface
@@ -33,13 +33,16 @@ def gen_interface(game_id) -> Optional[DataInterface]:
     :rtype: _type_
     """
     ret_val = None
-    src_map = settings['GAME_SOURCE_MAP'].get(game_id)
-    if src_map is not None:
+    source_name = settings['GAME_SOURCE_MAP'][game_id]['source']
+    source : Dict[str, Any] = settings['GAME_SOURCES'][source_name]
+    config = settings.get('GAME_SOURCE_MAP', {}).get(game_id, {})
+    config['source'] = {key:val for key, val in source.items()}
+    if config is not None:
         # set up interface and request
-        if src_map['interface'] == "MySQL":
+        if config['interface'] == "MySQL":
             ret_val = MySQLInterface(game_id, settings=settings)
             current_app.logger.info(f"Using MySQLInterface for {game_id}")
-        elif src_map['interface'] == "BigQuery":
+        elif config['interface'] == "BigQuery":
             ret_val = BigQueryInterface(game_id=game_id, settings=settings)
             current_app.logger.info(f"Using BigQueryInterface for {game_id}")
         else:
