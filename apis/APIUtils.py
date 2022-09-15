@@ -39,10 +39,10 @@ def gen_interface(game_id) -> Optional[DataInterface]:
     config['source'] = {key:val for key, val in source.items()}
     if config is not None:
         # set up interface and request
-        if config['interface'] == "MySQL":
+        if config['DB_TYPE'] == "MySQL":
             ret_val = MySQLInterface(game_id, config=config)
             current_app.logger.info(f"Using MySQLInterface for {game_id}")
-        elif config['interface'] == "BigQuery":
+        elif config['DB_TYPE'] == "BigQuery":
             ret_val = BigQueryInterface(game_id=game_id, config=config)
             current_app.logger.info(f"Using BigQueryInterface for {game_id}")
         else:
@@ -62,7 +62,7 @@ def gen_coding_interface(game_id) -> Optional[CodingInterface]:
     src_map = settings['GAME_SOURCE_MAP'].get(game_id)
     if src_map is not None:
         # set up interface and request
-        if src_map['interface'] == "BigQuery":
+        if src_map['DB_TYPE'] == "BigQuery":
             ret_val = BigQueryCodingInterface(game_id=game_id, settings=settings)
             current_app.logger.info(f"Using BigQueryCodingInterface for {game_id}")
         else:
