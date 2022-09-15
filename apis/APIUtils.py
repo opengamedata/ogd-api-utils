@@ -40,13 +40,13 @@ def gen_interface(game_id) -> Optional[DataInterface]:
     if config is not None:
         # set up interface and request
         if config['interface'] == "MySQL":
-            ret_val = MySQLInterface(game_id, settings=settings)
+            ret_val = MySQLInterface(game_id, config=config)
             current_app.logger.info(f"Using MySQLInterface for {game_id}")
         elif config['interface'] == "BigQuery":
-            ret_val = BigQueryInterface(game_id=game_id, settings=settings)
+            ret_val = BigQueryInterface(game_id=game_id, config=config)
             current_app.logger.info(f"Using BigQueryInterface for {game_id}")
         else:
-            ret_val = MySQLInterface(game_id, settings=settings)
+            ret_val = MySQLInterface(game_id, config=config)
             current_app.logger.warning(f"Could not find a valid interface for {game_id}, defaulting to MySQL!")
     return ret_val
 
