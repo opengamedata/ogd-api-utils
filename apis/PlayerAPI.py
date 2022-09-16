@@ -164,7 +164,7 @@ class PlayerAPI:
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(source=_interface, ids=[player_id], id_mode=IDMode.USER)
-                    _exp_types = set([ExportMode.POPULATION])
+                    _exp_types = set([ExportMode.PLAYER])
                     _outerface = DictionaryOuterface(game_id=game_id, out_dict=values_dict)
                     request    = Request(interface=_interface,      range=_range,
                                          exporter_modes=_exp_types, exporter_locs=[_outerface],
