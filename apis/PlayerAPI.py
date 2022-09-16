@@ -184,7 +184,7 @@ class PlayerAPI:
                 current_app.logger.error(traceback.format_exc())
             else:
                 cols   = values_dict.get("players", {}).get("cols", [])
-                player = values_dict.get("players", {}).get("vals", [])[0]
+                player = values_dict.get("players", {}).get("vals", [[]])[0]
                 ct = min(len(cols), len(player))
                 if ct > 0:
                     ret_val.RequestSucceeded(

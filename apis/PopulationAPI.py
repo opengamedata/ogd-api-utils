@@ -88,7 +88,7 @@ class PopulationAPI:
             else:
                 current_app.logger.info(f"The values_dict:\n{values_dict}")
                 cols = values_dict.get("populations", {}).get("cols", [])
-                pop  = values_dict.get("populations", {}).get("vals", [])[0]
+                pop  = values_dict.get("populations", {}).get("vals", [[]])[0]
                 ct = min(len(cols), len(pop))
                 if ct > 0:
                     ret_val.RequestSucceeded(
