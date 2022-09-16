@@ -33,16 +33,17 @@ def gen_interface(game_id) -> Optional[DataInterface]:
     :rtype: _type_
     """
     ret_val = None
-    source_name = settings['GAME_SOURCE_MAP'][game_id]['source']
-    source : Dict[str, Any] = settings['GAME_SOURCES'][source_name]
-    config = settings.get('GAME_SOURCE_MAP', {}).get(game_id, {})
-    config['source'] = {key:val for key, val in source.items()}
+    _source_name = settings['GAME_SOURCE_MAP'][game_id]['source']
+    _source : Dict[str, Any] = settings['GAME_SOURCES'][_source_name]
+
+    config = settings.get('GAME_SOURCE_MAP', {}).get(game_id)
     if config is not None:
+        config['source'] = {key:val for key, val in _source.items()}
         # set up interface and request
-        if config['DB_TYPE'] == "MySQL":
+        if config['source']['DB_TYPE'] == "MySQL":
             ret_val = MySQLInterface(game_id, config=config)
             current_app.logger.info(f"Using MySQLInterface for {game_id}")
-        elif config['DB_TYPE'] == "BigQuery":
+        elif config['source']['DB_TYPE'] == "BigQuery":
             ret_val = BigQueryInterface(game_id=game_id, config=config)
             current_app.logger.info(f"Using BigQueryInterface for {game_id}")
         else:
