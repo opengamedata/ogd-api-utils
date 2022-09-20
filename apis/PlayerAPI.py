@@ -184,7 +184,8 @@ class PlayerAPI:
                 current_app.logger.error(traceback.format_exc())
             else:
                 cols   = values_dict.get("players", {}).get("cols", [])
-                player = values_dict.get("players", {}).get("vals", [[]])[0]
+                players = values_dict.get("players", {}).get("vals", [[]])
+                player = self._findPlayer(player_list=players, target_id=player_id)
                 ct = min(len(cols), len(player))
                 if ct > 0:
                     ret_val.RequestSucceeded(
@@ -195,3 +196,14 @@ class PlayerAPI:
                     current_app.logger.warn(f"Couldn't find anything in result[player], result was:\n{result}")
                     ret_val.RequestErrored("FAIL: No valid session features")
             return ret_val.ToDict()
+
+        def _findPlayer(self, player_list, target_id):
+            ret_val = None
+            for _player in player_list:
+                _player_id = _player[0]
+                if _player_id == target_id:
+                    ret_val = _player
+            if ret_val is None:
+                current_app.logger.warn(f"Didn't find {target_id} in list of player results, defaulting to first player in list (player ID={player_list[0][0]})")
+                ret_val = player_list[0]
+            return ret_val

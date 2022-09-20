@@ -181,7 +181,8 @@ class SessionAPI:
                 current_app.logger.error(traceback.format_exc())
             else:
                 cols = values_dict.get("sessions", {}).get("cols", [])
-                sess = values_dict.get("sessions", {}).get("vals", [[]])[0]
+                sessions = values_dict.get("sessions", {}).get("vals", [[]])
+                sess = self._findSession(session_list=sessions, target_id=session_id)
                 ct = min(len(cols), len(sess))
                 if ct > 0:
                     ret_val.RequestSucceeded(
@@ -192,3 +193,14 @@ class SessionAPI:
                     current_app.logger.debug(f"Couldn't find anything in result[session], result was:\n{result}")
                     ret_val.RequestErrored("FAIL: No valid session features")
             return ret_val.ToDict()
+
+        def _findSession(self, session_list, target_id):
+            ret_val = None
+            for _session in session_list:
+                _session_id = _session[0]
+                if _session_id == target_id:
+                    ret_val = _session
+            if ret_val is None:
+                current_app.logger.warn(f"Didn't find {target_id} in list of session results, defaulting to first session in list (session ID={session_list[0][0]})")
+                ret_val = session_list[0]
+            return ret_val
