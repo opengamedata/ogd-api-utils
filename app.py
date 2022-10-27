@@ -32,7 +32,7 @@ if not _ogd_core in sys.path:
 application.logger.setLevel(settings['DEBUG_LEVEL'])
 application.secret_key = b'thisisafakesecretkey'
 
-def _logImportErr(msg:str, err:ImportError):
+def _logImportErr(msg:str, err:Exception):
     application.logger.warning(msg)
     application.logger.exception(err)
 
@@ -40,6 +40,8 @@ try:
     from apis.ClassroomAPI import ClassroomAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Classroom API:", err=err)
+except Exception as err:
+    _logImportErr(msg="Could not import Classroom API, general error:", err=err)
 else:
     ClassroomAPI.register(application)
 
@@ -47,6 +49,8 @@ try:
     from apis.CodingAPI import CodingAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Coding API:", err=err)
+except Exception as err:
+    _logImportErr(msg="Could not import Coding API, general error:", err=err)
 else:
     CodingAPI.register(application)
 
@@ -54,6 +58,8 @@ try:
     from apis.DashboardAPI import DashboardAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Dashboard API:", err=err)
+except Exception as err:
+    _logImportErr(msg="Could not import Dashboard API, general error:", err=err)
 else:
     DashboardAPI.register(application)
 
@@ -61,6 +67,8 @@ try:
     from apis.PopulationAPI import PopulationAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Population API:", err=err)
+except Exception as err:
+    _logImportErr(msg="Could not import Population API, general error:", err=err)
 else:
     PopulationAPI.register(application)
 
@@ -68,6 +76,8 @@ try:
     from apis.PlayerAPI import PlayerAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Player API:", err=err)
+except Exception as err:
+    _logImportErr(msg="Could not import Player API, general error:", err=err)
 else:
     PlayerAPI.register(application)
 
@@ -75,6 +85,8 @@ try:
     from apis.SessionAPI import SessionAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Session API:", err=err)
+except Exception as err:
+    _logImportErr(msg="Could not import Session API, general error:", err=err)
 else:
     SessionAPI.register(application)
 
@@ -82,6 +94,8 @@ try:
     from apis.GameStateAPI import GameStateAPI
 except ImportError as err:
     _logImportErr(msg="Could not import GameState API:", err=err)
+except Exception as err:
+    _logImportErr(msg="Could not import GameState API, general error:", err=err)
 else:
     GameStateAPI.register(application)
 
@@ -89,6 +103,8 @@ try:
     from apis.HelloAPI import HelloAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Hello API:", err=err)
+except Exception as err:
+    _logImportErr(msg="Could not import Hello API, general error:", err=err)
 else:
     HelloAPI.register(application)
 
@@ -96,6 +112,8 @@ try:
     from apis.PlayerIDAPI import PlayerIDAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Player ID API:", err=err)
+except Exception as err:
+    _logImportErr(msg="Could not import Player ID API, general error:", err=err)
 else:
     PlayerIDAPI.register(application)
 
