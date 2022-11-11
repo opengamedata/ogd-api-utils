@@ -68,8 +68,8 @@ class PopulationAPI:
                     _range     = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
                     _exp_types = set([ExportMode.POPULATION])
                     _outerface = DictionaryOuterface(game_id=game_id, out_dict=values_dict)
-                    request    = Request(interface=_interface,      range=_range,
-                                         exporter_modes=_exp_types, exporter_locs=[_outerface],
+                    request    = Request(range=_range,         exporter_modes=_exp_types,
+                                         interface=_interface, outerfaces={_outerface},
                                          feature_overrides=_metrics
                     )
                     # retrieve and process the data

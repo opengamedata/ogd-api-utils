@@ -108,7 +108,7 @@ class PlayerAPI:
                     _exp_types = set([ExportMode.PLAYER])
                     _outerface = DictionaryOuterface(game_id=game_id, out_dict=values_dict)
                     request    = Request(interface=_interface,      range=_range,
-                                         exporter_modes=_exp_types, exporter_locs=[_outerface],
+                                         exporter_modes=_exp_types, outerfaces={_outerface},
                                          feature_overrides=_metrics
                     )
                     # retrieve and process the data
@@ -167,7 +167,7 @@ class PlayerAPI:
                     _exp_types = set([ExportMode.PLAYER])
                     _outerface = DictionaryOuterface(game_id=game_id, out_dict=values_dict)
                     request    = Request(interface=_interface,      range=_range,
-                                         exporter_modes=_exp_types, exporter_locs=[_outerface],
+                                         exporter_modes=_exp_types, outerfaces={_outerface},
                                          feature_overrides=_metrics
                     )
                     # retrieve and process the data
