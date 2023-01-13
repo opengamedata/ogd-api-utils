@@ -1,6 +1,7 @@
 # import libraries
 import json
-from flask import Flask
+from flask import Flask, request
+from flask import current_app
 from flask_restful import Resource, Api, reqparse
 from mysql.connector import Error as MySQLError
 from mysql.connector.connection import MySQLConnection
@@ -111,10 +112,21 @@ class GameStateAPI:
                 "status":"SUCCESS",
             }
             # Step 1: get args
-            parser = reqparse.RequestParser()
-            parser.add_argument("state", type=str)
-            args = parser.parse_args()
-            state = args['state']
+            state = None
+            content_type = request.headers.get("Content-Type")
+            if content_type == "application/json":
+                state = request.get_json(silent=True).get('state')
+            else:
+                state = request.get_data()
+            if state is None or state == b'':
+                parser = reqparse.RequestParser()
+                parser.add_argument("state", type=str)
+                args = parser.parse_args()
+                state = args['state']
+                # current_app.logger.info(f"Found state in request args: {state}")
+            # else:
+                # current_app.logger.info(f"Found state in request get_data function: {state}")
+
             # Step 2: insert state into database.
             fd_config = settings["DB_CONFIG"]["fd_users"]
             _dummy, db_conn = SQL.ConnectDB(db_settings=fd_config)
