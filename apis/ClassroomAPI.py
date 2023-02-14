@@ -16,11 +16,14 @@ from opengamedata.interfaces.MySQLInterface import SQL
 class ClassroomAPI:
     @staticmethod
     def register(app:Flask):
+        # Expected WSGIScriptAlias URL path is /data
         api = Api(app)
-        api.add_resource(ClassroomAPI.TeacherLogin, '/teacher')
-        api.add_resource(ClassroomAPI.Teacher, '/teacher/<teacher_id>')
-        api.add_resource(ClassroomAPI.Classroom, '/classroom/<class_id>')
-        api.add_resource(ClassroomAPI.Student, '/student/<player_id>')
+        api.add_resource(ClassroomAPI.TeacherLogin, '/classrooms/teacherLogin')
+        api.add_resource(ClassroomAPI.Teacher, '/classrooms/teacherInfo')
+        api.add_resource(ClassroomAPI.ClassroomInfo, '/classrooms/classInfo/<class_id>')
+        api.add_resource(ClassroomAPI.ClassroomAssignTeacher, '/classrooms/assignTeacherToClass')
+        api.add_resource(ClassroomAPI.ClassroomStudentInfo, '/classrooms/studentInfo/<player_id>')
+        api.add_resource(ClassroomAPI.ClassroomAssignStudent, '/classrooms/assignStudentToClass')
 
     class TeacherLogin(Resource):
         @staticmethod
@@ -126,7 +129,7 @@ class ClassroomAPI:
                     SQL.disconnectMySQL(db_conn)
             return ret_val
         
-        def post(self, teacher_id):
+        def post(self):
             ret_val : Dict[str,Any] = {
                 "type":"POST",
                 "val":None,
@@ -136,8 +139,12 @@ class ClassroomAPI:
             # Step 1: Get args and check token is valid
             parser = reqparse.RequestParser()
             parser.add_argument("token")
+            parser.add_argument("teacher_id")
             args = parser.parse_args()
+
             id_token = ClassroomAPI.TeacherLogin._verifyToken(args["token"])
+            teacher_id = args["teacher_id"]
+
             if id_token is not None:
             # Step 2: If token is valid, update database with whatever data we got
                 fd_config = settings["DB_CONFIG"]["fd_users"]
@@ -193,14 +200,19 @@ class ClassroomAPI:
                         ret_val = True
             return ret_val
 
-        def get(self, teacher_id):
+        def get(self):
             ret_val : Dict[str,Any] = {
                 "type":"GET",
                 "val":None,
                 "msg":"",
                 "status":"SUCCESS",
             }
-            if "teacher_id" in session and (session['teacher_id'] == teacher_id):
+
+            # If teacher has authenticated
+            if "teacher_id" in session:
+
+                teacher_id = session["teacher_id"]
+
                 # Step 1: Set up database and get the teacher info
                 fd_config = settings["DB_CONFIG"]["fd_users"]
                 _dummy, db_conn = SQL.ConnectDB(db_settings=fd_config)
@@ -227,7 +239,7 @@ class ClassroomAPI:
                 finally:
                     SQL.disconnectMySQL(db_conn)
             else:
-                ret_val['msg'] = f"FAIL: Could not get teacher info, {teacher_id} is not logged in"
+                ret_val['msg'] = f"FAIL: Could not get teacher info, teacher is not logged in"
                 ret_val['status'] = "ERR_REQ"
             return ret_val
         
@@ -245,20 +257,19 @@ class ClassroomAPI:
         #     return ret_val
 
 
-    class Classroom(Resource):
+    class ClassroomInfo(Resource):
         def get(self, class_id):
             ret_val : Dict[str,Any] = {
-                "type":"GET",
                 "val":None,
                 "msg":"",
                 "status":"SUCCESS",
             }
+
             # Step 1: Get args and set up database
-            parser = reqparse.RequestParser()
-            parser.add_argument("teacher_id")
-            args = parser.parse_args()
-            teacher_id = args["teacher_id"]
-            if "teacher_id" in session and (session['teacher_id'] == teacher_id):
+
+            # If teacher has authenticated
+            if "teacher_id" in session:
+                teacher_id = session["teacher_id"]
                 fd_config = settings["DB_CONFIG"]["fd_users"]
                 _dummy, db_conn = SQL.ConnectDB(db_settings=fd_config)
             # Step 2: If teacher has the classroom, we can retrieve the list of students.
@@ -277,14 +288,13 @@ class ClassroomAPI:
                         ret_val['msg'] = f"SUCCESS: Retrieved data for classroom {class_id}"
                 SQL.disconnectMySQL(db_conn)
             else:
-                ret_val['msg'] = f"FAIL: Could not retreive the classroom data, {teacher_id} is not logged in"
+                ret_val['msg'] = f"FAIL: Could not retreive the classroom data, teacher is not logged in"
                 ret_val['status'] = "ERR_REQ"
             return ret_val
 
-
-        def put(self, class_id):
+    class ClassroomAssignTeacher(Resource):
+        def post(self):
             ret_val : Dict[str,Any] = {
-                "type":"PUT",
                 "val":None,
                 "msg":"",
                 "status":"SUCCESS",
@@ -292,8 +302,15 @@ class ClassroomAPI:
             # Step 1: Get args and set up database
             parser = reqparse.RequestParser()
             parser.add_argument("teacher_id")
+            parser.add_argument("class_id")
             args = parser.parse_args()
             teacher_id = args["teacher_id"]
+            class_id = args["class_id"]
+
+            # Are teachers assigning themselves to class?
+            # If yes, teacher_id shouldn't be a required request value, but do we need a check to ensure a teacher isn't assigning themselves to another teacher's class?
+            # If no, checking the session for a logged-in teacher doesn't make sense.
+
             if "teacher_id" in session and (session['teacher_id'] == teacher_id):
                 fd_config = settings["DB_CONFIG"]["fd_users"]
                 _dummy, db_conn = SQL.ConnectDB(db_settings=fd_config)
@@ -317,11 +334,11 @@ class ClassroomAPI:
                     ret_val['msg'] = f"FAIL: Teacher does not have access to the classroom"
                     ret_val['status'] = "ERR_REQ"
             else:
-                ret_val['msg'] = f"FAIL: Could not create classroom, {teacher_id} is not logged in"
+                ret_val['msg'] = f"FAIL: Could not create classroom, teacher is not logged in"
                 ret_val['status'] = "ERR_REQ"
             return ret_val
 
-    class Student(Resource):
+    class ClassroomStudentInfo(Resource):
         @staticmethod
         def _hasClassroom(db_conn:Union[MySQLConnection, None], db_name:str, student_id:Union[str,None], class_id:str) -> bool:
             ret_val : bool = False
@@ -340,16 +357,15 @@ class ClassroomAPI:
 
         def get(self, player_id):
             ret_val : Dict[str,Any] = {
-                "type":"GET",
                 "val":None,
                 "msg":"",
                 "status":"SUCCESS",
             }
             # Step 1: get args and set up database.
-            parser = reqparse.RequestParser()
-            parser.add_argument("teacher_id")
-            args = parser.parse_args()
-            if "teacher_id" in session and (session['teacher_id'] == args['teacher_id']):
+
+            # If teacher has authenticated
+            if "teacher_id" in session:
+                teacher_id = session["teacher_id"]
                 fd_config = settings["DB_CONFIG"]["fd_users"]
                 _dummy, db_conn = SQL.ConnectDB(db_settings=fd_config)
                 # Step 2: If teacher has student, then we can retrieve their name.
@@ -377,28 +393,32 @@ class ClassroomAPI:
                     ret_val['msg'] = f"FAIL: Teacher does not have access to {player_id}."
                     ret_val['status'] = "ERR_REQ"
             else:
-                ret_val['msg'] = f"FAIL: Could retrieve player classrooms, {args['teacher_id']} is not logged in"
+                ret_val['msg'] = f"FAIL: Could not retrieve player classrooms, teacher is not logged in"
                 ret_val['status'] = "ERR_REQ"
             return ret_val
-        
-        def put(self, player_id):
+
+    class ClassroomAssignStudent(Resource):
+        def post(self):
             ret_val : Dict[str,Any] = {
-                "type":"PUT",
                 "val":None,
                 "msg":"",
                 "status":"SUCCESS",
             }
             # Step 1: get args and set up database.
             parser = reqparse.RequestParser()
-            parser.add_argument("teacher_id")
             parser.add_argument("class_id")
+            parser.add_argument("player_id")            
             args = parser.parse_args()
-            if "teacher_id" in session and (session['teacher_id'] == args['teacher_id']):
+            player_id = args["player_id"]
+            
+            # If teacher has authenticated
+            if "teacher_id" in session:
+                teacher_id =  session['teacher_id']
                 fd_config = settings["DB_CONFIG"]["fd_users"]
                 _dummy, db_conn = SQL.ConnectDB(db_settings=fd_config)
                 # Step 2: If teacher has student, then we can retrieve their name.
                 if      (db_conn is not None) \
-                    and      ClassroomAPI.Teacher._hasStudent(  db_conn=db_conn, db_name=fd_config["DB_NAME"], teacher_id=args["teacher_id"], student_id=player_id) \
+                    and      ClassroomAPI.Teacher._hasStudent(  db_conn=db_conn, db_name=fd_config["DB_NAME"], teacher_id=teacher_id, student_id=player_id) \
                     and (not ClassroomAPI.Student._hasClassroom(db_conn=db_conn, db_name=fd_config["DB_NAME"], student_id=player_id,          class_id=args["class_id"])):
                     try:
                         db_name = fd_config['DB_NAME']
@@ -419,6 +439,6 @@ class ClassroomAPI:
                     ret_val['msg'] = f"FAIL: Teacher does not have access to {player_id}."
                     ret_val['status'] = "ERR_REQ"
             else:
-                ret_val['msg'] = f"FAIL: Could not add student to classroom, {args['teacher_id']} is not logged in"
+                ret_val['msg'] = f"FAIL: Could not add student to classroom, teacher is not logged in"
                 ret_val['status'] = "ERR_REQ"
             return ret_val

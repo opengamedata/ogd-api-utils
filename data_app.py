@@ -1,22 +1,42 @@
 # import standard libraries
-import sys
+import sys, os
 from logging.config import dictConfig
 # import 3rd-party libraries
 from flask import Flask
+
+# By default we'll log to WSGI errors stream which ends up in the Apache error log
+logHandlers = {
+        'wsgi': { 
+            'class': 'logging.StreamHandler',
+            'stream': 'ext://flask.logging.wsgi_errors_stream', 
+            'formatter': 'default'
+            }
+    }
+
+logRootHandlers = ['wsgi']
+
+# If a dedicated log file is defined for this Flask app, we'll also log there
+# Ensure this is a writable directory
+if "OGD_FLASK_APP_LOG_FILE" in os.environ:
+    logHandlers['wsgi_app_file'] = {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.environ["OGD_FLASK_APP_LOG_FILE"],
+            'maxBytes': 100000000, # 100 MB
+            'backupCount': 10, # Up to 10 rotated files
+            'formatter': 'default'
+    }
+
+    logRootHandlers.append('wsgi_app_file')
 
 dictConfig({
     'version': 1,
     'formatters': {'default': {
         'format': '%(levelname)s in %(module)s: %(message)s',
     }},
-    'handlers': {'wsgi': {
-        'class': 'logging.StreamHandler',
-        'stream': 'ext://flask.logging.wsgi_errors_stream',
-        'formatter': 'default'
-    }},
+    'handlers': logHandlers,
     'root': {
         'level': 'INFO',
-        'handlers': ['wsgi']
+        'handlers': logRootHandlers
     }
 })
 
@@ -44,15 +64,6 @@ except Exception as err:
     _logImportErr(msg="Could not import Classroom API, general error:", err=err)
 else:
     ClassroomAPI.register(application)
-
-try:
-    from apis.CodingAPI import CodingAPI
-except ImportError as err:
-    _logImportErr(msg="Could not import Coding API:", err=err)
-except Exception as err:
-    _logImportErr(msg="Could not import Coding API, general error:", err=err)
-else:
-    CodingAPI.register(application)
 
 try:
     from apis.DashboardAPI import DashboardAPI
@@ -91,15 +102,6 @@ else:
     SessionAPI.register(application)
 
 try:
-    from apis.GameStateAPI import GameStateAPI
-except ImportError as err:
-    _logImportErr(msg="Could not import GameState API:", err=err)
-except Exception as err:
-    _logImportErr(msg="Could not import GameState API, general error:", err=err)
-else:
-    GameStateAPI.register(application)
-
-try:
     from apis.HelloAPI import HelloAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Hello API:", err=err)
@@ -107,24 +109,6 @@ except Exception as err:
     _logImportErr(msg="Could not import Hello API, general error:", err=err)
 else:
     HelloAPI.register(application)
-
-try:
-    from apis.PlayerIDAPI import PlayerIDAPI
-except ImportError as err:
-    _logImportErr(msg="Could not import Player ID API:", err=err)
-except Exception as err:
-    _logImportErr(msg="Could not import Player ID API, general error:", err=err)
-else:
-    PlayerIDAPI.register(application)
-
-@application.route("/")
-def home() -> str:
-    """Defines a message when pinging the root of the API
-
-    :return: The message for pinging API root.
-    :rtype: str
-    """
-    return "Home"
     
 # if __name__ == '__main__':
 # 	application.run(debug=True)

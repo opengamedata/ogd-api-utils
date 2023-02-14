@@ -29,10 +29,11 @@ class SessionAPI:
         :param app: _description_
         :type app: Flask
         """
+        # Expected WSGIScriptAlias URL path is /data
         api = Api(app)
-        api.add_resource(SessionAPI.SessionList, '/game/<game_id>/sessions/')
-        api.add_resource(SessionAPI.Sessions, '/game/<game_id>/sessions/metrics')
-        api.add_resource(SessionAPI.Session, '/game/<game_id>/session/<session_id>/metrics')
+        api.add_resource(SessionAPI.SessionList, '/sessions/list/<game_id>')
+        api.add_resource(SessionAPI.SessionsMetrics, '/sessions/metrics')
+        api.add_resource(SessionAPI.SessionMetrics, '/session/metrics')
 
     
     class SessionList(Resource):
@@ -52,19 +53,22 @@ class SessionAPI:
             _start_time : datetime = _end_time-timedelta(hours=1)
 
             parser = reqparse.RequestParser()
-            parser.add_argument("start_datetime", type=datetime_from_iso8601, required=False, default=_start_time, nullable=True, help="Invalid starting date, defaulting to 1 hour ago.")
-            parser.add_argument("end_datetime",   type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time.")
+            parser.add_argument("start_datetime", type=datetime_from_iso8601, required=False, default=_start_time, nullable=True, help="Invalid starting date, defaulting to 1 hour ago.", location="args")
+            parser.add_argument("end_datetime",   type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time.", location="args")
             args = parser.parse_args()
 
             _end_time   = args.get('end_datetime')   or _end_time
             _start_time = args.get('start_datetime') or _start_time
             _range : Union[ExporterRange, None] = None
             try:
-                os.chdir("var/www/opengamedata/")
+                
+                orig_cwd = os.getcwd()
+                os.chdir(settings["OGD_CORE_PATH"])
+
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _interface is not None:
                     _range = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
-                os.chdir("../../../../")
+                os.chdir(orig_cwd)
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing SessionList request")
                 current_app.logger.error(f"Got exception for SessionList request:\ngame={game_id}\n{str(err)}")
@@ -76,10 +80,10 @@ class SessionAPI:
                     ret_val.RequestErrored("FAIL: Did not find IDs in the given date range")
             return ret_val.ToDict()
 
-    class Sessions(Resource):
+    class SessionsMetrics(Resource):
         """Class for handling requests for session-level features, given a list of session ids."""
-        def get(self, game_id):
-            """Handles a GET request for session-level features for a list of sessions.
+        def post(self):
+            """Handles a POST  request for session-level features for a list of sessions.
 
             :param game_id: _description_
             :type game_id: _type_
@@ -87,19 +91,25 @@ class SessionAPI:
             :rtype: _type_
             """
             current_app.logger.info("Received sessions request.")
-            ret_val = APIResult.Default(req_type=RESTType.GET)
+            ret_val = APIResult.Default(req_type=RESTType.POST)
 
             parser = reqparse.RequestParser()
+            parser.add_argument("game_id", type=str, required=True)
             parser.add_argument("session_ids", type=str, required=False, default="[]", nullable=True, help="Got bad list of session ids, defaulting to [].")
             parser.add_argument("metrics",    type=str, required=False, default="[]", nullable=True, help="Got bad list of metrics, defaulting to all.")
             args = parser.parse_args()
+
+            game_id = args["game_id"]
 
             _metrics     = APIUtils.parse_list(args.get('metrics') or "")
             _session_ids = APIUtils.parse_list(args.get('session_ids') or "[]")
             try:
                 result : RequestResult = RequestResult(msg="Empty result")
                 values_dict = {}
-                os.chdir("var/www/opengamedata/")
+                
+                orig_cwd = os.getcwd()
+                os.chdir(settings["OGD_CORE_PATH"])
+
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _session_ids is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(source=_interface, ids=_session_ids, id_mode=IDMode.SESSION)
@@ -116,7 +126,7 @@ class SessionAPI:
                     current_app.logger.warning("_metrics was None")
                 elif _interface is None:
                     current_app.logger.warning("_interface was None")
-                os.chdir("../../../../")
+                os.chdir(orig_cwd)
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing Sessions request")
                 current_app.logger.error(f"Got exception for Sessions request:\ngame={game_id}\n{str(err)}")
@@ -133,9 +143,9 @@ class SessionAPI:
                     ret_val.RequestErrored("FAIL: No valid session features")
             return ret_val.ToDict()
     
-    class Session(Resource):
+    class SessionMetrics(Resource):
         """Class for handling requests for session-level features, given a session id."""
-        def get(self, game_id, session_id):
+        def post(self):
             """Handles a GET request for session-level features of a single Session.
             Gives back a dictionary of the APIResult, with the val being a dictionary of columns to values for the given session.
 
@@ -150,14 +160,22 @@ class SessionAPI:
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
             parser = reqparse.RequestParser()
+            parser.add_argument("game_id", type=str, required=True)
+            parser.add_argument("session_id", type=str, required=True)
             parser.add_argument("metrics", type=str, required=False, default="[]", nullable=True, help="Got bad list of metrics, defaulting to all.")
             args = parser.parse_args()
+
+            game_id = args["game_id"]
+            session_id = args["session_id"]
 
             _metrics    = APIUtils.parse_list(args.get('metrics') or "")
             try:
                 result : RequestResult = RequestResult(msg="Empty result")
                 values_dict = {}
-                os.chdir("var/www/opengamedata/")
+                
+                orig_cwd = os.getcwd()
+                os.chdir(settings["OGD_CORE_PATH"])
+
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(source=_interface, ids=[session_id], id_mode=IDMode.SESSION)
@@ -174,7 +192,7 @@ class SessionAPI:
                     current_app.logger.warning("_metrics was None")
                 elif _interface is None:
                     current_app.logger.warning("_interface was None")
-                os.chdir("../../../../")
+                os.chdir(orig_cwd)
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing Session request")
                 current_app.logger.error(f"Got exception for Session request:\ngame={game_id}, player={session_id}\n{str(err)}")

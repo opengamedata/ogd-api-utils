@@ -11,10 +11,12 @@ from opengamedata.interfaces.MySQLInterface import SQL
 class PlayerIDAPI:
     @staticmethod
     def register(app:Flask):
+        # Expected WSGIScriptAlias URL path is /playerGameState
         api = Api(app)
-        api.add_resource(PlayerIDAPI.PlayerID, '/player/')
+        api.add_resource(PlayerIDAPI.GeneratePlayerID, '/players/generateId')
+        api.add_resource(PlayerIDAPI.SavePlayerID, '/players/saveId')
 
-    class PlayerID(Resource):
+    class GeneratePlayerID(Resource):
         @staticmethod
         def _generateID(db_conn:Union[MySQLConnection, None], db_name:str) -> Union[str,None]:
             """[summary]
@@ -112,9 +114,10 @@ class PlayerIDAPI:
                 ret_val['status'] = "ERR_DB"
             return ret_val
 
-        def put(self):
+    class SavePlayerID(Resource):
+        def post(self):
             ret_val : Dict[str,Any] = {
-                "type":"PUT",
+                "type":"POST",
                 "val":None,
                 "msg":"",
                 "status":"SUCCESS",
@@ -126,6 +129,7 @@ class PlayerIDAPI:
             args = parser.parse_args()
             player_id = args['player_id']
             name      = args['name']
+
             # Step 2: insert player into the database
             fd_config = settings["DB_CONFIG"]["fd_users"]
             _dummy, db_conn = SQL.ConnectDB(db_settings=fd_config)

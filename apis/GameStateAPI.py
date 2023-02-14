@@ -1,6 +1,6 @@
 # import libraries
 import json
-from flask import Flask
+from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from mysql.connector import Error as MySQLError
 from mysql.connector.connection import MySQLConnection
@@ -8,35 +8,36 @@ from mysql.connector.connection import MySQLConnection
 from config.config import settings
 from opengamedata.interfaces.MySQLInterface import SQL
 
-class GameStateAPI:
-    """API for logging and retrieving game states.
-    Located at <server_addr>/player/<player_id>/game/<game_id>/state
-    Valid requests are GET and POST.
-    A GET request optionally takes 'count' and 'offset' as request parameters.
-    A POST request should have a state variable as a request parameter.
+import time
 
-    example usage:  GET fieldday-web.ad.education.wisc.edu/player/Bob/game/AQUALAB/state
-                    with count=1, offset=0
-    """
+class GameStateAPI:
+
     @staticmethod
     def register(app:Flask):
+        # Expected WSGIScriptAlias URL path is /playerGameState
         api = Api(app)
-        api.add_resource(GameStateAPI.GameState, '/player/<player_id>/game/<game_id>/state')
+        api.add_resource(GameStateAPI.GameStateLoad, '/load')
+        api.add_resource(GameStateAPI.GameStateSave, '/save')
 
-    class GameState(Resource):
-        def get(self, player_id, game_id:str):
+    class GameStateLoad(Resource):
+        def get(self):
             """GET request for a player's game state.
-            Located at <server_addr>/player/<player_id>/game/<game_id>/state
-            Optionally takes 'count' and 'offset' as request parameters.
+            Located at <server_addr>/playerGameState/load
+            Requires 'player_id' and 'game_id'  as query string parameters.
+            Optionally takes 'count' and 'offset' as query string parameters.
             Count controls the number of states to retrieve.
             Offset allows the retrieved states to be offset from the latest state.
                 For example, count=1, offset=0 will retrieve the most recent state
                 count=1, offset=1 will retrieve the second-most recent state
 
-            :param player_id: A player id string. Retrieved from <player_id> in the API request URL
+            :param player_id: A player id string.
             :type player_id: str
-            :param game_id: A game id string. Retrieved from <player_id> in the API request URL
+            :param game_id: A game id string.
             :type game_id: str
+            :param count: Integer representing the total number of states to retrieve
+            :type count: int
+            :param offset: Integer representing offset (going backwards from the most-recent) to start retrieving. So, zero would start with the most-recent state
+            :type offset: int
             :raises err: If a mysqlerror occurs, it will be raised up a level after setting an error message in the API call return value.
             :return: A dictionary containing a 'message' describing the result, and a 'state' containing either the actual state variable if found, else None
             :rtype: Dict[str, str | None]
@@ -47,13 +48,20 @@ class GameStateAPI:
                 "msg":"",
                 "status":"SUCCESS",
             }
+
             # Step 1: get args
             parser = reqparse.RequestParser()
-            parser.add_argument("count", type=int, help="Invalid count of states to retrieve, default to 1.")
-            parser.add_argument("offset", type=int, help="Invalid offset of states to retrieve, default to 0.")
+            parser.add_argument("player_id", type=str, required=True, location="args")
+            parser.add_argument("game_id", type=str, required=True, location="args")
+            parser.add_argument("count", type=int, help="Invalid count of states to retrieve, default to 1.", location="args")
+            parser.add_argument("offset", type=int, help="Invalid offset of states to retrieve, default to 0.", location="args") # Query string
             args = parser.parse_args()
+
+            player_id = args["player_id"]
+            game_id = args["game_id"]
             count = args['count'] if args['count'] is not None else 1
             offset = args['offset'] if args['offset'] is not None else 0
+
             # Step 2: get states from database.
             fd_config = settings["DB_CONFIG"]["fd_users"]
             tunnel, db_conn = SQL.ConnectDB(db_settings=fd_config)
@@ -88,18 +96,23 @@ class GameStateAPI:
                 ret_val['status'] = "ERR_DB"
                 ret_val['msg'] = "FAIL: Could not retrieve state(s), database unavailable!"
             return ret_val
-
-        def post(self, player_id, game_id):
+    
+    class GameStateSave(Resource):
+        def post(self):
             """POST request to store a player's game state.
-            Located at <server_addr>/player/<player_id>/game/<game_id>/state
-            Takes 'state' as request parameter.
+            Located at <server_addr>/playerGameState/save
+            
+            Required data fields are expected in the request body as JSON
+
             The state should be a string, encoding state in whatever way is convenient to the client program.
             No formatting of the string is enforced from the database side of things.
 
-            :param player_id: A player id string. Retrieved from <player_id> in the API request URL
+            :param player_id: A player id string.
             :type player_id: str
-            :param game_id: A game id string. Retrieved from <player_id> in the API request URL
+            :param game_id: A game id string.
             :type game_id: str
+            :param state: The player's state
+            :type state: str
             :raises err: If a mysqlerror occurs, it will be raised up a level after setting an error message in the API call return value.
             :return: A dictionary containing a 'message' describing the result, and a 'state' containing either the actual state variable if found, else None
             :rtype: Dict[str, str | None]
@@ -110,11 +123,17 @@ class GameStateAPI:
                 "msg":"",
                 "status":"SUCCESS",
             }
+
             # Step 1: get args
             parser = reqparse.RequestParser()
+            parser.add_argument("player_id", type=str, required=True)
+            parser.add_argument("game_id", type=str, required=True)
             parser.add_argument("state", type=str)
             args = parser.parse_args()
+            player_id = args["player_id"]
+            game_id = args["game_id"]
             state = args['state']
+
             # Step 2: insert state into database.
             fd_config = settings["DB_CONFIG"]["fd_users"]
             _dummy, db_conn = SQL.ConnectDB(db_settings=fd_config)

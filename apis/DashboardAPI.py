@@ -21,8 +21,9 @@ class DashboardAPI:
         :param app: _description_
         :type app: Flask
         """
+        # Expected WSGIScriptAlias URL path is /data
         api = Api(app)
-        api.add_resource(DashboardAPI.FeatureList, '/game/<game_id>/metrics/list')
+        api.add_resource(DashboardAPI.FeatureList, '/metrics/list/<game_id>')
 
     class FeatureList(Resource):
         """Class for getting a full list of features for a given game."""
@@ -39,7 +40,10 @@ class DashboardAPI:
 
             try:
                 feature_list = []
-                os.chdir("var/www/opengamedata/")
+                
+                orig_cwd = os.getcwd()
+                os.chdir(settings["OGD_CORE_PATH"])
+
                 _schema = GameSchema(schema_name=f"{game_id}.json")
                 for name,percount in _schema.PerCountFeatures.items():
                     if percount.get('enabled', False):
@@ -47,7 +51,7 @@ class DashboardAPI:
                 for name,aggregate in _schema.AggregateFeatures.items():
                     if aggregate.get('enabled', False):
                         feature_list.append(name)
-                os.chdir("../../../../")
+                os.chdir(orig_cwd)
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: Unknown error while processing FeatureList request")
                 print(f"Got exception for FeatureList request:\ngame={game_id}\n{str(err)}")
@@ -56,5 +60,5 @@ class DashboardAPI:
                 if feature_list != []:
                     ret_val.RequestSucceeded(msg="SUCCESS: Got metric list for given game", val=feature_list)
                 else:
-                    ret_val.RequestErrored("FAIL: Did not find any metrics for the given")
+                    ret_val.RequestErrored("FAIL: Did not find any metrics for the given game")
             return ret_val.ToDict()
