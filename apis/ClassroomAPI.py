@@ -18,12 +18,12 @@ class ClassroomAPI:
     def register(app:Flask):
         # Expected WSGIScriptAlias URL path is /data
         api = Api(app)
-        api.add_resource(ClassroomAPI.TeacherLogin, '/classrooms/teacherLogin')
+        api.add_resource(ClassroomAPI.TeacherLogin, '/classrooms/login')
         api.add_resource(ClassroomAPI.Teacher, '/classrooms/teacherInfo')
         api.add_resource(ClassroomAPI.ClassroomInfo, '/classrooms/classInfo/<class_id>')
-        api.add_resource(ClassroomAPI.ClassroomAssignTeacher, '/classrooms/assignTeacherToClass')
+        api.add_resource(ClassroomAPI.ClassroomAssignTeacher, '/classrooms/assign/teacher')
         api.add_resource(ClassroomAPI.ClassroomStudentInfo, '/classrooms/studentInfo/<player_id>')
-        api.add_resource(ClassroomAPI.ClassroomAssignStudent, '/classrooms/assignStudentToClass')
+        api.add_resource(ClassroomAPI.ClassroomAssignStudent, '/classrooms/assign/student')
 
     class TeacherLogin(Resource):
         @staticmethod
@@ -292,6 +292,7 @@ class ClassroomAPI:
                 ret_val['status'] = "ERR_REQ"
             return ret_val
 
+    # This is for teachers to assign themselves or a secondary teacher to a classroom
     class ClassroomAssignTeacher(Resource):
         def post(self):
             ret_val : Dict[str,Any] = {
@@ -307,9 +308,14 @@ class ClassroomAPI:
             teacher_id = args["teacher_id"]
             class_id = args["class_id"]
 
-            # Are teachers assigning themselves to class?
-            # If yes, teacher_id shouldn't be a required request value, but do we need a check to ensure a teacher isn't assigning themselves to another teacher's class?
-            # If no, checking the session for a logged-in teacher doesn't make sense.
+            # TODO:
+            
+            # If class_id is empty/null, we'll create a class and return the class_id
+            
+            # If a class_id and teacher_id is given, assume the logged-in teacher is assigning
+            # a second teacher (assistant) to the class. Confirm the logged-in teacher is already 
+            # associated with the class before assigning the second teacher            
+
 
             if "teacher_id" in session and (session['teacher_id'] == teacher_id):
                 fd_config = settings["DB_CONFIG"]["fd_users"]

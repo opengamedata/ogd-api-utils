@@ -19,6 +19,7 @@ from opengamedata.managers.ExportManager import ExportManager
 from opengamedata.ogd_requests.Request import Request, ExporterRange, IDMode
 from opengamedata.ogd_requests.RequestResult import RequestResult
 from opengamedata.schemas.ExportMode import ExportMode
+from opengamedata.schemas.GameSchema import GameSchema
 
 class SessionAPI:
     """Class to define an API for the developer/designer dashboard"""
@@ -34,6 +35,7 @@ class SessionAPI:
         api.add_resource(SessionAPI.SessionList, '/sessions/list/<game_id>')
         api.add_resource(SessionAPI.SessionsMetrics, '/sessions/metrics')
         api.add_resource(SessionAPI.SessionMetrics, '/session/metrics')
+        api.add_resource(SessionAPI.SessionFeatureList, '/sessions/metrics/list/<game_id>')
 
     
     class SessionList(Resource):
@@ -222,3 +224,41 @@ class SessionAPI:
                 current_app.logger.warn(f"Didn't find {target_id} in list of session results, defaulting to first session in list (session ID={session_list[0][0]})")
                 ret_val = session_list[0]
             return ret_val
+
+    class SessionFeatureList(Resource):
+        """Class for getting a full list of features for a given game."""
+        def get(self, game_id):
+            """Handles a GET request for a list of sessions.
+
+            :param game_id: _description_
+            :type game_id: _type_
+            :return: _description_
+            :rtype: _type_
+            """
+            print("Received metric list request.")
+            ret_val = APIResult.Default(req_type=RESTType.GET)
+
+            try:
+                feature_list = []
+                
+                orig_cwd = os.getcwd()
+                os.chdir(settings["OGD_CORE_PATH"])
+
+                _schema = GameSchema(schema_name=f"{game_id}.json")
+                for name,percount in _schema.PerCountFeatures.items():
+                    if percount.get('enabled', False):
+                        feature_list.append(name)
+                for name,aggregate in _schema.AggregateFeatures.items():
+                    if aggregate.get('enabled', False):
+                        feature_list.append(name)
+                os.chdir(orig_cwd)
+            except Exception as err:
+                ret_val.ServerErrored(f"ERROR: Unknown error while processing FeatureList request")
+                print(f"Got exception for FeatureList request:\ngame={game_id}\n{str(err)}")
+                print(traceback.format_exc())
+            else:
+                if feature_list != []:
+                    ret_val.RequestSucceeded(msg="SUCCESS: Got metric list for given game", val=feature_list)
+                else:
+                    ret_val.RequestErrored("FAIL: Did not find any metrics for the given game")
+            return ret_val.ToDict()
