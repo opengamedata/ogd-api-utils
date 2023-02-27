@@ -151,6 +151,11 @@ elif args.level == 'DEBUG':
     logging.basicConfig(level=logging.DEBUG)
 data_dirs = os.walk("./data/")
 indexed_files = generate_index(data_dirs)
+if not "CONFIG" in indexed_files.keys():
+    indexed_files["CONFIG"] = {
+        "files_base"     : settings.get("FILE_INDEXING", {}).get("REMOTE_URL", None),
+        "templates_base" : settings.get("FILE_INDEXING", {}).get("TEMPLATES_URL", None)
+    }
 # print(f"Final set of indexed files: {indexed_files}")
 with open(Path("./data/file_list.json"), "w+") as indexed_zips_file:
     indexed_zips_file.write(json.dumps(indexed_files, indent=4, sort_keys=True))
