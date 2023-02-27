@@ -30,8 +30,8 @@ class t_DashboardAPI(TestCase):
             url = f"{base}/game/AQUALAB/metrics"
             print(f"GET test at {url}")
             params = {
-                'start_datetime':datetime(year=2022, month=4, day=1).isoformat(),
-                'end_datetime':datetime(year=2022, month=4, day=14).isoformat(),
+                'start_datetime':datetime(year=2022, month=9, day=1).isoformat(),
+                'end_datetime':datetime(year=2022, month=9, day=3).isoformat(),
                 'metrics':'[ActiveJobs, SessionID, TopJobCompletionDestinations, TopJobSwitchDestinations]'
             }
             result = requests.get(url=url, params=params)
