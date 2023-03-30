@@ -66,15 +66,6 @@ else:
     ClassroomAPI.register(application)
 
 try:
-    from apis.DashboardAPI import DashboardAPI
-except ImportError as err:
-    _logImportErr(msg="Could not import Dashboard API:", err=err)
-except Exception as err:
-    _logImportErr(msg="Could not import Dashboard API, general error:", err=err)
-else:
-    DashboardAPI.register(application)
-
-try:
     from apis.PopulationAPI import PopulationAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Population API:", err=err)
