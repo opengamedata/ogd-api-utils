@@ -8,6 +8,8 @@ import pandas as pd
 import zipfile
 from pathlib import Path
 from typing import Dict
+# local imports
+from config.config import settings as settings
 
 def meta_to_index(meta:Dict, data_dir:Path):
     # raw_stat = os.stat(raw_csv_full_path)
@@ -18,16 +20,20 @@ def meta_to_index(meta:Dict, data_dir:Path):
     raw_file  = meta['raw_file'].split('/')[-1]        if meta.get('raw_file')        is not None else None
     evt_file  = meta['events_file'].split('/')[-1]     if meta.get('events_file')     is not None else None
     return {
-        "population_file" : str(data_dir / pop_file)  if pop_file  is not None else None,
-        "players_file"    : str(data_dir / play_file) if play_file is not None else None,
-        "sessions_file"   : str(data_dir / sess_file) if sess_file is not None else None,
-        "raw_file"        : str(data_dir / raw_file)  if raw_file  is not None else None,
-        "events_file"     : str(data_dir / evt_file)  if evt_file  is not None else None,
-        "ogd_revision"    : meta.get('ogd_revision', None),
-        "start_date"      : meta.get('start_date', None),
-        "end_date"        : meta.get('end_date', None),
-        "date_modified"   : meta.get('date_modified', None),
-        "sessions"        : meta.get('sessions', None)
+        "population_file"     : str(data_dir / pop_file)  if pop_file  is not None else None,
+        "players_file"        : str(data_dir / play_file) if play_file is not None else None,
+        "sessions_file"       : str(data_dir / sess_file) if sess_file is not None else None,
+        "events_file"         : str(data_dir / evt_file)  if evt_file  is not None else None,
+        "raw_file"            : str(data_dir / raw_file)  if raw_file  is not None else None,
+        "population_template" : meta.get('population_template', "") if pop_file  is not None else None,
+        "players_template"    : meta.get('players_template', "")    if play_file is not None else None,
+        "sessions_template"   : meta.get('sessions_template', "")   if sess_file is not None else None,
+        "events_template"     : meta.get('events_template', "")     if evt_file  is not None else None,
+        "ogd_revision"        : meta.get('ogd_revision', None),
+        "start_date"          : meta.get('start_date', None),
+        "end_date"            : meta.get('end_date', None),
+        "date_modified"       : meta.get('date_modified', None),
+        "sessions"            : meta.get('sessions', None)
     }
 
 def index_meta(root:Path, name:str, indexed_files:Dict):
@@ -70,33 +76,46 @@ def index_zip(root:Path, name:str, indexed_files):
                 session_ct = len(data.index)
         logging.log(msg=f"Indexing {file_path}", level=logging.INFO)
         indexed_files[game_id][dataset_id] = {
-            "population_file" :str(file_path) if kind == 'population-features' else None,
-            "players_file"    :str(file_path) if kind == 'player-features' else None,
-            "sessions_file"   :str(file_path) if kind == 'session-features' else None,
-            "raw_file"        :str(file_path) if kind == 'raw' else None,
-            "events_file"     :str(file_path) if kind == 'events' else None,
-            "ogd_revision"    :None,
-            "start_date"      :start_date,
-            "end_date"        :end_date,
-            "date_modified"   :None,
-            "sessions"        :session_ct
+            "population_file"     : str(file_path) if kind == 'population-features' else None,
+            "population_template" : '' if kind == 'population-features' else None,
+            "players_file"        : str(file_path) if kind == 'player-features' else None,
+            "players_template"    : '' if kind == 'players-features' else None,
+            "sessions_file"       : str(file_path) if kind == 'session-features' else None,
+            "sessions_template"   : '' if kind == 'sessions-features' else None,
+            "raw_file"            : str(file_path) if kind == 'raw' else None,
+            "events_file"         : str(file_path) if kind == 'events' else None,
+            "events_template"     : '' if kind == 'events' else None,
+            "ogd_revision"        : None,
+            "start_date"          : start_date,
+            "end_date"            : end_date,
+            "date_modified"       : None,
+            "sessions"            : session_ct
         }
     else:
+        # handle population file
         if indexed_files[game_id][dataset_id]["population_file"] == None and kind == 'population-features':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
             indexed_files[game_id][dataset_id]["population_file"] = str(file_path)
+            indexed_files[game_id][dataset_id]["population_template"] = ''
+        # handle players file
         if indexed_files[game_id][dataset_id]["players_file"] == None and kind == 'player-features':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
             indexed_files[game_id][dataset_id]["players_file"] = str(file_path)
+            indexed_files[game_id][dataset_id]["players_template"] = ''
+        # handle sessions file
         if indexed_files[game_id][dataset_id]["sessions_file"] == None and kind == 'session-features':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
             indexed_files[game_id][dataset_id]["sessions_file"] = str(file_path)
-        if indexed_files[game_id][dataset_id]["raw_file"] == None and kind == 'raw':
-            logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
-            indexed_files[game_id][dataset_id]["raw_file"] = str(file_path)
+            indexed_files[game_id][dataset_id]["sessions_template"] = ''
+        # handle events file
         if indexed_files[game_id][dataset_id]["events_file"] == None and kind == 'events':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
             indexed_files[game_id][dataset_id]["events_file"] = str(file_path)
+            indexed_files[game_id][dataset_id]["events_template"] = ''
+        # handle raw file
+        if indexed_files[game_id][dataset_id]["raw_file"] == None and kind == 'raw':
+            logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
+            indexed_files[game_id][dataset_id]["raw_file"] = str(file_path)
     return indexed_files
 
 def generate_index(walk_data):
@@ -132,6 +151,11 @@ elif args.level == 'DEBUG':
     logging.basicConfig(level=logging.DEBUG)
 data_dirs = os.walk("./data/")
 indexed_files = generate_index(data_dirs)
+if not "CONFIG" in indexed_files.keys():
+    indexed_files["CONFIG"] = {
+        "files_base"     : settings.get("FILE_INDEXING", {}).get("REMOTE_URL", None),
+        "templates_base" : settings.get("FILE_INDEXING", {}).get("TEMPLATES_URL", None)
+    }
 # print(f"Final set of indexed files: {indexed_files}")
 with open(Path("./data/file_list.json"), "w+") as indexed_zips_file:
     indexed_zips_file.write(json.dumps(indexed_files, indent=4, sort_keys=True))
