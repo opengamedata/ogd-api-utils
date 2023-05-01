@@ -67,8 +67,7 @@ def index_meta(root:Path, name:str, indexed_files:Dict):
     if not next_game in indexed_files.keys():
         indexed_files[next_game] = {}
     # if we already indexed something with this dataset id, and this was older, do nothing..
-    existing_mod = indexed_files[next_game][next_id]['date_modified']
-    if next_id in indexed_files[next_game].keys() and compare_dates(next_mod, existing_mod) <= 0:
+    if next_id in indexed_files[next_game].keys() and compare_dates(next_mod, indexed_files[next_game][next_id]['date_modified']) <= 0:
         return indexed_files
     else:
         indexed_files[next_game][next_id] = meta_to_index(meta=next_meta, data_dir=root)
