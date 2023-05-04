@@ -117,22 +117,22 @@ def index_zip(root:Path, name:str, indexed_files):
         if indexed_files[game_id][dataset_id]["population_file"] == None and kind == 'population-features':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
             indexed_files[game_id][dataset_id]["population_file"] = str(file_path)
-            indexed_files[game_id][dataset_id]["population_template"] = ''
+            indexed_files[game_id][dataset_id]["population_template"] = f'/tree/{game_id}'
         # handle players file
         if indexed_files[game_id][dataset_id]["players_file"] == None and kind == 'player-features':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
             indexed_files[game_id][dataset_id]["players_file"] = str(file_path)
-            indexed_files[game_id][dataset_id]["players_template"] = ''
+            indexed_files[game_id][dataset_id]["players_template"] = f'/tree/{game_id}'
         # handle sessions file
         if indexed_files[game_id][dataset_id]["sessions_file"] == None and kind == 'session-features':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
             indexed_files[game_id][dataset_id]["sessions_file"] = str(file_path)
-            indexed_files[game_id][dataset_id]["sessions_template"] = ''
+            indexed_files[game_id][dataset_id]["sessions_template"] = f'/tree/{game_id}'
         # handle events file
         if indexed_files[game_id][dataset_id]["events_file"] == None and kind == 'events':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
             indexed_files[game_id][dataset_id]["events_file"] = str(file_path)
-            indexed_files[game_id][dataset_id]["events_template"] = ''
+            indexed_files[game_id][dataset_id]["events_template"] = f'/tree/{game_id}'
         # handle raw file
         if indexed_files[game_id][dataset_id]["raw_file"] == None and kind == 'raw':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
