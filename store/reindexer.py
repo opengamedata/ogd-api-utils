@@ -77,14 +77,14 @@ def index_zip(root:Path, name:str, indexed_files):
         logging.log(msg=f"Indexing {file_path}", level=logging.INFO)
         indexed_files[game_id][dataset_id] = {
             "population_file"     : str(file_path) if kind == 'population-features' else None,
-            "population_template" : '' if kind == 'population-features' else None,
+            "population_template" : f'/tree/{game_id}' if kind == 'population-features' else None,
             "players_file"        : str(file_path) if kind == 'player-features' else None,
-            "players_template"    : '' if kind == 'players-features' else None,
+            "players_template"    : f'/tree/{game_id}' if kind == 'players-features' else None,
             "sessions_file"       : str(file_path) if kind == 'session-features' else None,
-            "sessions_template"   : '' if kind == 'sessions-features' else None,
+            "sessions_template"   : f'/tree/{game_id}' if kind == 'sessions-features' else None,
             "raw_file"            : str(file_path) if kind == 'raw' else None,
             "events_file"         : str(file_path) if kind == 'events' else None,
-            "events_template"     : '' if kind == 'events' else None,
+            "events_template"     : f'/tree/{game_id}' if kind == 'events' else None,
             "ogd_revision"        : None,
             "start_date"          : start_date,
             "end_date"            : end_date,
