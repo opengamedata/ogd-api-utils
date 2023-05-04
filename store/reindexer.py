@@ -6,6 +6,7 @@ import logging
 import os
 import pandas as pd
 import zipfile
+from datetime import datetime
 from pathlib import Path
 from typing import Dict
 # local imports
@@ -36,6 +37,26 @@ def meta_to_index(meta:Dict, data_dir:Path):
         "sessions"            : meta.get('sessions', None)
     }
 
+def compare_dates(date_a:str, date_b:str) -> int:
+    """Function to parse and compare two date strings.
+    Easier this way then inline parse and compare.
+
+    :param date_a: The first date for comparison
+    :type date_a: str
+    :param date_b: The second date for comparison
+    :type date_b: str
+    :return: -1 if the first date is smaller, 0 if they are the same, 1 if the first date is larger
+    :rtype: int
+    """
+    _a = datetime.strptime(date_a, "%m/%d/%Y")
+    _b = datetime.strptime(date_b, "%m/%d/%Y")
+    if _a < _b:
+        return -1
+    elif _a == _b:
+        return 0
+    else:
+        return 1
+
 def index_meta(root:Path, name:str, indexed_files:Dict):
     next_meta : Dict = {}
     with open(root / name, 'r') as next_file:
@@ -46,7 +67,7 @@ def index_meta(root:Path, name:str, indexed_files:Dict):
     if not next_game in indexed_files.keys():
         indexed_files[next_game] = {}
     # if we already indexed something with this dataset id, and this was older, do nothing..
-    if next_id in indexed_files[next_game].keys() and next_mod < indexed_files[next_game][next_id]['date_modified']:
+    if next_id in indexed_files[next_game].keys() and compare_dates(next_mod, indexed_files[next_game][next_id]['date_modified']) <= 0:
         return indexed_files
     else:
         indexed_files[next_game][next_id] = meta_to_index(meta=next_meta, data_dir=root)
