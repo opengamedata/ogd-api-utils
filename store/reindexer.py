@@ -98,14 +98,14 @@ def index_zip(root:Path, name:str, indexed_files):
         logging.log(msg=f"Indexing {file_path}", level=logging.INFO)
         indexed_files[game_id][dataset_id] = {
             "population_file"     : str(file_path) if kind == 'population-features' else None,
-            "population_template" : f'/tree/{game_id}' if kind == 'population-features' else None,
+            "population_template" : f'/tree/{game_id.lower()}' if kind == 'population-features' else None,
             "players_file"        : str(file_path) if kind == 'player-features' else None,
-            "players_template"    : f'/tree/{game_id}' if kind == 'players-features' else None,
+            "players_template"    : f'/tree/{game_id.lower()}' if kind == 'players-features' else None,
             "sessions_file"       : str(file_path) if kind == 'session-features' else None,
-            "sessions_template"   : f'/tree/{game_id}' if kind == 'sessions-features' else None,
+            "sessions_template"   : f'/tree/{game_id.lower()}' if kind == 'sessions-features' else None,
             "raw_file"            : str(file_path) if kind == 'raw' else None,
             "events_file"         : str(file_path) if kind == 'events' else None,
-            "events_template"     : f'/tree/{game_id}' if kind == 'events' else None,
+            "events_template"     : f'/tree/{game_id.lower()}' if kind == 'events' else None,
             "ogd_revision"        : None,
             "start_date"          : start_date,
             "end_date"            : end_date,
@@ -117,22 +117,22 @@ def index_zip(root:Path, name:str, indexed_files):
         if indexed_files[game_id][dataset_id]["population_file"] == None and kind == 'population-features':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
             indexed_files[game_id][dataset_id]["population_file"] = str(file_path)
-            indexed_files[game_id][dataset_id]["population_template"] = f'/tree/{game_id}'
+            indexed_files[game_id][dataset_id]["population_template"] = f'/tree/{game_id.lower()}'
         # handle players file
         if indexed_files[game_id][dataset_id]["players_file"] == None and kind == 'player-features':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
             indexed_files[game_id][dataset_id]["players_file"] = str(file_path)
-            indexed_files[game_id][dataset_id]["players_template"] = f'/tree/{game_id}'
+            indexed_files[game_id][dataset_id]["players_template"] = f'/tree/{game_id.lower()}'
         # handle sessions file
         if indexed_files[game_id][dataset_id]["sessions_file"] == None and kind == 'session-features':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
             indexed_files[game_id][dataset_id]["sessions_file"] = str(file_path)
-            indexed_files[game_id][dataset_id]["sessions_template"] = f'/tree/{game_id}'
+            indexed_files[game_id][dataset_id]["sessions_template"] = f'/tree/{game_id.lower()}'
         # handle events file
         if indexed_files[game_id][dataset_id]["events_file"] == None and kind == 'events':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
             indexed_files[game_id][dataset_id]["events_file"] = str(file_path)
-            indexed_files[game_id][dataset_id]["events_template"] = f'/tree/{game_id}'
+            indexed_files[game_id][dataset_id]["events_template"] = f'/tree/{game_id.lower()}'
         # handle raw file
         if indexed_files[game_id][dataset_id]["raw_file"] == None and kind == 'raw':
             logging.log(msg=f"Updating index with {file_path}", level=logging.INFO)
