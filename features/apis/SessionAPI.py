@@ -113,7 +113,6 @@ class SessionAPI:
                 
                 orig_cwd = os.getcwd()
                 os.chdir(server_settings["OGD_CORE_PATH"])
-                _core_config = ConfigSchema(name="Core Config", all_elements=core_settings)
 
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _session_ids is not None and _interface is not None:
@@ -125,7 +124,7 @@ class SessionAPI:
                                          feature_overrides=_metrics
                     )
                     # retrieve and process the data
-                    export_mgr = ExportManager(config=_core_config)
+                    export_mgr = ExportManager(config=ConfigSchema(name="Core Config", all_elements=core_settings))
                     result = export_mgr.ExecuteRequest(request=request)
                 elif _metrics is None:
                     current_app.logger.warning("_metrics was None")
@@ -180,7 +179,6 @@ class SessionAPI:
                 
                 orig_cwd = os.getcwd()
                 os.chdir(server_settings["OGD_CORE_PATH"])
-                _core_config = ConfigSchema(name="Core Config", all_elements=core_settings)
 
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
@@ -192,7 +190,7 @@ class SessionAPI:
                                          feature_overrides=_metrics
                     )
                     # retrieve and process the data
-                    export_mgr = ExportManager(config=_core_config)
+                    export_mgr = ExportManager(config=ConfigSchema(name="Core Config", all_elements=core_settings))
                     result = export_mgr.ExecuteRequest(request=request)
                 elif _metrics is None:
                     current_app.logger.warning("_metrics was None")
