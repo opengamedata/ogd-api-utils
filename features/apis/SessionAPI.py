@@ -10,8 +10,8 @@ from flask_restful import Resource, Api, reqparse
 from flask_restful.inputs import datetime_from_iso8601
 from typing import Optional, Union
 # import locals
-from apis.APIResult import APIResult, RESTType, ResultStatus
-from apis import APIUtils
+from utils.APIResult import APIResult, RESTType, ResultStatus
+from utils import APIUtils
 from config.config import settings
 from opengamedata.interfaces.DataInterface import DataInterface
 from opengamedata.interfaces.outerfaces.DictionaryOuterface import DictionaryOuterface
@@ -19,7 +19,7 @@ from opengamedata.managers.ExportManager import ExportManager
 from opengamedata.ogd_requests.Request import Request, ExporterRange, IDMode
 from opengamedata.ogd_requests.RequestResult import RequestResult
 from opengamedata.schemas.ExportMode import ExportMode
-from opengamedata.schemas.GameSchema import GameSchema
+from opengamedata.schemas.games.GameSchema import GameSchema
 
 class SessionAPI:
     """Class to define an API for the developer/designer dashboard"""

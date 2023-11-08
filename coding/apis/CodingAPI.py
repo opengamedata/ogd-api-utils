@@ -8,8 +8,8 @@ from flask_restful import Resource, Api, reqparse
 from mysql.connector import Error as MySQLError
 from mysql.connector.connection import MySQLConnection
 # import locals
-from apis.APIResult import APIResult, RESTType, ResultStatus
-from apis import APIUtils
+from utils.APIResult import APIResult, RESTType, ResultStatus
+from utils import APIUtils
 from config.config import settings
 from opengamedata.coding.Code import Code
 from opengamedata.coding.Coder import Coder
