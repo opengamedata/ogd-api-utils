@@ -11,15 +11,18 @@ from typing import Any, Dict, Optional, Union
 # import locals
 from utils.APIResult import APIResult, RESTType, ResultStatus
 from utils import APIUtils
-from config.config import settings
+from config.config import settings as server_settings
+from opengamedata.config.config import settings as core_settings
 from opengamedata.interfaces.DataInterface import DataInterface
 from opengamedata.interfaces.outerfaces.DictionaryOuterface import DictionaryOuterface
 from opengamedata.managers.ExportManager import ExportManager
+from opengamedata.ogd_requests.Request import Request, ExporterRange
+from opengamedata.ogd_requests.RequestResult import RequestResult
 from opengamedata.schemas.games.GameSchema import GameSchema
 from opengamedata.schemas.IDMode import IDMode
 from opengamedata.schemas.ExportMode import ExportMode
-from opengamedata.ogd_requests.Request import Request, ExporterRange
-from opengamedata.ogd_requests.RequestResult import RequestResult
+from opengamedata.schemas.configs.ConfigSchema import ConfigSchema
+from opengamedata.schemas.configs.GameSourceSchema import GameSourceSchema
 class PlayerAPI:
     """Class to define an API for the developer/designer dashboard"""
     @staticmethod
@@ -63,7 +66,7 @@ class PlayerAPI:
             try:
                 result = {}
                 orig_cwd = os.getcwd()
-                os.chdir(settings["OGD_CORE_PATH"])
+                os.chdir(server_settings["OGD_CORE_PATH"])
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _interface is not None:
                     _range = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
@@ -110,19 +113,19 @@ class PlayerAPI:
                 values_dict = {}
 
                 orig_cwd = os.getcwd()
-                os.chdir(settings["OGD_CORE_PATH"])
+                os.chdir(server_settings["OGD_CORE_PATH"])
 
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _player_ids is not None and _interface is not None:
                     _range     = ExporterRange.FromIDs(source=_interface, ids=_player_ids, id_mode=IDMode.USER)
                     _exp_types = set([ExportMode.PLAYER])
-                    _outerface = DictionaryOuterface(game_id=game_id, out_dict=values_dict)
+                    _outerface = DictionaryOuterface(game_id=game_id, config=GameSourceSchema.EmptySchema(), export_modes=_exp_types, out_dict=values_dict)
                     request    = Request(interface=_interface,      range=_range,
                                          exporter_modes=_exp_types, outerfaces={_outerface},
                                          feature_overrides=_metrics
                     )
                     # retrieve and process the data
-                    export_mgr = ExportManager(settings=settings)
+                    export_mgr = ExportManager(config=ConfigSchema(name="Core Config", all_elements=core_settings))
                     result = export_mgr.ExecuteRequest(request=request)
                 elif _metrics is None:
                     current_app.logger.warning("_metrics was None")
@@ -179,19 +182,19 @@ class PlayerAPI:
                 values_dict = {}
                 
                 orig_cwd = os.getcwd()
-                os.chdir(settings["OGD_CORE_PATH"])
+                os.chdir(server_settings["OGD_CORE_PATH"])
 
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
                     _range = ExporterRange.FromIDs(source=_interface, ids=[player_id], id_mode=IDMode.USER)
                     _exp_types = set([ExportMode.PLAYER])
-                    _outerface = DictionaryOuterface(game_id=game_id, out_dict=values_dict)
+                    _outerface = DictionaryOuterface(game_id=game_id, config=GameSourceSchema.EmptySchema(), export_modes=_exp_types, out_dict=values_dict)
                     request    = Request(interface=_interface,      range=_range,
                                          exporter_modes=_exp_types, outerfaces={_outerface},
                                          feature_overrides=_metrics
                     )
                     # retrieve and process the data
-                    export_mgr = ExportManager(settings=settings)
+                    export_mgr = ExportManager(config=ConfigSchema(name="Core Config", all_elements=core_settings))
                     result = export_mgr.ExecuteRequest(request=request)
                 elif _metrics is None:
                     current_app.logger.warning("_metrics was None")
@@ -245,14 +248,14 @@ class PlayerAPI:
                 feature_list = []
                 
                 orig_cwd = os.getcwd()
-                os.chdir(settings["OGD_CORE_PATH"])
+                os.chdir(server_settings["OGD_CORE_PATH"])
 
                 _schema = GameSchema(schema_name=f"{game_id}.json")
                 for name,percount in _schema.PerCountFeatures.items():
-                    if percount.get('enabled', False):
+                    if ExportMode.PLAYER in percount.Enabled:
                         feature_list.append(name)
                 for name,aggregate in _schema.AggregateFeatures.items():
-                    if aggregate.get('enabled', False):
+                    if ExportMode.PLAYER in aggregate.Enabled:
                         feature_list.append(name)
                 os.chdir(orig_cwd)
             except Exception as err:
