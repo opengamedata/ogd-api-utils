@@ -38,11 +38,11 @@ runs:
       run: sed -i 's@username@${{inputs.db_user}}@g' config/config.py
       shell: bash
     - name: Set DB password
-      run: sed -i 's@password@${{inputs.db_pass}}@g' config/config.py
+      run: sed -i 's/password/${{inputs.db_pass}}/g' config/config.py
       shell: bash
     - name: Set ID Generator DB name
-      run: sed -i 's@id_generator@${{inputs.id_gen_db_name}}@g' config/config.py
+      run: sed -i 's/id_generator/${{inputs.id_gen_db_name}}/g' config/config.py
       shell: bash
     - name: Set User DB name
-      run: sed -i 's@fieldday_users@${{inputs.fd_users_db_name}}@g' config/config.py
+      run: sed -i 's/fieldday_users/${{inputs.fd_users_db_name}}/g' config/config.py
       shell: bash
