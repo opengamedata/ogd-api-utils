@@ -20,6 +20,7 @@ jobs:
     name: CI Deploy of Feature APIs
     runs-on: ubuntu-22.04
     steps:
+    # 1. Local checkout & config
     - uses: actions/checkout@v3
     - name: Set up Config File
       uses: ./.github/actions/apis_config
@@ -29,13 +30,23 @@ jobs:
         db_pass: ${{secrets.SQL_PASS}}
         id_gen_db_name: ${{ secrets.DBNAME_ID_GEN }}
         fd_users_db_name: ${{ secrets.DBNAME_FD_USERS }}
+
+    # 2. Build 
+
+    # 3. Remote config & deploy
     - name: Get OpenConnect installed
       run: sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-
+      # Prepare directory structure for deploy
+    - name: Setup Access Key
+      run: |
+        mkdir -p ~/.ssh
+        echo '${{secrets.DEPLOY_KEY}}' >> ./key.txt
+        chmod 600 ./key.txt
     - name: Ensure directory exists
       run: ssh -o StrictHostKeyChecking=no -t -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.TARGET_HOST }} "mkdir -p ${{ env.TARGET_PATH }}"
+      # Actual upload
     - name: Upload config to web server via rsync
       uses: burnett01/rsync-deployments@5.2
       with:
