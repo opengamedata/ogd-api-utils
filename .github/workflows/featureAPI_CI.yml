@@ -12,7 +12,7 @@ on:
 
 env:
   CI: ""
-  TARGET_PATH: ${{ vars.WEB_PATH }}${{ github.event.repository.name }}/${{ github.ref_name }}/features
+  TARGET_PATH: ${{ vars.WSGI_PATH }}${{ github.event.repository.name }}/${{ github.ref_name }}/features
   TARGET_HOST: ${{ vars.OGD_STAGING_HOST }}
 
 jobs:
