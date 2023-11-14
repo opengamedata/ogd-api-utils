@@ -1,13 +1,12 @@
 # Workflow to build and deploy designer dashboard to server.
 name: OpenGameData Features API CI
 on:
-  # push:
-    # paths:
-    # - '.github/workflows/codesAPI_CI.yml'
-    # - '.github/actions/**'
-    # - 'config/**'
-    # - 'apis/codes/**'
-    # - 'codes_app.py'
+  push:
+    paths:
+    - '.github/workflows/featureAPI_CI.yml'
+    - '.github/actions/**'
+    - 'config/**'
+    - 'apis/features/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 
 env:
