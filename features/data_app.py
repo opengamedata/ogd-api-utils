@@ -99,7 +99,7 @@ else:
     SessionAPI.register(application)
 
 try:
-    from apis.HelloAPI import HelloAPI
+    from utils.HelloAPI import HelloAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Hello API:", err=err)
 except Exception as err:
