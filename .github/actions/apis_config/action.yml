@@ -54,3 +54,6 @@ runs:
     - name: Set User DB name
       run: sed -i 's/fieldday_users/${{inputs.fd_users_db_name}}/g' config/config.py
       shell: bash
+    - name: Set Path to App
+      run: sed -i 's@DEPLOY_PATH@${{inputs.deploy_path}}@g' ${{inputs.app_name}}
+      shell: bash
