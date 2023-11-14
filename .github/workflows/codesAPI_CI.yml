@@ -29,7 +29,7 @@ jobs:
         db_pass: ${{secrets.SQL_PASS}}
         id_gen_db_name: ${{ secrets.DBNAME_ID_GEN }}
         fd_users_db_name: ${{ secrets.DBNAME_FD_USERS }}
-        app_name: "codes.wsgi"
+        app_name: "coding/codes.wsgi"
         deploy_path: ${{ env.TARGET_PATH }}
     - name: Get OpenConnect installed
       run: sudo apt-get -q update && sudo apt-get -q install openconnect
