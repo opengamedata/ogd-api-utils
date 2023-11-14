@@ -25,6 +25,14 @@ inputs:
     description: "Name of the database containing data on existing users"
     required: true
     default: 'fd_users placeholder'
+  app_name:
+    description: "The name of the wsgi app being deployed"
+    required: true
+    default: "opengamedata.wsgi"
+  deploy_path:
+    description: "The path on the server in which the app is deployed"
+    required: true
+    default: '/var/www/wsgi-bin'
 runs:
   using: "composite"
   steps:
