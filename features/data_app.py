@@ -18,15 +18,21 @@ logRootHandlers = ['wsgi']
 # If a dedicated log file is defined for this Flask app, we'll also log there
 # Ensure this is a writable directory
 if "OGD_FLASK_APP_LOG_FILE" in os.environ:
-    logHandlers['wsgi_app_file'] = {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.environ["OGD_FLASK_APP_LOG_FILE"],
-            'maxBytes': 100000000, # 100 MB
-            'backupCount': 10, # Up to 10 rotated files
-            'formatter': 'default'
-    }
+    try:
+        flask_log_file = open(os.environ['OGD_FLASK_APP_LOG_FILE'], "a+")
+    except FileNotFoundError:
+        pass
+    else:
+        flask_log_file.close()
+        logHandlers['wsgi_app_file'] = {
+                'class': 'logging.handlers.RotatingFileHandler',
+                'filename': os.environ["OGD_FLASK_APP_LOG_FILE"],
+                'maxBytes': 100000000, # 100 MB
+                'backupCount': 10, # Up to 10 rotated files
+                'formatter': 'default'
+        }
 
-    logRootHandlers.append('wsgi_app_file')
+        logRootHandlers.append('wsgi_app_file')
 
 dictConfig({
     'version': 1,
