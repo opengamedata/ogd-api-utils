@@ -21,6 +21,8 @@ jobs:
     steps:
     # 1. Local checkout & config
     - uses: actions/checkout@v3
+      with:
+        submodules: 'true'
     - name: Set up Config File
       uses: ./.github/actions/apis_config
       with:
@@ -31,7 +33,6 @@ jobs:
         fd_users_db_name: ${{ secrets.DBNAME_FD_USERS }}
         app_name: "features/data.wsgi"
         deploy_path: ${{ env.TARGET_PATH }}
-        submodules: 'true'
 
     # 2. Build 
 
