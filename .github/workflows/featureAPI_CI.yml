@@ -31,6 +31,7 @@ jobs:
         fd_users_db_name: ${{ secrets.DBNAME_FD_USERS }}
         app_name: "features/data.wsgi"
         deploy_path: ${{ env.TARGET_PATH }}
+        submodules: 'true'
 
     # 2. Build 
 
