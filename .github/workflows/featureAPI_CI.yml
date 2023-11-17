@@ -52,8 +52,8 @@ jobs:
       uses: burnett01/rsync-deployments@5.2
       with:
         switches: -vrc --exclude-from rsync-exclude
-        path: config/
-        remote_path: ${{ env.TARGET_PATH }}
+        path: config/*
+        remote_path: ${{ env.TARGET_PATH }}/config/
         remote_host: ${{ env.TARGET_HOST }}
         remote_user: ${{ secrets.DEPLOY_USER }}
         remote_key:  ${{ secrets.DEPLOY_KEY  }}
@@ -70,8 +70,8 @@ jobs:
       uses: burnett01/rsync-deployments@5.2
       with:
         switches: -vrc --exclude-from rsync-exclude
-        path: utils/
-        remote_path: ${{ env.TARGET_PATH }}
+        path: utils/*
+        remote_path: ${{ env.TARGET_PATH }}/utils
         remote_host: ${{ env.TARGET_HOST }}
         remote_user: ${{ secrets.DEPLOY_USER }}
         remote_key:  ${{ secrets.DEPLOY_KEY  }}
@@ -79,8 +79,8 @@ jobs:
       uses: burnett01/rsync-deployments@5.2
       with:
         switches: -vrc --exclude-from rsync-exclude
-        path: opengamedata/
-        remote_path: ${{ env.TARGET_PATH }}
+        path: opengamedata/*
+        remote_path: ${{ env.TARGET_PATH }}/opengamedata
         remote_host: ${{ env.TARGET_HOST }}
         remote_user: ${{ secrets.DEPLOY_USER }}
         remote_key:  ${{ secrets.DEPLOY_KEY  }}
