@@ -1,8 +1,11 @@
 # import standard libraries
-import sys, os
+import os
+import logging
+import sys
 from logging.config import dictConfig
 # import 3rd-party libraries
 from flask import Flask
+from opengamedata.utils.Logger import Logger
 
 # By default we'll log to WSGI errors stream which ends up in the Apache error log
 logHandlers = {
@@ -61,6 +64,7 @@ application.secret_key = b'thisisafakesecretkey'
 def _logImportErr(msg:str, err:Exception):
     application.logger.warning(msg)
     application.logger.exception(err)
+Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 
 try:
     from apis.ClassroomAPI import ClassroomAPI
