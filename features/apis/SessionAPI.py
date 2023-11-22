@@ -26,9 +26,11 @@ from opengamedata.schemas.games.GameSchema import GameSchema
 from schemas.ServerConfigSchema import ServerConfigSchema
 
 class SessionAPI:
+    """Class to define an API for the developer/designer dashboard"""
+
     ogd_core   : Path
     ogd_config : ConfigSchema
-    """Class to define an API for the developer/designer dashboard"""
+
     @staticmethod
     def register(app:Flask, server_settings:ServerConfigSchema, core_settings:ConfigSchema):
         """Sets up the dashboard api in a flask app.
