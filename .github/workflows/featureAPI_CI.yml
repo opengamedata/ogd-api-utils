@@ -83,7 +83,7 @@ jobs:
       with:
         switches: -vrc --exclude-from rsync-exclude
         path: schemas/*
-        remote_path: ${{ env.TARGET_PATH }}/schemas
+        remote_path: ${{ env.TARGET_PATH }}/schemas/
         remote_host: ${{ env.TARGET_HOST }}
         remote_user: ${{ secrets.DEPLOY_USER }}
         remote_key:  ${{ secrets.DEPLOY_KEY  }}
