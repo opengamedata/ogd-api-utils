@@ -32,7 +32,7 @@ jobs:
         db_pass: ${{secrets.SQL_PASS}}
         id_gen_db_name: ${{ secrets.DBNAME_ID_GEN }}
         fd_users_db_name: ${{ secrets.DBNAME_FD_USERS }}
-        app_name: "features/data.wsgi"
+        app_path: "apps/features/data.wsgi"
         deploy_path: ${{ env.TARGET_PATH }}
     - name: Set up Core Config File
       uses: ./.github/actions/OGD_config

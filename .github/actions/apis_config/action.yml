@@ -25,7 +25,7 @@ inputs:
     description: "Name of the database containing data on existing users"
     required: true
     default: 'fd_users placeholder'
-  app_name:
+  app_path:
     description: "The name of the wsgi app being deployed"
     required: true
     default: "opengamedata.wsgi"
@@ -55,5 +55,5 @@ runs:
       run: sed -i 's/fieldday_users/${{inputs.fd_users_db_name}}/g' shared/config/config.py
       shell: bash
     - name: Set Path to App
-      run: sed -i 's@DEPLOY_PATH@${{inputs.deploy_path}}@g' ${{inputs.app_name}}
+      run: sed -i 's@DEPLOY_PATH@${{inputs.deploy_path}}@g' ${{inputs.app_path}}
       shell: bash
