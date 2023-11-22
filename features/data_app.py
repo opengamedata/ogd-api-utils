@@ -5,7 +5,6 @@ import sys
 from logging.config import dictConfig
 # import 3rd-party libraries
 from flask import Flask
-import opengamedata
 from opengamedata.schemas.configs.ConfigSchema import ConfigSchema
 from opengamedata.utils.Logger import Logger
 from schemas.ServerConfigSchema import ServerConfigSchema
