@@ -33,6 +33,16 @@ jobs:
         fd_users_db_name: ${{ secrets.DBNAME_FD_USERS }}
         app_name: "features/data.wsgi"
         deploy_path: ${{ env.TARGET_PATH }}
+    - name: Set up Core Config File
+      uses: ./.github/actions/OGD_config
+      with:
+        sql_user: ${{ secrets.SQL_USER }}
+        sql_pass: ${{ secrets.SQL_PASS }}
+        ssh_host: ${{ vars.OGD_LOGGER_HOST }}
+        ssh_user: ${{ secrets.VPN_USER }}
+        ssh_pass: ${{ secrets.VPN_PASS }}
+        slice_size: 1000
+        log_level: "INFO"
 
     # 2. Build 
 
