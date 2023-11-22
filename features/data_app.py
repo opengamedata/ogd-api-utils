@@ -5,6 +5,7 @@ import sys
 from logging.config import dictConfig
 # import 3rd-party libraries
 from flask import Flask
+from schemas.ServerConfigSchema import ServerConfigSchema
 from opengamedata.utils.Logger import Logger
 
 # By default we'll log to WSGI errors stream which ends up in the Apache error log
@@ -52,13 +53,13 @@ dictConfig({
 application = Flask(__name__)
 
 # import locals
-from config.config import settings
-_ogd_core = settings['OGD_CORE_PATH']
-if not _ogd_core in sys.path:
-    sys.path.append(settings['OGD_CORE_PATH'])
-    application.logger.info(f"Added {_ogd_core} to path.")
+from config.config import settings as srv_settings
+_server_settings = ServerConfigSchema(name="DataAppConfiguration", all_elements=srv_settings, logger=application.logger)
+if not _server_settings.OGDCore in sys.path:
+    sys.path.append(str(_server_settings.OGDCore.absolute()))
+    application.logger.info(f"Added {_server_settings.OGDCore} to path.")
 
-application.logger.setLevel(settings['DEBUG_LEVEL'])
+application.logger.setLevel(_server_settings.DebugLevel)
 application.secret_key = b'thisisafakesecretkey'
 
 def _logImportErr(msg:str, err:Exception):
