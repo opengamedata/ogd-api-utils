@@ -2,7 +2,6 @@
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
 # import locals
-from config.config import settings
 from utils.APIResult import APIResult, RESTType, ResultStatus
 
 class HelloAPI:
