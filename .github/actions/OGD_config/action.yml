@@ -40,23 +40,23 @@ runs:
       run: cp opengamedata/config/config.py.template opengamedata/config/config.py 
       shell: bash
     - name: Set SQL username
-      run: sed -i 's/username/${{inputs.sql_user}}/g' config/config.py
+      run: sed -i 's/username/${{inputs.sql_user}}/g' opengamedata/config/config.py
       shell: bash
     - name: Set SQL password
-      run: sed -i 's/password/${{inputs.sql_pass}}/g' config/config.py
+      run: sed -i 's/password/${{inputs.sql_pass}}/g' opengamedata/config/config.py
       shell: bash
     - name: Set SSH hostname
-      run: sed -i 's/hostname/${{inputs.sql_host}}/g' config/config.py
+      run: sed -i 's/hostname/${{inputs.sql_host}}/g' opengamedata/config/config.py
       shell: bash
     - name: Set SSH username
-      run: sed -i 's/WCER AD User/${{inputs.ssh_user}}/g' config/config.py
+      run: sed -i 's/WCER AD User/${{inputs.ssh_user}}/g' opengamedata/config/config.py
       shell: bash
     - name: Set SSH password
-      run: sed -i 's/WCER AD Password/${{inputs.ssh_pass}}/g' config/config.py
+      run: sed -i 's/WCER AD Password/${{inputs.ssh_pass}}/g' opengamedata/config/config.py
       shell: bash
     - name: Set Logger level
-      run: sed -i 's/INFO/${{inputs.log_level}}/g' config/config.py
+      run: sed -i 's/INFO/${{inputs.log_level}}/g' opengamedata/config/config.py
       shell: bash
     - name: Set Slice Size
-      run: sed -i 's/"BATCH_SIZE"\s*:\s*1000,/"BATCH_SIZE":${{inputs.slice_size}},/g' config/config.py
+      run: sed -i 's/"BATCH_SIZE"\s*:\s*1000,/"BATCH_SIZE":${{inputs.slice_size}},/g' opengamedata/config/config.py
       shell: bash
