@@ -4,16 +4,16 @@
 import os
 import traceback
 from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any, Dict, Optional
+# import 3rd-party libraries
 from flask import Flask
 from flask import current_app
 from flask_restful import Resource, Api, reqparse
 from flask_restful.inputs import datetime_from_iso8601
-from typing import Any, Dict, Optional
 # import locals
 from utils.APIResult import APIResult, RESTType, ResultStatus
 from utils import APIUtils
-from config.config import settings as server_settings
-from opengamedata.config.config import settings as core_settings
 from opengamedata.interfaces.DataInterface import DataInterface
 from opengamedata.interfaces.outerfaces.DictionaryOuterface import DictionaryOuterface
 from opengamedata.managers.ExportManager import ExportManager
@@ -23,11 +23,16 @@ from opengamedata.schemas.ExportMode import ExportMode
 from opengamedata.schemas.configs.ConfigSchema import ConfigSchema
 from opengamedata.schemas.configs.GameSourceSchema import GameSourceSchema
 from opengamedata.schemas.games.GameSchema import GameSchema
+from schemas.ServerConfigSchema import ServerConfigSchema
 
 class PopulationAPI:
     """Class to define an API for the developer/designer dashboard"""
+
+    ogd_core   : Path
+    ogd_config : ConfigSchema
+
     @staticmethod
-    def register(app:Flask):
+    def register(app:Flask, server_settings:ServerConfigSchema, core_settings:ConfigSchema):
         """Sets up the dashboard api in a flask app.
 
         :param app: _description_
@@ -37,6 +42,8 @@ class PopulationAPI:
         api = Api(app)
         api.add_resource(PopulationAPI.Population, '/populations/metrics')
         api.add_resource(PopulationAPI.PopulationFeatureList, '/populations/metrics/list/<game_id>')
+        PopulationAPI.ogd_core = server_settings.OGDCore
+        PopulationAPI.ogd_config = core_settings
 
     class Population(Resource):
         """Class for handling requests for population-level features."""
@@ -73,7 +80,7 @@ class PopulationAPI:
                 values_dict = {}
                 
                 orig_cwd = os.getcwd()
-                os.chdir(server_settings["OGD_CORE_PATH"])
+                os.chdir(PopulationAPI.ogd_core)
 
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
@@ -86,7 +93,7 @@ class PopulationAPI:
                     )
                     # retrieve and process the data
                     current_app.logger.info(f"Processing population request {request}...")
-                    export_mgr = ExportManager(config=ConfigSchema(name="Core Config", all_elements=core_settings))
+                    export_mgr = ExportManager(config=PopulationAPI.ogd_config)
                     result = export_mgr.ExecuteRequest(request=request)
                     current_app.logger.info(f"Result: {result.Message}")
                 elif _metrics is None:
@@ -128,7 +135,7 @@ class PopulationAPI:
                 feature_list = []
                 
                 orig_cwd = os.getcwd()
-                os.chdir(server_settings["OGD_CORE_PATH"])
+                os.chdir(PopulationAPI.ogd_core)
 
                 _schema = GameSchema(schema_name=f"{game_id}.json")
                 for name,percount in _schema.PerCountFeatures.items():

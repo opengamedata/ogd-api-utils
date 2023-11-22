@@ -4,15 +4,15 @@
 import os
 import traceback
 from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any, Dict, Optional, Union
+# import 3rd-party libraries
 from flask import Flask, current_app
 from flask_restful import Resource, Api, reqparse
 from flask_restful.inputs import datetime_from_iso8601
-from typing import Any, Dict, Optional, Union
 # import locals
 from utils.APIResult import APIResult, RESTType, ResultStatus
 from utils import APIUtils
-from config.config import settings as server_settings
-from opengamedata.config.config import settings as core_settings
 from opengamedata.interfaces.DataInterface import DataInterface
 from opengamedata.interfaces.outerfaces.DictionaryOuterface import DictionaryOuterface
 from opengamedata.managers.ExportManager import ExportManager
@@ -23,10 +23,15 @@ from opengamedata.schemas.IDMode import IDMode
 from opengamedata.schemas.ExportMode import ExportMode
 from opengamedata.schemas.configs.ConfigSchema import ConfigSchema
 from opengamedata.schemas.configs.GameSourceSchema import GameSourceSchema
+from schemas.ServerConfigSchema import ServerConfigSchema
 class PlayerAPI:
     """Class to define an API for the developer/designer dashboard"""
+
+    ogd_core   : Path
+    ogd_config : ConfigSchema
+
     @staticmethod
-    def register(app:Flask):
+    def register(app:Flask, server_settings:ServerConfigSchema, core_settings:ConfigSchema):
         """Sets up the dashboard api in a flask app.
 
         :param app: _description_
@@ -38,6 +43,8 @@ class PlayerAPI:
         api.add_resource(PlayerAPI.PlayersMetrics, '/players/metrics')
         api.add_resource(PlayerAPI.PlayerMetrics, '/player/metrics')
         api.add_resource(PlayerAPI.PlayerFeatureList, '/players/metrics/list/<game_id>')
+        PlayerAPI.ogd_core = server_settings.OGDCore
+        PlayerAPI.ogd_config = core_settings
 
     class PlayerList(Resource):
         """Class for handling requests for a list of sessions over a date range."""
@@ -66,7 +73,7 @@ class PlayerAPI:
             try:
                 result = {}
                 orig_cwd = os.getcwd()
-                os.chdir(server_settings["OGD_CORE_PATH"])
+                os.chdir(PlayerAPI.ogd_core)
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _interface is not None:
                     _range = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
@@ -113,7 +120,7 @@ class PlayerAPI:
                 values_dict = {}
 
                 orig_cwd = os.getcwd()
-                os.chdir(server_settings["OGD_CORE_PATH"])
+                os.chdir(PlayerAPI.ogd_core)
 
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _player_ids is not None and _interface is not None:
@@ -125,7 +132,7 @@ class PlayerAPI:
                                          feature_overrides=_metrics
                     )
                     # retrieve and process the data
-                    export_mgr = ExportManager(config=ConfigSchema(name="Core Config", all_elements=core_settings))
+                    export_mgr = ExportManager(config=PlayerAPI.ogd_config)
                     result = export_mgr.ExecuteRequest(request=request)
                 elif _metrics is None:
                     current_app.logger.warning("_metrics was None")
@@ -182,7 +189,7 @@ class PlayerAPI:
                 values_dict = {}
                 
                 orig_cwd = os.getcwd()
-                os.chdir(server_settings["OGD_CORE_PATH"])
+                os.chdir(PlayerAPI.ogd_core)
 
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
@@ -194,7 +201,7 @@ class PlayerAPI:
                                          feature_overrides=_metrics
                     )
                     # retrieve and process the data
-                    export_mgr = ExportManager(config=ConfigSchema(name="Core Config", all_elements=core_settings))
+                    export_mgr = ExportManager(config=PlayerAPI.ogd_config)
                     result = export_mgr.ExecuteRequest(request=request)
                 elif _metrics is None:
                     current_app.logger.warning("_metrics was None")
@@ -248,7 +255,7 @@ class PlayerAPI:
                 feature_list = []
                 
                 orig_cwd = os.getcwd()
-                os.chdir(server_settings["OGD_CORE_PATH"])
+                os.chdir(PlayerAPI.ogd_core)
 
                 _schema = GameSchema(schema_name=f"{game_id}.json")
                 for name,percount in _schema.PerCountFeatures.items():
