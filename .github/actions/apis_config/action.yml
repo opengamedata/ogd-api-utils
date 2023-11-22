@@ -37,7 +37,7 @@ runs:
   using: "composite"
   steps:
     - name: Set up config
-      run: cp config/config.py.template config/config.py 
+      run: cp shared/config/config.py.template shared/config/config.py 
       shell: bash
     - name: Set DB hostname
       run: sed -i 's@127.0.0.1@${{inputs.db_host}}@g' config/config.py
