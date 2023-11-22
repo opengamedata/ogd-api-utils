@@ -20,6 +20,8 @@ jobs:
     name: CI Deploy of Feature APIs
     runs-on: ubuntu-22.04
     steps:
+
+    # 1. Local checkout & config
     - uses: actions/checkout@v3
     - name: Set up Config File
       uses: ./.github/actions/apis_config
@@ -31,15 +33,38 @@ jobs:
         fd_users_db_name: ${{ secrets.DBNAME_FD_USERS }}
         app_name: "coding/codes.wsgi"
         deploy_path: ${{ env.TARGET_PATH }}
+    - name: Set up Core Config File
+      uses: ./.github/actions/OGD_config
+      with:
+        sql_user: ${{ secrets.SQL_USER }}
+        sql_pass: ${{ secrets.SQL_PASS }}
+        ssh_host: ${{ vars.OGD_LOGGER_HOST }}
+        ssh_user: ${{ secrets.VPN_USER }}
+        ssh_pass: ${{ secrets.VPN_PASS }}
+        slice_size: 1000
+        log_level: "INFO"
+
+    # 2. Build 
+
+    # 3. Remote config & deploy
     - name: Get OpenConnect installed
       run: sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-    - name: Upload config to web server via rsync
+      # Prepare directory structure for deploy
+    - name: Setup Access Key
+      run: |
+        mkdir -p ~/.ssh
+        echo '${{secrets.DEPLOY_KEY}}' >> ./key.txt
+        chmod 600 ./key.txt
+    - name: Ensure directory exists
+      run: ssh -o StrictHostKeyChecking=no -t -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.TARGET_HOST }} "mkdir -p ${{ env.TARGET_PATH }}"
+      # Actual upload
+    - name: Upload *shared code* to web server via rsync
       uses: burnett01/rsync-deployments@5.2
       with:
         switches: -vrc --exclude-from rsync-exclude
-        path: config/*
+        path: shared/*
         remote_path: ${{ env.TARGET_PATH }}
         remote_host: ${{ env.TARGET_HOST }}
         remote_user: ${{ secrets.DEPLOY_USER }}
@@ -48,17 +73,17 @@ jobs:
       uses: burnett01/rsync-deployments@5.2
       with:
         switches: -vrc --exclude-from rsync-exclude
-        path: coding/*
+        path: apps/coding/*
         remote_path: ${{ env.TARGET_PATH }}
         remote_host: ${{ env.TARGET_HOST }}
         remote_user: ${{ secrets.DEPLOY_USER }}
         remote_key:  ${{ secrets.DEPLOY_KEY  }}
-    - name: Upload API classes to web server via rsync
+    - name: Upload *OGD-core* to web server via rsync
       uses: burnett01/rsync-deployments@5.2
       with:
         switches: -vrc --exclude-from rsync-exclude
-        path: utils/API*.py
-        remote_path: ${{ env.TARGET_PATH }}
+        path: opengamedata/*
+        remote_path: ${{ env.TARGET_PATH }}/opengamedata
         remote_host: ${{ env.TARGET_HOST }}
         remote_user: ${{ secrets.DEPLOY_USER }}
         remote_key:  ${{ secrets.DEPLOY_KEY  }}
