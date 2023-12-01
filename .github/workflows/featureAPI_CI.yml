@@ -5,8 +5,8 @@ on:
     paths:
     - '.github/workflows/featureAPI_CI.yml'
     - '.github/actions/**'
-    - 'config/**'
-    - 'features/**'
+    - 'shared/**'
+    - 'apps/features/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 
 env:
