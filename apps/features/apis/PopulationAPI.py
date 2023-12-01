@@ -78,9 +78,8 @@ class PopulationAPI:
             try:
                 result : RequestResult = RequestResult(msg="No Export")
                 values_dict = {}
-                
-                orig_cwd = os.getcwd()
-                os.chdir(PopulationAPI.ogd_core)
+                # orig_cwd = os.getcwd()
+                # os.chdir(PopulationAPI.ogd_core)
 
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
@@ -100,7 +99,7 @@ class PopulationAPI:
                     current_app.logger.warning("_metrics was None")
                 elif _interface is None:
                     current_app.logger.warning("_interface was None")
-                os.chdir(orig_cwd)
+                # os.chdir(orig_cwd)
             except Exception as err:
                 ret_val.ServerErrored(f"Unknown error while processing Population request")
                 current_app.logger.error(f"Got exception for Population request:\ngame={game_id}\n{str(err)}\n{traceback.format_exc()}")
@@ -133,18 +132,17 @@ class PopulationAPI:
 
             try:
                 feature_list = []
-                
-                orig_cwd = os.getcwd()
-                os.chdir(PopulationAPI.ogd_core)
+                # orig_cwd = os.getcwd()
+                # os.chdir(PopulationAPI.ogd_core)
 
-                _schema = GameSchema(schema_name=f"{game_id}.json")
+                _schema = GameSchema(game_id=game_id)
                 for name,percount in _schema.PerCountFeatures.items():
                     if ExportMode.POPULATION in percount.Enabled:
                         feature_list.append(name)
                 for name,aggregate in _schema.AggregateFeatures.items():
                     if ExportMode.POPULATION in aggregate.Enabled:
                         feature_list.append(name)
-                os.chdir(orig_cwd)
+                # os.chdir(orig_cwd)
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: Unknown error while processing FeatureList request")
                 print(f"Got exception for FeatureList request:\ngame={game_id}\n{str(err)}")

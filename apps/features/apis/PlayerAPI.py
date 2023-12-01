@@ -72,13 +72,13 @@ class PlayerAPI:
 
             try:
                 result = {}
-                orig_cwd = os.getcwd()
-                os.chdir(PlayerAPI.ogd_core)
+                # orig_cwd = os.getcwd()
+                # os.chdir(PlayerAPI.ogd_core)
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _interface is not None:
                     _range = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
                     result["ids"] = _range.IDs
-                os.chdir(orig_cwd)
+                # os.chdir(orig_cwd)
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing PlayerList request")
                 current_app.logger.error(f"Got exception for PlayerList request:\ngame={game_id}\n{str(err)}")
@@ -118,9 +118,8 @@ class PlayerAPI:
             try:
                 result : RequestResult = RequestResult(msg="Empty result")
                 values_dict = {}
-
-                orig_cwd = os.getcwd()
-                os.chdir(PlayerAPI.ogd_core)
+                # orig_cwd = os.getcwd()
+                # os.chdir(PlayerAPI.ogd_core)
 
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _player_ids is not None and _interface is not None:
@@ -138,7 +137,7 @@ class PlayerAPI:
                     current_app.logger.warning("_metrics was None")
                 elif _interface is None:
                     current_app.logger.warning("_interface was None")
-                os.chdir(orig_cwd)
+                # os.chdir(orig_cwd)
 
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing Players request")
@@ -188,8 +187,8 @@ class PlayerAPI:
                 result : RequestResult = RequestResult(msg="Empty result")
                 values_dict = {}
                 
-                orig_cwd = os.getcwd()
-                os.chdir(PlayerAPI.ogd_core)
+                # orig_cwd = os.getcwd()
+                # os.chdir(PlayerAPI.ogd_core)
 
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
@@ -207,7 +206,7 @@ class PlayerAPI:
                     current_app.logger.warning("_metrics was None")
                 elif _interface is None:
                     current_app.logger.warning("_interface was None")
-                os.chdir(orig_cwd)
+                # os.chdir(orig_cwd)
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing Player request")
                 current_app.logger.error(f"Got exception for Player request:\ngame={game_id}, player={player_id}\nerror={str(err)}")
@@ -254,17 +253,17 @@ class PlayerAPI:
             try:
                 feature_list = []
                 
-                orig_cwd = os.getcwd()
-                os.chdir(PlayerAPI.ogd_core)
+                # orig_cwd = os.getcwd()
+                # os.chdir(PlayerAPI.ogd_core)
 
-                _schema = GameSchema(schema_name=f"{game_id}.json")
+                _schema = GameSchema(game_id=game_id)
                 for name,percount in _schema.PerCountFeatures.items():
                     if ExportMode.PLAYER in percount.Enabled:
                         feature_list.append(name)
                 for name,aggregate in _schema.AggregateFeatures.items():
                     if ExportMode.PLAYER in aggregate.Enabled:
                         feature_list.append(name)
-                os.chdir(orig_cwd)
+                # os.chdir(orig_cwd)
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: Unknown error while processing FeatureList request")
                 print(f"Got exception for FeatureList request:\ngame={game_id}\n{str(err)}")
