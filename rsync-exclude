@@ -3,7 +3,6 @@ opengamedata/
 realtime/
 store/
 tests/
-config/config.py
 .DS_Store
 .gitignore
 .gitmodules
