@@ -17,8 +17,8 @@ from utils import APIUtils
 from ogd.core.interfaces.DataInterface import DataInterface
 from ogd.core.interfaces.outerfaces.DictionaryOuterface import DictionaryOuterface
 from ogd.core.managers.ExportManager import ExportManager
-from ogd.core.ogd_requests.Request import Request, ExporterRange
-from ogd.core.ogd_requests.RequestResult import RequestResult
+from ogd.core.requests.Request import Request, ExporterRange
+from ogd.core.requests.RequestResult import RequestResult
 from ogd.core.schemas.ExportMode import ExportMode
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
