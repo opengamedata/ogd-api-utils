@@ -23,7 +23,7 @@ from ogd.core.schemas.ExportMode import ExportMode
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.schemas.games.GameSchema import GameSchema
-from shared.schemas.ServerConfigSchema import ServerConfigSchema
+from schemas.ServerConfigSchema import ServerConfigSchema
 
 class PopulationAPI:
     """Class to define an API for the developer/designer dashboard"""
