@@ -23,7 +23,7 @@ from ogd.core.schemas.IDMode import IDMode
 from ogd.core.schemas.ExportMode import ExportMode
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
-from schemas.ServerConfigSchema import ServerConfigSchema
+from shared.schemas.ServerConfigSchema import ServerConfigSchema
 class PlayerAPI:
     """Class to define an API for the developer/designer dashboard"""
 
