@@ -56,7 +56,7 @@ dictConfig({
 application = Flask(__name__)
 
 # import locals
-from config.config import settings as srv_settings
+from shared.config.config import settings as srv_settings
 from ogd.core.config.config import settings as core_settings
 _server_cfg = ServerConfigSchema(name="DataAppConfiguration", all_elements=srv_settings, logger=application.logger)
 _core_cfg   = ConfigSchema(name="OGDConfiguration", all_elements=core_settings)
@@ -109,7 +109,7 @@ else:
     SessionAPI.register(application, server_settings=_server_cfg, core_settings=_core_cfg)
 
 try:
-    from utils.HelloAPI import HelloAPI
+    from shared.utils.HelloAPI import HelloAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Hello API:", err=err)
 except Exception as err:
