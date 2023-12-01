@@ -37,22 +37,22 @@ runs:
   using: "composite"
   steps:
     - name: Set up config
-      run: cp config/config.py.template config/config.py 
+      run: cp shared/config/config.py.template shared/config/config.py 
       shell: bash
     - name: Set DB hostname
-      run: sed -i 's@127.0.0.1@${{inputs.db_host}}@g' config/config.py
+      run: sed -i 's@127.0.0.1@${{inputs.db_host}}@g' shared/config/config.py
       shell: bash
     - name: Set DB username
-      run: sed -i 's@username@${{inputs.db_user}}@g' config/config.py
+      run: sed -i 's@username@${{inputs.db_user}}@g' shared/config/config.py
       shell: bash
     - name: Set DB password
-      run: sed -i 's/password/${{inputs.db_pass}}/g' config/config.py
+      run: sed -i 's/password/${{inputs.db_pass}}/g' shared/config/config.py
       shell: bash
     - name: Set ID Generator DB name
-      run: sed -i 's/id_generator/${{inputs.id_gen_db_name}}/g' config/config.py
+      run: sed -i 's/id_generator/${{inputs.id_gen_db_name}}/g' shared/config/config.py
       shell: bash
     - name: Set User DB name
-      run: sed -i 's/fieldday_users/${{inputs.fd_users_db_name}}/g' config/config.py
+      run: sed -i 's/fieldday_users/${{inputs.fd_users_db_name}}/g' shared/config/config.py
       shell: bash
     - name: Set Path to App
       run: sed -i 's@DEPLOY_PATH@${{inputs.deploy_path}}@g' ${{inputs.app_path}}
