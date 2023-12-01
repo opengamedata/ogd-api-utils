@@ -3,8 +3,8 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, Optional, Type
 # import local files
-from opengamedata.schemas.Schema import Schema
-from opengamedata.schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
+from ogd.core.schemas.Schema import Schema
+from ogd.core.schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
 
 class ServerConfigSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any], logger:logging.Logger):
