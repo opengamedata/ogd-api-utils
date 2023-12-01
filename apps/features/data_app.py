@@ -7,8 +7,8 @@ from logging.config import dictConfig
 from flask import Flask
 print(f"Trying to import while in location {os.getcwd()}")
 print(f"Trying to import with path of  {sys.path}")
-from opengamedata.schemas.configs.ConfigSchema import ConfigSchema
-from opengamedata.utils.Logger import Logger
+from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
+from ogd.core.utils.Logger import Logger
 from schemas.ServerConfigSchema import ServerConfigSchema
 
 # By default we'll log to WSGI errors stream which ends up in the Apache error log
@@ -57,7 +57,7 @@ application = Flask(__name__)
 
 # import locals
 from config.config import settings as srv_settings
-from opengamedata.config.config import settings as core_settings
+from ogd.core.config.config import settings as core_settings
 _server_cfg = ServerConfigSchema(name="DataAppConfiguration", all_elements=srv_settings, logger=application.logger)
 _core_cfg   = ConfigSchema(name="OGDConfiguration", all_elements=core_settings)
 if not _server_cfg.OGDCore in sys.path:

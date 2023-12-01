@@ -6,7 +6,7 @@ from mysql.connector import Error as MySQLError
 from mysql.connector.connection import MySQLConnection
 # import locals
 from config.config import settings
-from opengamedata.interfaces.MySQLInterface import SQL
+from ogd.core.interfaces.MySQLInterface import SQL
 
 import time
 

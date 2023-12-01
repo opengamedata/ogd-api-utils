@@ -11,9 +11,9 @@ from mysql.connector.connection import MySQLConnection
 from utils.APIResult import APIResult, RESTType, ResultStatus
 from utils import APIUtils
 from config.config import settings
-from opengamedata.coding.Code import Code
-from opengamedata.coding.Coder import Coder
-from opengamedata.interfaces.CodingInterface import CodingInterface
+from ogd.core.coding.Code import Code
+from ogd.core.coding.Coder import Coder
+from ogd.core.interfaces.CodingInterface import CodingInterface
 
 class CodingAPI:
     """API for logging and retrieving game states.

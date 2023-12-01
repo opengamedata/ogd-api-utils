@@ -14,15 +14,15 @@ from flask_restful.inputs import datetime_from_iso8601
 # import locals
 from utils.APIResult import APIResult, RESTType, ResultStatus
 from utils import APIUtils
-from opengamedata.interfaces.DataInterface import DataInterface
-from opengamedata.interfaces.outerfaces.DictionaryOuterface import DictionaryOuterface
-from opengamedata.managers.ExportManager import ExportManager
-from opengamedata.ogd_requests.Request import Request, ExporterRange, IDMode
-from opengamedata.ogd_requests.RequestResult import RequestResult
-from opengamedata.schemas.ExportMode import ExportMode
-from opengamedata.schemas.configs.ConfigSchema import ConfigSchema
-from opengamedata.schemas.configs.GameSourceSchema import GameSourceSchema
-from opengamedata.schemas.games.GameSchema import GameSchema
+from ogd.core.interfaces.DataInterface import DataInterface
+from ogd.core.interfaces.outerfaces.DictionaryOuterface import DictionaryOuterface
+from ogd.core.managers.ExportManager import ExportManager
+from ogd.core.ogd_requests.Request import Request, ExporterRange, IDMode
+from ogd.core.ogd_requests.RequestResult import RequestResult
+from ogd.core.schemas.ExportMode import ExportMode
+from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
+from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.core.schemas.games.GameSchema import GameSchema
 from schemas.ServerConfigSchema import ServerConfigSchema
 
 class SessionAPI:
