@@ -9,7 +9,7 @@ print(f"Trying to import while in location {os.getcwd()}")
 print(f"Trying to import with path of  {sys.path}")
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.utils.Logger import Logger
-from shared.schemas.ServerConfigSchema import ServerConfigSchema
+from schemas.ServerConfigSchema import ServerConfigSchema
 
 # By default we'll log to WSGI errors stream which ends up in the Apache error log
 logHandlers = {
@@ -56,8 +56,8 @@ dictConfig({
 application = Flask(__name__)
 
 # import locals
-from shared.config.config import settings as srv_settings
-from shared.config.coreconfig import settings as core_settings
+from config.config import settings as srv_settings
+from config.coreconfig import settings as core_settings
 _server_cfg = ServerConfigSchema(name="DataAppConfiguration", all_elements=srv_settings, logger=application.logger)
 _core_cfg   = ConfigSchema(name="OGDConfiguration", all_elements=core_settings)
 if not _server_cfg.OGDCore in sys.path:
@@ -109,7 +109,7 @@ else:
     SessionAPI.register(application, server_settings=_server_cfg, core_settings=_core_cfg)
 
 try:
-    from shared.utils.HelloAPI import HelloAPI
+    from utils.HelloAPI import HelloAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Hello API:", err=err)
 except Exception as err:
