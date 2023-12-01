@@ -4,7 +4,7 @@ from typing import Any
 
 from grpc import Status
 # Import local files
-import opengamedata.ogd_requests.RequestResult as RequestResult
+import ogd.core.requests.RequestResult as RequestResult
 
 class RESTType(IntEnum):
     """Simple enumerated type to track type of a REST request.
