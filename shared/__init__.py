@@ -1,7 +1,7 @@
 __all__ = [
 	"config",
 	"utils",
-	"schemas",
+	"schemas"
 ]
 
 from . import config
