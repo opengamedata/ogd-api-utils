@@ -66,7 +66,7 @@ jobs:
       with:
         switches: -vrc --exclude-from rsync-exclude
         path: shared/*
-        remote_path: ${{ env.TARGET_PATH }}
+        remote_path: ${{ env.TARGET_PATH }}/shared
         remote_host: ${{ env.TARGET_HOST }}
         remote_user: ${{ secrets.DEPLOY_USER }}
         remote_key:  ${{ secrets.DEPLOY_KEY  }}

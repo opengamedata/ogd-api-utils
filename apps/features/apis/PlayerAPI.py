@@ -11,8 +11,6 @@ from flask import Flask, current_app
 from flask_restful import Resource, Api, reqparse
 from flask_restful.inputs import datetime_from_iso8601
 # import locals
-from utils.APIResult import APIResult, RESTType, ResultStatus
-from utils import APIUtils
 from ogd.core.interfaces.DataInterface import DataInterface
 from ogd.core.interfaces.outerfaces.DictionaryOuterface import DictionaryOuterface
 from ogd.core.managers.ExportManager import ExportManager
@@ -23,7 +21,9 @@ from ogd.core.schemas.IDMode import IDMode
 from ogd.core.schemas.ExportMode import ExportMode
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
-from schemas.ServerConfigSchema import ServerConfigSchema
+from shared.schemas.ServerConfigSchema import ServerConfigSchema
+from shared.utils.APIResult import APIResult, RESTType, ResultStatus
+from shared.utils import APIUtils
 class PlayerAPI:
     """Class to define an API for the developer/designer dashboard"""
 

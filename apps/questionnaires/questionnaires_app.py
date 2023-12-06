@@ -43,7 +43,7 @@ dictConfig({
 application = Flask(__name__)
 
 # import locals
-from config.config import settings
+from shared.config.config import settings
 _ogd_core = settings['OGD_CORE_PATH']
 if not _ogd_core in sys.path:
     sys.path.append(settings['OGD_CORE_PATH'])

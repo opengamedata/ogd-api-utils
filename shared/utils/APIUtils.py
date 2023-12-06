@@ -3,7 +3,7 @@ from flask import current_app
 from typing import Any, Dict, List, Optional
 # import locals
 from config.config import settings as server_settings
-from ogd.core.config.config import settings as core_settings
+from config.coreconfig import settings as core_settings
 from ogd.core.interfaces.CodingInterface import CodingInterface
 from ogd.core.interfaces.DataInterface import DataInterface
 from ogd.core.interfaces.MySQLInterface import MySQLInterface

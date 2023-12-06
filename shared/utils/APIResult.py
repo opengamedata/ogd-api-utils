@@ -1,7 +1,6 @@
 import json
 from enum import IntEnum
 from typing import Any
-
 from grpc import Status
 # Import local files
 import ogd.core.requests.RequestResult as RequestResult

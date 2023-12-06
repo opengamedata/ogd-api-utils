@@ -9,7 +9,7 @@ print(f"Trying to import while in location {os.getcwd()}")
 print(f"Trying to import with path of  {sys.path}")
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.utils.Logger import Logger
-from schemas.ServerConfigSchema import ServerConfigSchema
+from shared.schemas.ServerConfigSchema import ServerConfigSchema
 
 # By default we'll log to WSGI errors stream which ends up in the Apache error log
 logHandlers = {

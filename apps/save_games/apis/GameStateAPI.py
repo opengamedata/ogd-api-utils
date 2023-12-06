@@ -5,8 +5,8 @@ from flask_restful import Resource, Api, reqparse
 from mysql.connector import Error as MySQLError
 from mysql.connector.connection import MySQLConnection
 # import locals
-from config.config import settings
 from ogd.core.interfaces.MySQLInterface import SQL
+from shared.config.config import settings
 
 import time
 

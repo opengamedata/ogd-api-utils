@@ -10,8 +10,8 @@ from mysql.connector import Error as MySQLError
 from mysql.connector.connection import MySQLConnection
 from typing import Any, Dict, Union
 # import locals
-from config.config import settings
 from ogd.core.interfaces.MySQLInterface import SQL
+from shared.config.config import settings
 
 class ClassroomAPI:
     @staticmethod
