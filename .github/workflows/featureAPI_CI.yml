@@ -25,7 +25,7 @@ jobs:
       with:
         submodules: 'true'
     - name: Set up Config File
-      uses: ./.github/actions/apis_config
+      uses: ./.github/actions/API_config
       with:
         db_host: ${{ vars.OGD_LOGGER_HOST }}
         db_user: ${{secrets.SQL_USER}}
