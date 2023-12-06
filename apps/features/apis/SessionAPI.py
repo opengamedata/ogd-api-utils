@@ -72,13 +72,13 @@ class SessionAPI:
             _start_time = args.get('start_datetime') or _start_time
             _range : Union[ExporterRange, None] = None
             try:
-                orig_cwd = os.getcwd()
-                os.chdir(SessionAPI.ogd_core)
+                # orig_cwd = os.getcwd()
+                # os.chdir(SessionAPI.ogd_core)
 
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _interface is not None:
                     _range = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
-                os.chdir(orig_cwd)
+                # os.chdir(orig_cwd)
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing SessionList request")
                 current_app.logger.error(f"Got exception for SessionList request:\ngame={game_id}\n{str(err)}")
@@ -117,8 +117,8 @@ class SessionAPI:
                 result : RequestResult = RequestResult(msg="Empty result")
                 values_dict = {}
                 
-                orig_cwd = os.getcwd()
-                os.chdir(SessionAPI.ogd_core)
+                # orig_cwd = os.getcwd()
+                # os.chdir(SessionAPI.ogd_core)
 
                 _interface : Union[DataInterface, None] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _session_ids is not None and _interface is not None:
@@ -136,7 +136,7 @@ class SessionAPI:
                     current_app.logger.warning("_metrics was None")
                 elif _interface is None:
                     current_app.logger.warning("_interface was None")
-                os.chdir(orig_cwd)
+                # os.chdir(orig_cwd)
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing Sessions request")
                 current_app.logger.error(f"Got exception for Sessions request:\ngame={game_id}\n{str(err)}")
@@ -183,8 +183,8 @@ class SessionAPI:
                 result : RequestResult = RequestResult(msg="Empty result")
                 values_dict = {}
                 
-                orig_cwd = os.getcwd()
-                os.chdir(SessionAPI.ogd_core)
+                # orig_cwd = os.getcwd()
+                # os.chdir(SessionAPI.ogd_core)
 
                 _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
                 if _metrics is not None and _interface is not None:
@@ -202,7 +202,7 @@ class SessionAPI:
                     current_app.logger.warning("_metrics was None")
                 elif _interface is None:
                     current_app.logger.warning("_interface was None")
-                os.chdir(orig_cwd)
+                # os.chdir(orig_cwd)
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing Session request")
                 current_app.logger.error(f"Got exception for Session request:\ngame={game_id}, player={session_id}\n{str(err)}")
@@ -249,8 +249,8 @@ class SessionAPI:
             try:
                 feature_list = []
                 
-                orig_cwd = os.getcwd()
-                os.chdir(SessionAPI.ogd_core)
+                # orig_cwd = os.getcwd()
+                # os.chdir(SessionAPI.ogd_core)
 
                 _schema = GameSchema(schema_name=f"{game_id}.json")
                 for name,percount in _schema.PerCountFeatures.items():
@@ -259,7 +259,7 @@ class SessionAPI:
                 for name,aggregate in _schema.AggregateFeatures.items():
                     if ExportMode.SESSION in aggregate.Enabled:
                         feature_list.append(name)
-                os.chdir(orig_cwd)
+                # os.chdir(orig_cwd)
             except Exception as err:
                 ret_val.ServerErrored(f"ERROR: Unknown error while processing FeatureList request")
                 print(f"Got exception for FeatureList request:\ngame={game_id}\n{str(err)}")

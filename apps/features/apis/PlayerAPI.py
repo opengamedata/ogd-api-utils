@@ -1,7 +1,6 @@
 """Module for the Player API code
 """
 # import libraries
-import os
 import traceback
 from datetime import datetime, timedelta
 from pathlib import Path
