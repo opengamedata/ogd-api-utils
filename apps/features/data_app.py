@@ -5,8 +5,6 @@ import sys
 from logging.config import dictConfig
 # import 3rd-party libraries
 from flask import Flask
-print(f"Trying to import while in location {os.getcwd()}")
-print(f"Trying to import with path of  {sys.path}")
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.utils.Logger import Logger
 from shared.schemas.ServerConfigSchema import ServerConfigSchema
