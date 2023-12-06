@@ -8,12 +8,12 @@ from flask_restful import Resource, Api, reqparse
 from mysql.connector import Error as MySQLError
 from mysql.connector.connection import MySQLConnection
 # import locals
-from utils.APIResult import APIResult, RESTType, ResultStatus
-from utils import APIUtils
-from config.config import settings
+from shared.config.config import settings
 from ogd.core.coding.Code import Code
 from ogd.core.coding.Coder import Coder
 from ogd.core.interfaces.CodingInterface import CodingInterface
+from shared.utils.APIResult import APIResult, RESTType, ResultStatus
+from shared.utils import APIUtils
 
 class CodingAPI:
     """API for logging and retrieving game states.
