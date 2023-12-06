@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional
 # import locals
 from config.config import settings as server_settings
 from config.coreconfig import settings as core_settings
-from ogd.core.interfaces.CodingInterface import CodingInterface
+# from ogd.core.interfaces.CodingInterface import CodingInterface
 from ogd.core.interfaces.DataInterface import DataInterface
 from ogd.core.interfaces.MySQLInterface import MySQLInterface
 from ogd.core.interfaces.BigQueryInterface import BigQueryInterface
@@ -53,25 +53,25 @@ def gen_interface(game_id) -> Optional[DataInterface]:
             current_app.logger.warning(f"Could not find a valid interface for {game_id}, defaulting to MySQL!")
     return ret_val
 
-def gen_coding_interface(game_id) -> Optional[CodingInterface]:
-    """Utility to set up an Interface object for use by the API, given a game_id.
+# def gen_coding_interface(game_id) -> Optional[CodingInterface]:
+#     """Utility to set up an Interface object for use by the API, given a game_id.
 
-    :param game_id: _description_
-    :type game_id: _type_
-    :return: _description_
-    :rtype: _type_
-    """
-    ret_val = None
+#     :param game_id: _description_
+#     :type game_id: _type_
+#     :return: _description_
+#     :rtype: _type_
+#     """
+#     ret_val = None
 
-    _core_config = ConfigSchema(name="Core Config", all_elements=core_settings)
-    _game_source : GameSourceSchema = _core_config.GameSourceMap.get(game_id, GameSourceSchema.EmptySchema())
+#     _core_config = ConfigSchema(name="Core Config", all_elements=core_settings)
+#     _game_source : GameSourceSchema = _core_config.GameSourceMap.get(game_id, GameSourceSchema.EmptySchema())
 
-    if _game_source.Source is not None:
-        # set up interface and request
-        if _game_source.Source.Type == "BigQuery":
-            ret_val = BigQueryCodingInterface(game_id=game_id, config=_core_config)
-            current_app.logger.info(f"Using BigQueryCodingInterface for {game_id}")
-        else:
-            ret_val = BigQueryCodingInterface(game_id=game_id, config=_core_config)
-            current_app.logger.warning(f"Could not find a valid interface for {game_id}, defaulting to BigQuery!")
-    return ret_val
+#     if _game_source.Source is not None:
+#         # set up interface and request
+#         if _game_source.Source.Type == "BigQuery":
+#             ret_val = BigQueryCodingInterface(game_id=game_id, config=_core_config)
+#             current_app.logger.info(f"Using BigQueryCodingInterface for {game_id}")
+#         else:
+#             ret_val = BigQueryCodingInterface(game_id=game_id, config=_core_config)
+#             current_app.logger.warning(f"Could not find a valid interface for {game_id}, defaulting to BigQuery!")
+#     return ret_val
