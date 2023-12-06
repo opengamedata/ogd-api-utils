@@ -2,13 +2,13 @@
 from flask import current_app
 from typing import Any, Dict, List, Optional
 # import locals
-from config.config import settings as server_settings
+# from config.config import settings as server_settings
 from config.coreconfig import settings as core_settings
 # from ogd.core.interfaces.CodingInterface import CodingInterface
 from ogd.core.interfaces.DataInterface import DataInterface
 from ogd.core.interfaces.MySQLInterface import MySQLInterface
 from ogd.core.interfaces.BigQueryInterface import BigQueryInterface
-from ogd.core.interfaces.BigQueryCodingInterface import BigQueryCodingInterface
+# from ogd.core.interfaces.BigQueryCodingInterface import BigQueryCodingInterface
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 
