@@ -1,8 +1,8 @@
 # import standard libraries
 import os
 import logging
-import sys
 from logging.config import dictConfig
+from typing import Any, Dict
 # import 3rd-party libraries
 from flask import Flask
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
@@ -10,7 +10,7 @@ from ogd.core.utils.Logger import Logger
 from shared.schemas.ServerConfigSchema import ServerConfigSchema
 
 # By default we'll log to WSGI errors stream which ends up in the Apache error log
-logHandlers = {
+logHandlers : Dict[str, Any] = {
         'wsgi': { 
             'class': 'logging.StreamHandler',
             'stream': 'ext://flask.logging.wsgi_errors_stream', 

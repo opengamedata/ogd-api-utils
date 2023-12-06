@@ -1,11 +1,12 @@
 # import standard libraries
 import sys, os
 from logging.config import dictConfig
+from typing import Any, Dict
 # import 3rd-party libraries
 from flask import Flask
 
 # By default we'll log to WSGI errors stream which ends up in the Apache error log
-logHandlers = {
+logHandlers : Dict[str, Any] = {
         'wsgi': { 
             'class': 'logging.StreamHandler',
             'stream': 'ext://flask.logging.wsgi_errors_stream', 
@@ -63,7 +64,7 @@ else:
     CodingAPI.register(application)
 
 try:
-    from apis.HelloAPI import HelloAPI
+    from shared.utils.HelloAPI import HelloAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Hello API:", err=err)
 except Exception as err:
