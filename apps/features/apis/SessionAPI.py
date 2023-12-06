@@ -252,7 +252,7 @@ class SessionAPI:
                 # orig_cwd = os.getcwd()
                 # os.chdir(SessionAPI.ogd_core)
 
-                _schema = GameSchema(schema_name=f"{game_id}.json")
+                _schema = GameSchema(game_id=game_id)
                 for name,percount in _schema.PerCountFeatures.items():
                     if ExportMode.SESSION in percount.Enabled:
                         feature_list.append(name)
