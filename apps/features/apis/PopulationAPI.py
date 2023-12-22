@@ -115,7 +115,8 @@ class PopulationAPI:
                     )
                 else:
                     ret_val.RequestErrored("No valid population features")
-            return ret_val.ToDict()
+            finally:
+                return ret_val.ToDict()
 
     class PopulationFeatureList(Resource):
         """Class for getting a full list of features for a given game."""
@@ -152,4 +153,5 @@ class PopulationAPI:
                     ret_val.RequestSucceeded(msg="SUCCESS: Got metric list for given game", val=feature_list)
                 else:
                     ret_val.RequestErrored("FAIL: Did not find any metrics for the given game")
-            return ret_val.ToDict()
+            finally:
+                return ret_val.ToDict()
