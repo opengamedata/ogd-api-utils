@@ -138,7 +138,7 @@ class PopulationAPI:
             :return: _description_
             :rtype: _type_
             """
-            print("Received metric list request.")
+            print("Received metric list request. confirm latest version")
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
             try:
