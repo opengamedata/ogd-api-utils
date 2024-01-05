@@ -65,10 +65,10 @@ class PopulationAPI:
 
             # TODO: figure out how to make this use the default and print "help" part to server log, or maybe append to return message, instead of sending back as the only response from the server and dying here.
             parser = reqparse.RequestParser()
-            parser.add_argument("game_id",        location='body', type=str, required=True)
-            parser.add_argument("start_datetime", location='body', type=datetime_from_iso8601, required=False, default=_start_time, nullable=True, help="Invalid starting date, defaulting to 1 hour ago.")
-            parser.add_argument("end_datetime",   location='body', type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time.")
-            parser.add_argument("metrics",        location='body', type=str,                   required=False, default="[]",        nullable=True, help="Got bad list of metrics, defaulting to all.")
+            parser.add_argument(reqparse.Argument(name="game_id",        location='body', type=str,                   required=True,  default=_game_id))
+            parser.add_argument(reqparse.Argument(name="start_datetime", location='body', type=datetime_from_iso8601, required=False, default=_start_time, nullable=True, help="Invalid starting date, defaulting to 1 hour ago."))
+            parser.add_argument(reqparse.Argument(name="end_datetime",   location='body', type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time."))
+            parser.add_argument(reqparse.Argument(name="metrics",        location='body', type=str,                   required=False, default="[]",        nullable=True, help="Got bad list of metrics, defaulting to all."))
             try:
                 args : Dict[str, Any] = parser.parse_args()
 
