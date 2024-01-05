@@ -67,15 +67,15 @@ class PopulationAPI:
             parser.add_argument("start_datetime", type=datetime_from_iso8601, required=False, default=_start_time, nullable=True, help="Invalid starting date, defaulting to 1 hour ago.")
             parser.add_argument("end_datetime",   type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time.")
             parser.add_argument("metrics",        type=str,                   required=False, default="[]",        nullable=True, help="Got bad list of metrics, defaulting to all.")
-            args : Dict[str, Any] = parser.parse_args()
-
-            game_id = args["game_id"]
-
-            _end_time   = args.get('end_datetime')   or _end_time
-            _start_time = args.get('start_datetime') or _start_time
-            _metrics    = APIUtils.parse_list(args.get('metrics') or "")
-
             try:
+                args : Dict[str, Any] = parser.parse_args()
+
+                game_id = args["game_id"]
+
+                _end_time   = args.get('end_datetime')   or _end_time
+                _start_time = args.get('start_datetime') or _start_time
+                _metrics    = APIUtils.parse_list(args.get('metrics') or "")
+
                 result : RequestResult = RequestResult(msg="No Export")
                 values_dict = {}
                 # orig_cwd = os.getcwd()
