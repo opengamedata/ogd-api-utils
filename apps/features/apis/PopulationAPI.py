@@ -40,7 +40,7 @@ class PopulationAPI:
         """
         # Expected WSGIScriptAlias URL path is /data
         api = Api(app)
-        api.add_resource(PopulationAPI.Population, '/populations/metrics/test')
+        api.add_resource(PopulationAPI.Population, '/populations/metrics')
         api.add_resource(PopulationAPI.PopulationFeatureList, '/populations/metrics/list/<game_id>')
         PopulationAPI.ogd_core = server_settings.OGDCore
         PopulationAPI.ogd_config = core_settings
