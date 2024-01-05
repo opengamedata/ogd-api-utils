@@ -60,22 +60,21 @@ class PopulationAPI:
             ret_val = APIResult.Default(req_type=RESTType.POST)
 
             game_id = "UNKOWN"
-            try:
-                _end_time   : datetime = datetime.now()
-                _start_time : datetime = _end_time-timedelta(hours=1)
+            _end_time   : datetime = datetime.now()
+            _start_time : datetime = _end_time-timedelta(hours=1)
 
-                # TODO: figure out how to make this use the default and print "help" part to server log, or maybe append to return message, instead of sending back as the only response from the server and dying here.
-                parser = reqparse.RequestParser()
-                parser.add_argument("game_id",        location='body', type=str, required=True)
-                parser.add_argument("start_datetime", location='body', type=datetime_from_iso8601, required=False, default=_start_time, nullable=True, help="Invalid starting date, defaulting to 1 hour ago.")
-                parser.add_argument("end_datetime",   location='body', type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time.")
-                parser.add_argument("metrics",        location='body', type=str,                   required=False, default="[]",        nullable=True, help="Got bad list of metrics, defaulting to all.")
+            # TODO: figure out how to make this use the default and print "help" part to server log, or maybe append to return message, instead of sending back as the only response from the server and dying here.
+            parser = reqparse.RequestParser()
+            parser.add_argument("game_id",        location='body', type=str, required=True)
+            parser.add_argument("start_datetime", location='body', type=datetime_from_iso8601, required=False, default=_start_time, nullable=True, help="Invalid starting date, defaulting to 1 hour ago.")
+            parser.add_argument("end_datetime",   location='body', type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time.")
+            parser.add_argument("metrics",        location='body', type=str,                   required=False, default="[]",        nullable=True, help="Got bad list of metrics, defaulting to all.")
+            try:
                 args : Dict[str, Any] = parser.parse_args()
 
-                game_id = args["game_id"]
-
-                _end_time   = args.get('end_datetime')   or _end_time
-                _start_time = args.get('start_datetime') or _start_time
+                game_id = args.get("game_id", game_id)
+                _end_time   = args.get('end_datetime', _end_time)
+                _start_time = args.get('start_datetime', _start_time)
                 _metrics    = APIUtils.parse_list(args.get('metrics') or "")
 
                 result : RequestResult = RequestResult(msg="No Export")
