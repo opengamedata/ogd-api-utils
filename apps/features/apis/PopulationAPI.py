@@ -58,16 +58,18 @@ class PopulationAPI:
             """
             current_app.logger.info("Received population request.")
             ret_val = APIResult.Default(req_type=RESTType.POST)
-            _end_time   : datetime = datetime.now()
-            _start_time : datetime = _end_time-timedelta(hours=1)
 
-            # TODO: figure out how to make this use the default and print "help" part to server log, or maybe append to return message, instead of sending back as the only response from the server and dying here.
-            parser = reqparse.RequestParser()
-            parser.add_argument("game_id", type=str, required=True)
-            parser.add_argument("start_datetime", type=datetime_from_iso8601, required=False, default=_start_time, nullable=True, help="Invalid starting date, defaulting to 1 hour ago.")
-            parser.add_argument("end_datetime",   type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time.")
-            parser.add_argument("metrics",        type=str,                   required=False, default="[]",        nullable=True, help="Got bad list of metrics, defaulting to all.")
+            game_id = "UNKOWN"
             try:
+                _end_time   : datetime = datetime.now()
+                _start_time : datetime = _end_time-timedelta(hours=1)
+
+                # TODO: figure out how to make this use the default and print "help" part to server log, or maybe append to return message, instead of sending back as the only response from the server and dying here.
+                parser = reqparse.RequestParser()
+                parser.add_argument("game_id", type=str, required=True)
+                parser.add_argument("start_datetime", type=datetime_from_iso8601, required=False, default=_start_time, nullable=True, help="Invalid starting date, defaulting to 1 hour ago.")
+                parser.add_argument("end_datetime",   type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time.")
+                parser.add_argument("metrics",        type=str,                   required=False, default="[]",        nullable=True, help="Got bad list of metrics, defaulting to all.")
                 args : Dict[str, Any] = parser.parse_args()
 
                 game_id = args["game_id"]
