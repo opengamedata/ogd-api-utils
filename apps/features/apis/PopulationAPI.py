@@ -11,6 +11,7 @@ from flask import Flask
 from flask import current_app
 from flask_restful import Resource, Api, reqparse
 from flask_restful.inputs import datetime_from_iso8601
+from flask_restful.reqparse import Argument, RequestParser
 # import locals
 from ogd.core.interfaces.DataInterface import DataInterface
 from ogd.core.interfaces.outerfaces.DictionaryOuterface import DictionaryOuterface
@@ -64,11 +65,11 @@ class PopulationAPI:
             _start_time : datetime = _end_time-timedelta(hours=1)
 
             # TODO: figure out how to make this use the default and print "help" part to server log, or maybe append to return message, instead of sending back as the only response from the server and dying here.
-            parser = reqparse.RequestParser()
-            parser.add_argument(reqparse.Argument(name="game_id",        location='body', type=str,                   required=True,  default=_game_id))
-            parser.add_argument(reqparse.Argument(name="start_datetime", location='body', type=datetime_from_iso8601, required=False, default=_start_time, nullable=True, help="Invalid starting date, defaulting to 1 hour ago."))
-            parser.add_argument(reqparse.Argument(name="end_datetime",   location='body', type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time."))
-            parser.add_argument(reqparse.Argument(name="metrics",        location='body', type=str,                   required=False, default="[]",        nullable=True, help="Got bad list of metrics, defaulting to all."))
+            parser = RequestParser()
+            parser.add_argument(Argument(name="game_id",        location='body', type=str,                   required=True,  default=_game_id))
+            parser.add_argument(Argument(name="start_datetime", location='body', type=datetime_from_iso8601, required=False, default=_start_time, nullable=True, help="Invalid starting date, defaulting to 1 hour ago."))
+            parser.add_argument(Argument(name="end_datetime",   location='body', type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time."))
+            parser.add_argument(Argument(name="metrics",        location='body', type=str,                   required=False, default="[]",        nullable=True, help="Got bad list of metrics, defaulting to all."))
             try:
                 args : Dict[str, Any] = parser.parse_args()
 
