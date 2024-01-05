@@ -47,6 +47,14 @@ class PopulationAPI:
 
     class Population(Resource):
         """Class for handling requests for population-level features."""
+        def get(self):
+            ret_val = APIResult(
+                req_type = RESTType.GET,
+                val      = None,
+                msg      = "Hello! You GETted from /populations/metrics successfully!",
+                status   = ResultStatus.SUCCESS)
+            return ret_val.ToDict()
+
         def post(self):
             """Handles a POST request for population-level features.
             Gives back a dictionary of the APIResult, with the val being a dictionary of columns to values for the given population.
