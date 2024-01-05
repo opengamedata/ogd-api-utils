@@ -47,14 +47,6 @@ class PopulationAPI:
 
     class Population(Resource):
         """Class for handling requests for population-level features."""
-        def get(self):
-            ret_val = APIResult(
-                req_type = RESTType.GET,
-                val      = None,
-                msg      = "Hello! You GETted from /populations/metrics successfully!",
-                status   = ResultStatus.SUCCESS)
-            return ret_val.ToDict()
-
         def post(self):
             """Handles a POST request for population-level features.
             Gives back a dictionary of the APIResult, with the val being a dictionary of columns to values for the given population.
@@ -74,10 +66,10 @@ class PopulationAPI:
 
                 # TODO: figure out how to make this use the default and print "help" part to server log, or maybe append to return message, instead of sending back as the only response from the server and dying here.
                 parser = reqparse.RequestParser()
-                parser.add_argument("game_id", type=str, required=True)
-                parser.add_argument("start_datetime", type=datetime_from_iso8601, required=False, default=_start_time, nullable=True, help="Invalid starting date, defaulting to 1 hour ago.")
-                parser.add_argument("end_datetime",   type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time.")
-                parser.add_argument("metrics",        type=str,                   required=False, default="[]",        nullable=True, help="Got bad list of metrics, defaulting to all.")
+                parser.add_argument("game_id",        location='body', type=str, required=True)
+                parser.add_argument("start_datetime", location='body', type=datetime_from_iso8601, required=False, default=_start_time, nullable=True, help="Invalid starting date, defaulting to 1 hour ago.")
+                parser.add_argument("end_datetime",   location='body', type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time.")
+                parser.add_argument("metrics",        location='body', type=str,                   required=False, default="[]",        nullable=True, help="Got bad list of metrics, defaulting to all.")
                 args : Dict[str, Any] = parser.parse_args()
 
                 game_id = args["game_id"]
