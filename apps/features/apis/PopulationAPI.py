@@ -59,7 +59,7 @@ class PopulationAPI:
             current_app.logger.info("Received population request.")
             ret_val = APIResult.Default(req_type=RESTType.POST)
 
-            game_id = "UNKOWN"
+            _game_id    : str      = "UNKOWN"
             _end_time   : datetime = datetime.now()
             _start_time : datetime = _end_time-timedelta(hours=1)
 
@@ -72,7 +72,7 @@ class PopulationAPI:
             try:
                 args : Dict[str, Any] = parser.parse_args()
 
-                game_id = args.get("game_id", game_id)
+                _game_id    = args.get("game_id", _game_id)
                 _end_time   = args.get('end_datetime', _end_time)
                 _start_time = args.get('start_datetime', _start_time)
                 _metrics    = APIUtils.parse_list(args.get('metrics') or "")
@@ -82,11 +82,11 @@ class PopulationAPI:
                 # orig_cwd = os.getcwd()
                 # os.chdir(PopulationAPI.ogd_core)
 
-                _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=game_id)
+                _interface : Optional[DataInterface] = APIUtils.gen_interface(game_id=_game_id)
                 if _metrics is not None and _interface is not None:
                     _range     = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
                     _exp_types = {ExportMode.POPULATION}
-                    _outerface = DictionaryOuterface(game_id=game_id, config=GameSourceSchema.EmptySchema(), export_modes=_exp_types, out_dict=values_dict)
+                    _outerface = DictionaryOuterface(game_id=_game_id, config=GameSourceSchema.EmptySchema(), export_modes=_exp_types, out_dict=values_dict)
                     request    = Request(range=_range,         exporter_modes=_exp_types,
                                          interface=_interface, outerfaces={_outerface},
                                          feature_overrides=_metrics
@@ -103,7 +103,7 @@ class PopulationAPI:
                 # os.chdir(orig_cwd)
             except Exception as err:
                 ret_val.ServerErrored(f"Unknown error while processing Population request")
-                current_app.logger.error(f"Got exception for Population request:\ngame={game_id}\n{str(err)}\n{traceback.format_exc()}")
+                current_app.logger.error(f"Got exception for Population request:\ngame={_game_id}\n{str(err)}\n{traceback.format_exc()}")
             else:
                 current_app.logger.info(f"The values_dict:\n{values_dict}")
                 cols = values_dict.get("populations", {}).get("cols", [])
