@@ -7,9 +7,9 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, Optional
 # import 3rd-party libraries
-from flask import Flask
-from flask import current_app
-from flask_restful import Resource, Api, reqparse
+from flask import Flask, current_app
+from flask import request as flask_request
+from flask_restful import Resource, Api
 from flask_restful.inputs import datetime_from_iso8601
 from flask_restful.reqparse import Argument, RequestParser
 # import locals
@@ -71,6 +71,7 @@ class PopulationAPI:
             parser.add_argument(Argument(name="end_datetime",   location='body', type=datetime_from_iso8601, required=False, default=_end_time,   nullable=True, help="Invalid ending date, defaulting to present time."))
             parser.add_argument(Argument(name="metrics",        location='body', type=str,                   required=False, default="[]",        nullable=True, help="Got bad list of metrics, defaulting to all."))
             try:
+                current_app.logger.info(f"About to parse args from request with args='{flask_request.args}', and form='{flask_request.form}', body='{flask_request.data}'")
                 args : Dict[str, Any] = parser.parse_args()
 
                 _game_id    = args.get("game_id", _game_id)
