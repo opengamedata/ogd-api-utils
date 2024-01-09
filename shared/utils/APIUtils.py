@@ -42,10 +42,10 @@ def gen_interface(game_id) -> Optional[DataInterface]:
 
     if _game_source.Source is not None:
         # set up interface and request
-        if _game_source.Source.Type == "MySQL":
+        if _game_source.Source.Type.upper() == "MYSQL":
             ret_val = MySQLInterface(game_id, config=_game_source, fail_fast=False)
             current_app.logger.info(f"Using MySQLInterface for {game_id}")
-        elif _game_source.Source.Type == "BigQuery":
+        elif _game_source.Source.Type.upper() == "BIGQUERY":
             ret_val = BigQueryInterface(game_id=game_id, config=_game_source, fail_fast=False)
             current_app.logger.info(f"Using BigQueryInterface for {game_id}")
         else:
