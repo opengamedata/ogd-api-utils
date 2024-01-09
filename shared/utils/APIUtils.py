@@ -46,8 +46,9 @@ def gen_interface(game_id) -> Optional[DataInterface]:
             ret_val = MySQLInterface(game_id, config=_game_source, fail_fast=False)
             current_app.logger.info(f"Using MySQLInterface for {game_id}")
         elif _game_source.Source.Type.upper() == "BIGQUERY":
+            current_app.logger.info(f"Generating BigQueryInterface for {game_id}, from directory {os.getcwd()}...")
             ret_val = BigQueryInterface(game_id=game_id, config=_game_source, fail_fast=False)
-            current_app.logger.info(f"Using BigQueryInterface for {game_id}, from directory {os.getcwd()}")
+            current_app.logger.info(f"Done")
         else:
             ret_val = MySQLInterface(game_id, config=_game_source, fail_fast=False)
             current_app.logger.warning(f"Could not find a valid interface for {game_id}, defaulting to MySQL!")
