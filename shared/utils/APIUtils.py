@@ -1,8 +1,8 @@
 # import libraries
+import os
 from flask import current_app
 from typing import Any, Dict, List, Optional
 # import locals
-# from config.config import settings as server_settings
 from shared.config.coreconfig import settings as core_settings
 # from ogd.core.interfaces.CodingInterface import CodingInterface
 from ogd.core.interfaces.DataInterface import DataInterface
@@ -47,7 +47,7 @@ def gen_interface(game_id) -> Optional[DataInterface]:
             current_app.logger.info(f"Using MySQLInterface for {game_id}")
         elif _game_source.Source.Type.upper() == "BIGQUERY":
             ret_val = BigQueryInterface(game_id=game_id, config=_game_source, fail_fast=False)
-            current_app.logger.info(f"Using BigQueryInterface for {game_id}")
+            current_app.logger.info(f"Using BigQueryInterface for {game_id}, from directory {os.getcwd()}")
         else:
             ret_val = MySQLInterface(game_id, config=_game_source, fail_fast=False)
             current_app.logger.warning(f"Could not find a valid interface for {game_id}, defaulting to MySQL!")
