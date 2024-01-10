@@ -201,6 +201,7 @@ class PlayerAPI:
                     # retrieve and process the data
                     export_mgr = ExportManager(config=PlayerAPI.ogd_config)
                     result = export_mgr.ExecuteRequest(request=request)
+                    current_app.logger.info(f"Result: {result.Message}")
                 elif _metrics is None:
                     current_app.logger.warning("_metrics was None")
                 elif _interface is None:
@@ -211,6 +212,7 @@ class PlayerAPI:
                 current_app.logger.error(f"Got exception for Player request:\ngame={game_id}, player={player_id}\nerror={str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
+                current_app.logger.info(f"The values_dict:\n{values_dict}")
                 cols   = values_dict.get("players", {}).get("cols", [])
                 players = values_dict.get("players", {}).get("vals", [[]])
                 player = self._findPlayer(player_list=players, target_id=player_id)
@@ -226,13 +228,14 @@ class PlayerAPI:
             return ret_val.ToDict()
 
         def _findPlayer(self, player_list, target_id):
+            current_app.logger.info(f"The list of players is {player_list}")
             ret_val = None
             for _player in player_list:
                 _player_id = _player[0]
                 if _player_id == target_id:
                     ret_val = _player
             if ret_val is None:
-                current_app.logger.warn(f"Didn't find {target_id} in list of player results, defaulting to first player in list (player ID={player_list[0][0]})")
+                current_app.logger.warn(f"Didn't find {target_id} in list of player results, defaulting to first player in list (player ID={player_list[0]})")
                 ret_val = player_list[0]
             return ret_val
 
