@@ -93,7 +93,7 @@ class PlayerAPI:
     class PlayersMetrics(Resource):
         """Class for handling requests for session-level features, given a list of session ids."""
         def post(self):
-            """Handles a GET request for session-level features for a list of sessions.
+            """Handles a POST request for session-level features for a list of sessions.
 
             :param game_id: _description_
             :type game_id: _type_
@@ -103,9 +103,9 @@ class PlayerAPI:
             
             ret_val = APIResult.Default(req_type=RESTType.GET)
             parser = reqparse.RequestParser()
-            parser.add_argument("game_id", type=str, required=True)
-            parser.add_argument("player_ids", type=str, required=False, default="[]", nullable=True, help="Got bad list of player ids, defaulting to [].")
-            parser.add_argument("metrics",    type=str, required=False, default="[]", nullable=True, help="Got bad list of metrics, defaulting to all.")
+            parser.add_argument("game_id",    location='form', type=str, required=True)
+            parser.add_argument("player_ids", location='form', type=str, required=False, default="[]", nullable=True, help="Got bad list of player ids, defaulting to [].")
+            parser.add_argument("metrics",    location='form', type=str, required=False, default="[]", nullable=True, help="Got bad list of metrics, defaulting to all.")
             args = parser.parse_args()
 
             game_id = args["game_id"]
@@ -170,9 +170,9 @@ class PlayerAPI:
             ret_val = APIResult.Default(req_type=RESTType.GET)
 
             parser = reqparse.RequestParser()
-            parser.add_argument("game_id", type=str, required=True)
-            parser.add_argument("player_id", type=str, required=True)
-            parser.add_argument("metrics", type=str, required=False, default="[]", nullable=True, help="Got bad list of metrics, defaulting to all.")
+            parser.add_argument("game_id",   location='form', type=str, required=True)
+            parser.add_argument("player_id", location='form', type=str, required=True)
+            parser.add_argument("metrics",   location='form', type=str, required=False, default="[]", nullable=True, help="Got bad list of metrics, defaulting to all.")
             args : Dict[str, Any] = parser.parse_args()
 
             game_id = args["game_id"]
