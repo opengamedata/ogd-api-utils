@@ -2,7 +2,7 @@
 import unittest
 from unittest import TestCase
 # import locals
-from apis.APIUtils import parse_list, gen_interface
+from shared.utils.APIUtils import parse_list, gen_interface
 from tests.t_config import settings
 
 class t_APIUtils(TestCase):

@@ -1,0 +1,59 @@
+name: "Set up config file for a run"
+author: Luke Swanson
+description: "Given a set of appropriate inputs, this action prepares a config.js file for a data export."
+branding:
+  icon: 'clipboard'
+  color: 'blue'
+inputs:
+  db_host:
+    description: "Host of the database"
+    required: true
+    default: 'db placeholder'
+  db_user:
+    description: "User name for the database"
+    required: true
+    default: 'user placeholder'
+  db_pass:
+    description: "Password to access the database"
+    required: true
+    default: 'pass placeholder'
+  id_gen_db_name:
+    description: "Name of the database containing data for the ID generator"
+    required: true
+    default: 'id_gen placeholder'
+  fd_users_db_name:
+    description: "Name of the database containing data on existing users"
+    required: true
+    default: 'fd_users placeholder'
+  app_path:
+    description: "The name of the wsgi app being deployed"
+    required: true
+    default: "opengamedata.wsgi"
+  deploy_path:
+    description: "The path on the server in which the app is deployed"
+    required: true
+    default: '/var/www/wsgi-bin'
+runs:
+  using: "composite"
+  steps:
+    - name: Set up config
+      run: cp shared/config/config.py.template shared/config/config.py 
+      shell: bash
+    - name: Set DB hostname
+      run: sed -i 's@127.0.0.1@${{inputs.db_host}}@g' shared/config/config.py
+      shell: bash
+    - name: Set DB username
+      run: sed -i 's@username@${{inputs.db_user}}@g' shared/config/config.py
+      shell: bash
+    - name: Set DB password
+      run: sed -i 's/password/${{inputs.db_pass}}/g' shared/config/config.py
+      shell: bash
+    - name: Set ID Generator DB name
+      run: sed -i 's/id_generator/${{inputs.id_gen_db_name}}/g' shared/config/config.py
+      shell: bash
+    - name: Set User DB name
+      run: sed -i 's/fieldday_users/${{inputs.fd_users_db_name}}/g' shared/config/config.py
+      shell: bash
+    - name: Set Path to App
+      run: sed -i 's@DEPLOY_PATH@${{inputs.deploy_path}}@g' ${{inputs.app_path}}
+      shell: bash

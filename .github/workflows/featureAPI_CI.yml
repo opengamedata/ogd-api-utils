@@ -1,18 +1,17 @@
 # Workflow to build and deploy designer dashboard to server.
-name: OpenGameData Codes API CI
+name: OpenGameData Features API CI
 on:
-  # push:
-    # paths:
-    # - '.github/workflows/codesAPI_CI.yml'
-    # - '.github/actions/**'
-    # - 'config/**'
-    # - 'apis/codes/**'
-    # - 'codes_app.py'
+  push:
+    paths:
+    - '.github/workflows/featureAPI_CI.yml'
+    - '.github/actions/**'
+    - 'shared/**'
+    - 'apps/features/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 
 env:
   CI: ""
-  TARGET_PATH: ${{ vars.WSGI_PATH }}${{ github.event.repository.name }}/${{ github.ref_name }}/codes
+  TARGET_PATH: ${{ vars.WSGI_PATH }}${{ github.event.repository.name }}/${{ github.ref_name }}/features
   TARGET_HOST: ${{ vars.OGD_STAGING_HOST }}
 
 jobs:
@@ -23,6 +22,8 @@ jobs:
 
     # 1. Local checkout & config
     - uses: actions/checkout@v3
+      with:
+        submodules: 'true'
     - name: Set up Config File
       uses: ./.github/actions/API_config
       with:
@@ -31,7 +32,7 @@ jobs:
         db_pass: ${{secrets.SQL_PASS}}
         id_gen_db_name: ${{ secrets.DBNAME_ID_GEN }}
         fd_users_db_name: ${{ secrets.DBNAME_FD_USERS }}
-        app_path: "apps/coding/codes.wsgi"
+        app_path: "apps/features/data.wsgi"
         deploy_path: ${{ env.TARGET_PATH }}
     - name: Set up Core Config File
       uses: ./.github/actions/OGD_config
@@ -69,15 +70,19 @@ jobs:
         remote_host: ${{ env.TARGET_HOST }}
         remote_user: ${{ secrets.DEPLOY_USER }}
         remote_key:  ${{ secrets.DEPLOY_KEY  }}
-    - name: Upload API to web server via rsync
+    - name: Upload *App* to web server via rsync
       uses: burnett01/rsync-deployments@5.2
       with:
         switches: -vrc --exclude-from rsync-exclude
-        path: apps/coding/*
+        path: apps/features/*
         remote_path: ${{ env.TARGET_PATH }}
         remote_host: ${{ env.TARGET_HOST }}
         remote_user: ${{ secrets.DEPLOY_USER }}
         remote_key:  ${{ secrets.DEPLOY_KEY  }}
+    - name: Upload OGD access key
+      run: |
+        echo '${{secrets.OGD_SELECTOR_BQ_KEY}}' >> ./ogd.json
+        scp -o StrictHostKeyChecking=no -i ./key.txt ./ogd.json ${{ secrets.VPN_USER }}@${{ env.TARGET_HOST }}:${{env.TARGET_PATH}}/shared/config/ogd.json
     - name: Trigger Graceful Reboot
       run: sudo apachectl -k graceful
     - name: Announce deploy
