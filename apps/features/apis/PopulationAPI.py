@@ -41,12 +41,12 @@ class PopulationAPI:
         """
         # Expected WSGIScriptAlias URL path is /data
         api = Api(app)
-        api.add_resource(PopulationAPI.Population, '/populations/metrics')
+        api.add_resource(PopulationAPI.PopulationMetrics, '/populations/metrics')
         api.add_resource(PopulationAPI.PopulationFeatureList, '/populations/metrics/list/<game_id>')
         PopulationAPI.ogd_core = server_settings.OGDCore
         PopulationAPI.ogd_config = core_settings
 
-    class Population(Resource):
+    class PopulationMetrics(Resource):
         """Class for handling requests for population-level features."""
         def post(self):
             """Handles a POST request for population-level features.
