@@ -1,5 +1,5 @@
 # Workflow to build and deploy designer dashboard to server.
-name: OpenGameData Event Monitor API CI
+name: OpenGameData Event Monitor API Release
 on:
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
   push: # Trigger automatically when we do a merge to production
@@ -15,8 +15,8 @@ env:
   TARGET_HOST: ${{ vars.OGD_MONITOR_HOST }}
 
 jobs:
-  ci_deploy:
-    name: CI Deploy of Feature APIs
+  release_deploy:
+    name: Release Deploy of Monitor API
     runs-on: ubuntu-22.04
     steps:
 
