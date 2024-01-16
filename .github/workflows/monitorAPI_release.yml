@@ -3,7 +3,11 @@ name: OpenGameData Event Monitor API CI
 on:
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
   push: # Trigger automatically when we do a merge to production
-     branches: [ production ]
+    branches: [ production ]
+    paths:
+    - '.github/workflows/monitorAPI_CI.yml'
+    - 'shared/**'
+    - 'apps/monitor/**'
 
 env:
   CI: ""
