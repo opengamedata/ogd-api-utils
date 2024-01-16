@@ -38,10 +38,10 @@ class PlayerAPI:
         """
         # Expected WSGIScriptAlias URL path is /data
         api = Api(app)
-        api.add_resource(PlayerAPI.PlayerList, '/players/list/<game_id>')
-        api.add_resource(PlayerAPI.PlayersMetrics, '/players/metrics')
-        api.add_resource(PlayerAPI.PlayerMetrics, '/player/metrics')
+        api.add_resource(PlayerAPI.PlayerList,        '/players/list/<game_id>')
         api.add_resource(PlayerAPI.PlayerFeatureList, '/players/metrics/list/<game_id>')
+        api.add_resource(PlayerAPI.PlayersMetrics,    '/players/metrics')
+        api.add_resource(PlayerAPI.PlayerMetrics,     '/player/metrics')
         PlayerAPI.ogd_core = server_settings.OGDCore
         PlayerAPI.ogd_config = core_settings
 
