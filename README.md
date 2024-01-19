@@ -65,3 +65,4 @@ Lastly, at this point in time, the `<server_path>` is `https://fieldday-web.wcer
 `PUT(str player_id, str name = None)`
 
 - Returns no value, and either a success or error message  
+---
