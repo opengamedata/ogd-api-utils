@@ -9,6 +9,7 @@ from typing import Any, Dict, Optional
 # import 3rd-party libraries
 from flask import Flask, current_app
 from flask import request as flask_request
+from flask_cors import CORS
 from flask_restful import Resource, Api
 from flask_restful.inputs import datetime_from_iso8601
 from flask_restful.reqparse import Argument, RequestParser
@@ -41,6 +42,7 @@ class PopulationAPI:
         """
         # Expected WSGIScriptAlias URL path is /data
         api = Api(app)
+        cors = CORS(app, resources={r"/populations/*": {"origins": "*"}})
         api.add_resource(PopulationAPI.PopulationMetrics, '/populations/metrics')
         api.add_resource(PopulationAPI.PopulationFeatureList, '/populations/metrics/list/<game_id>')
         PopulationAPI.ogd_core = server_settings.OGDCore
