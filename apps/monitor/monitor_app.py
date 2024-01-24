@@ -68,7 +68,7 @@ def handle_game_selector_changed(selectedGame):
 # send data to corresponding room
 class LoggerReceiver(Resource):
     def post(self):
-        json_data = request.get_json()
+        json_data = request.get_json() or {}
         socketio.emit('logger_data', json_data, to=json_data.get('app_id'))
         return {'message': 'Received logger data successfully'}
 
@@ -76,4 +76,5 @@ class LoggerReceiver(Resource):
 api.add_resource(LoggerReceiver, '/all-game')
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True, port=5022)
+    socketio.run(app, port=5022, debug=True, use_reloader=True, log_output=True, allow_unsafe_werkzeug=True) # For debugging work
+    # socketio.run(app, port=5022, debug=False, use_reloader=False, log_output=True, allow_unsafe_werkzeug=False) # For stable, production work
