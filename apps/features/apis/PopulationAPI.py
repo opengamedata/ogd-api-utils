@@ -41,8 +41,8 @@ class PopulationAPI:
         :type app: Flask
         """
         # Expected WSGIScriptAlias URL path is /data
-        api = Api(app)
         cors = CORS(app, resources={r"/populations/*": {"origins": "*"}})
+        api = Api(app)
         api.add_resource(PopulationAPI.PopulationMetrics, '/populations/metrics')
         api.add_resource(PopulationAPI.PopulationFeatureList, '/populations/metrics/list/<game_id>')
         PopulationAPI.ogd_core = server_settings.OGDCore
