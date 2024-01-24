@@ -1,19 +1,19 @@
 # Workflow to build and deploy designer dashboard to server.
 name: OpenGameData Event Monitor API CI
 on:
-  # push:
-  #   paths:
-  #   - '.github/workflows/monitorAPI_CI.yml'
-  #   - '.github/actions/**'
-  #   - 'shared/**'
-  #   - 'apps/monitor/**'
+  push:
+    paths:
+    - '.github/workflows/monitorAPI_CI.yml'
+    - '.github/actions/**'
+    - 'shared/**'
+    - 'apps/monitor/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 
 env:
   CI: ""
   TARGET_PATH: ${{ vars.WSGI_PATH }}${{ github.event.repository.name }}/${{ github.ref_name }}/monitor
-  TARGET_HOST: ${{ vars.OGD_STAGING_HOST }}
-  TARGET_URL:  ${{ vars.OGD_STAGING_HOST }}${{ github.event.repository.name }}/${{ github.ref_name }}/monitor
+  TARGET_HOST: ${{ vars.OGD_MONITOR_HOST }}
+  TARGET_URL:  ${{ vars.OGD_MONITOR_HOST }}${{ github.event.repository.name }}/${{ github.ref_name }}/monitor
 
 jobs:
   ci_deploy:

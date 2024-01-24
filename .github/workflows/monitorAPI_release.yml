@@ -11,9 +11,11 @@ on:
 
 env:
   CI: ""
-  TARGET_PATH: ${{ vars.WSGI_PATH }}${{ github.event.repository.name }}/${{ github.ref_name }}/monitor
+  # TARGET_PATH: ${{ vars.WSGI_PATH }}${{ github.event.repository.name }}/${{ github.ref_name }}/monitor
+  TARGET_PATH: ${{ vars.WSGI_PATH }}opengamedata-server/production/monitor
   TARGET_HOST: ${{ vars.OGD_MONITOR_HOST }}
-  TARGET_URL:  ${{ vars.OGD_MONITOR_HOST }}${{ github.event.repository.name }}/${{ github.ref_name }}/monitor
+  # TARGET_URL:  ${{ vars.OGD_MONITOR_HOST }}${{ github.event.repository.name }}/${{ github.ref_name }}/monitor
+  TARGET_URL:  ${{ vars.OGD_MONITOR_HOST }}opengamedata-server/production/monitor
 
 jobs:
   release_deploy:
