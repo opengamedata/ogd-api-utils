@@ -1,7 +1,7 @@
 """Module for the Population API code
 """
 # import libraries
-import os
+import json
 import traceback
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -121,7 +121,7 @@ class PopulationAPI:
                 else:
                     api_result.RequestErrored("No valid population features")
             finally:
-                return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
+                return Response(response=json.dumps(api_result.ToDict()), status=api_result.Status.value, mimetype='application/json')
                 # return api_result.ToDict()
 
     class PopulationFeatureList(Resource):
