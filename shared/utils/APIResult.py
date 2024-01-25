@@ -17,14 +17,15 @@ class RESTType(IntEnum):
         :return: Simple string version of the name of a RESTType
         :rtype: _type_
         """
-        if self.value == RESTType.GET:
-            return "GET"
-        elif self.value == RESTType.POST:
-            return "POST"
-        elif self.value == RESTType.PUT:
-            return "PUT"
-        else:
-            return "INVALID REST TYPE"
+        match self.value:
+            case RESTType.GET:
+                return "GET"
+            case RESTType.POST:
+                return "POST"
+            case RESTType.PUT:
+                return "PUT"
+            case _:
+                return "INVALID REST TYPE"
 
 class ResultStatus(IntEnum):
     """Simple enumerated type to track the status of an API request result.
@@ -40,16 +41,17 @@ class ResultStatus(IntEnum):
         :return: Simple string version of the name of a ResultStatus
         :rtype: _type_
         """
-        if self.value == ResultStatus.NONE:
-            return "NONE"
-        elif self.value == ResultStatus.SUCCESS:
-            return "SUCCESS"
-        elif self.value == ResultStatus.ERR_SRV:
-            return "SERVER ERROR"
-        elif self.value == ResultStatus.ERR_REQ:
-            return "REQUEST ERROR"
-        else:
-            return "INVALID STATUS TYPE"
+        match self.value:
+            case ResultStatus.NONE:
+                return "NONE"
+            case ResultStatus.SUCCESS:
+                return "SUCCESS"
+            case ResultStatus.ERR_SRV:
+                return "SERVER ERROR"
+            case ResultStatus.ERR_REQ:
+                return "REQUEST ERROR"
+            case _:
+                return "INVALID STATUS TYPE"
 
 class APIResult:
     def __init__(self, req_type:RESTType, val:Any, msg:str, status:ResultStatus):
