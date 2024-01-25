@@ -1,6 +1,6 @@
 import json
 from enum import IntEnum
-from typing import Any
+from typing import Any, Dict
 # Import local files
 import ogd.core.requests.RequestResult as RequestResult
 
@@ -55,10 +55,10 @@ class ResultStatus(IntEnum):
 
 class APIResult:
     def __init__(self, req_type:RESTType, val:Any, msg:str, status:ResultStatus):
-        self._type   : RESTType     = req_type
-        self._val    : Any          = val
-        self._msg    : str          = msg
-        self._status : ResultStatus = status
+        self._type   : RESTType       = req_type
+        self._val    : Dict[str, Any] = val
+        self._msg    : str            = msg
+        self._status : ResultStatus   = status
 
     def __str__(self):
         return f"{self.Type.name} request: {self.Status}\n{self.Message}\nValues: {self.Value}"
@@ -94,7 +94,7 @@ class APIResult:
         return self._type
 
     @property
-    def Value(self) -> Any:
+    def Value(self) -> Dict[str, Any]:
         """Property for the value of the request result.
 
         :return: Some value, of any type, returned from the request.
@@ -102,7 +102,7 @@ class APIResult:
         """
         return self._val
     @Value.setter
-    def Value(self, new_val:Any):
+    def Value(self, new_val:Dict[str, Any]):
         self._val = new_val
 
 
@@ -140,7 +140,7 @@ class APIResult:
     def ToDict(self):
         return {
             "type"   : str(self._type),
-            "val"    : self._val,
+            "val"    : json.dumps(self._val),
             "msg"    : self._msg,
             "status" : str(self._status)
         }
