@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, Optional
 # import 3rd-party libraries
-from flask import Flask, current_app
+from flask import Flask, Response, current_app
 from flask import request as flask_request
 from flask_cors import CORS
 from flask_restful import Resource, Api
@@ -60,7 +60,7 @@ class PopulationAPI:
             :rtype: _type_
             """
             current_app.logger.info("Received population request.")
-            ret_val = APIResult.Default(req_type=RESTType.POST)
+            api_result = APIResult.Default(req_type=RESTType.POST)
 
             _game_id    : str      = "UNKOWN"
             _end_time   : datetime = datetime.now()
@@ -81,7 +81,7 @@ class PopulationAPI:
                 _start_time = args.get('start_datetime', _start_time)
                 _metrics    = APIUtils.parse_list(args.get('metrics') or "")
 
-                result : RequestResult = RequestResult(msg="No Export")
+                ogd_result : RequestResult = RequestResult(msg="No Export")
                 values_dict = {}
                 # orig_cwd = os.getcwd()
                 # os.chdir(PopulationAPI.ogd_core)
@@ -98,15 +98,15 @@ class PopulationAPI:
                     # retrieve and process the data
                     current_app.logger.info(f"Processing population request {request}...")
                     export_mgr = ExportManager(config=PopulationAPI.ogd_config)
-                    result = export_mgr.ExecuteRequest(request=request)
-                    current_app.logger.info(f"Result: {result.Message}")
+                    ogd_result = export_mgr.ExecuteRequest(request=request)
+                    current_app.logger.info(f"Result: {ogd_result.Message}")
                 elif _metrics is None:
                     current_app.logger.warning("_metrics was None")
                 elif _interface is None:
                     current_app.logger.warning("_interface was None")
                 # os.chdir(orig_cwd)
             except Exception as err:
-                ret_val.ServerErrored(f"Unknown error while processing Population request")
+                api_result.ServerErrored(f"Unknown error while processing Population request")
                 current_app.logger.error(f"Got exception for Population request:\ngame={_game_id}\n{str(err)}\n{traceback.format_exc()}")
             else:
                 current_app.logger.info(f"The values_dict:\n{values_dict}")
@@ -114,14 +114,15 @@ class PopulationAPI:
                 pop  = values_dict.get("populations", {}).get("vals", [[]])[0]
                 ct = min(len(cols), len(pop))
                 if ct > 0:
-                    ret_val.RequestSucceeded(
+                    api_result.RequestSucceeded(
                         msg="Generated population features",
                         val={cols[i] : pop[i] for i in range(ct)}
                     )
                 else:
-                    ret_val.RequestErrored("No valid population features")
+                    api_result.RequestErrored("No valid population features")
             finally:
-                return ret_val.ToDict()
+                return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
+                # return api_result.ToDict()
 
     class PopulationFeatureList(Resource):
         """Class for getting a full list of features for a given game."""

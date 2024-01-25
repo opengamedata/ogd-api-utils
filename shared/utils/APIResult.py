@@ -30,9 +30,9 @@ class ResultStatus(IntEnum):
     """Simple enumerated type to track the status of an API request result.
     """
     NONE = 1
-    SUCCESS = 2
-    ERR_SRV = 3
-    ERR_REQ = 4
+    SUCCESS = 200
+    ERR_REQ = 400
+    ERR_SRV = 500
 
     def __str__(self):
         """Stringify function for ResultStatus objects.
