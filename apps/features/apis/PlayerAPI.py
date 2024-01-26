@@ -69,14 +69,14 @@ class PlayerAPI:
                     if ExportMode.PLAYER in aggregate.Enabled:
                         feature_list.append(name)
             except Exception as err:
-                api_result.ServerErrored(f"ERROR: {type(err).__name__} error while processing FeatureList request")
+                api_result.ServerErrored(f"{type(err).__name__} error while processing FeatureList request")
                 current_app.logger.error(f"Got exception for FeatureList request:\ngame={game_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
                 if feature_list != []:
-                    api_result.RequestSucceeded(msg="SUCCESS: Got metric list for given game", val=feature_list)
+                    api_result.RequestSucceeded(msg="Got metric list for given game", val=feature_list)
                 else:
-                    api_result.RequestErrored("FAIL: Did not find any metrics for the given game")
+                    api_result.RequestErrored(msg="Did not find any metrics for the given game")
             finally:
                 return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
 
@@ -121,9 +121,9 @@ class PlayerAPI:
         # 4. If range generation succeeded, get into return format and send back data.
                 val = result.get('ids')
                 if val is not None:
-                    api_result.RequestSucceeded(msg="SUCCESS: Got ID list for given date range", val=val)
+                    api_result.RequestSucceeded(msg="Got ID list for given date range", val=val)
                 else:
-                    api_result.RequestErrored("FAIL: Did not find IDs in the given date range")
+                    api_result.RequestErrored(msg="Did not find IDs in the given date range")
             finally:
                 return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
     
@@ -183,7 +183,7 @@ class PlayerAPI:
                     current_app.logger.warning("_interface was None")
                 # os.chdir(orig_cwd)
             except Exception as err:
-                api_result.ServerErrored(f"ERROR: {type(err).__name__} error while processing Player request")
+                api_result.ServerErrored(f"{type(err).__name__} error while processing Player request")
                 current_app.logger.error(f"Got exception for Player request:\ngame={_game_id}, player={_player_id}\nerror={str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
@@ -195,12 +195,12 @@ class PlayerAPI:
                 ct = min(len(cols), len(player))
                 if ct > 0:
                     api_result.RequestSucceeded(
-                        msg="SUCCESS: Generated features for the given session",
+                        msg="Generated features for the given session",
                         val={cols[i] : player[i] for i in range(ct)}
                     )
                 else:
                     current_app.logger.warn(f"Couldn't find anything in result[player], result was:\n{ogd_result}")
-                    api_result.RequestErrored("FAIL: No valid session features")
+                    api_result.RequestErrored("No valid session features")
             finally:
                 return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
 
@@ -268,7 +268,7 @@ class PlayerAPI:
                     current_app.logger.warning("_interface was None")
 
             except Exception as err:
-                api_result.ServerErrored(f"ERROR: {type(err).__name__} error while processing Players request")
+                api_result.ServerErrored(f"{type(err).__name__} error while processing Players request")
                 current_app.logger.error(f"Got exception for Players request:\ngame={_game_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
@@ -277,11 +277,11 @@ class PlayerAPI:
                 val = values_dict.get("players")
                 if val is not None:
                     api_result.RequestSucceeded(
-                        msg="SUCCESS: Generated features for given sessions",
+                        msg="Generated features for given players",
                         val=val
                     )
                 else:
                     current_app.logger.debug(f"Couldn't find anything in result[players], result was:\n{ogd_result}")
-                    api_result.RequestErrored("FAIL: No valid session features")
+                    api_result.RequestErrored("No valid session features")
             finally:
                 return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')

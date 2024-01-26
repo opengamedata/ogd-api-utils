@@ -72,14 +72,14 @@ class PopulationAPI:
                     if ExportMode.POPULATION in aggregate.Enabled:
                         feature_list.append(name)
             except Exception as err:
-                api_result.ServerErrored(f"ERROR: {type(err).__name__} error while processing FeatureList request")
+                api_result.ServerErrored(f"{type(err).__name__} error while processing FeatureList request")
                 print(f"Got exception for PopulationFeatureList request:\ngame={game_id}\n{str(err)}")
                 print(traceback.format_exc())
             else:
                 if feature_list != []:
-                    api_result.RequestSucceeded(msg="SUCCESS: Got metric list for given game", val=feature_list)
+                    api_result.RequestSucceeded(msg=f"Got metric list for {game_id}", val=feature_list)
                 else:
-                    api_result.RequestErrored("FAIL: Did not find any metrics for the given game")
+                    api_result.RequestErrored(msg=f"Did not find any metrics for {game_id}")
             finally:
                 return Response(response=json.dumps(api_result.ToDict()), status=api_result.Status.value, mimetype='application/json')
 
@@ -141,7 +141,7 @@ class PopulationAPI:
                 elif _interface is None:
                     current_app.logger.warning("_interface was None")
             except Exception as err:
-                api_result.ServerErrored(f"ERROR: {type(err).__name__}error while processing Population request")
+                api_result.ServerErrored(f"{type(err).__name__} error while processing Population request")
                 current_app.logger.error(f"Got exception for PopulationMetrics request:\ngame={_game_id}\n{str(err)}\n{traceback.format_exc()}")
             else:
         # 5. If request succeeded, get into return format and send back data.
@@ -155,6 +155,6 @@ class PopulationAPI:
                         val={cols[i] : pop[i] for i in range(ct)}
                     )
                 else:
-                    api_result.RequestErrored("No valid population features")
+                    api_result.RequestErrored(msg="No valid population features")
             finally:
                 return Response(response=json.dumps(api_result.ToDict()), status=api_result.Status.value, mimetype='application/json')

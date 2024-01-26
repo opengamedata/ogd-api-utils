@@ -70,14 +70,14 @@ class SessionAPI:
                     if ExportMode.SESSION in aggregate.Enabled:
                         feature_list.append(name)
             except Exception as err:
-                api_result.ServerErrored(f"ERROR: {type(err).__name__} error while processing SessionFeatureList request")
+                api_result.ServerErrored(f"{type(err).__name__} error while processing SessionFeatureList request")
                 print(f"Got exception for SessionFeatureList request:\ngame={game_id}\n{str(err)}")
                 print(traceback.format_exc())
             else:
                 if feature_list != []:
-                    api_result.RequestSucceeded(msg="SUCCESS: Got metric list for given game", val=feature_list)
+                    api_result.RequestSucceeded(msg=f"Got metric list for {game_id} game", val=feature_list)
                 else:
-                    api_result.RequestErrored("FAIL: Did not find any metrics for the given game")
+                    api_result.RequestErrored(msg=f"Did not find any metrics for {game_id} game")
             finally:
                 return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
     
@@ -113,15 +113,15 @@ class SessionAPI:
                 if _interface is not None:
                     _range = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
             except Exception as err:
-                api_result.ServerErrored(f"ERROR: {type(err).__name__} error while processing SessionList request")
+                api_result.ServerErrored(f"{type(err).__name__} error while processing SessionList request")
                 current_app.logger.error(f"Got exception for SessionList request:\ngame={game_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
         # 5. If range generation succeeded, get into return format and send back data.
                 if _range is not None:
-                    api_result.RequestSucceeded(msg="SUCCESS: Got ID list for given date range", val=_range.IDs)
+                    api_result.RequestSucceeded(msg="Got ID list for given date range", val=_range.IDs)
                 else:
-                    api_result.RequestErrored("FAIL: Did not find IDs in the given date range")
+                    api_result.RequestErrored(msg="Did not find IDs in the given date range")
             finally:
                 return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
     
@@ -177,7 +177,7 @@ class SessionAPI:
                 elif _interface is None:
                     current_app.logger.warning("_interface was None")
             except Exception as err:
-                api_result.ServerErrored(f"ERROR: {type(err).__name__} error while processing Session request")
+                api_result.ServerErrored(f"{type(err).__name__} error while processing Session request")
                 current_app.logger.error(f"Got exception for Session request:\ngame={_game_id}, player={_session_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
@@ -188,12 +188,12 @@ class SessionAPI:
                 ct = min(len(cols), len(sess))
                 if ct > 0:
                     api_result.RequestSucceeded(
-                        msg="SUCCESS: Generated features for the given session",
+                        msg=f"Generated features for the session {_session_id}",
                         val={cols[i] : sess[i] for i in range(ct)}
                     )
                 else:
                     current_app.logger.debug(f"Couldn't find anything in result[session], result was:\n{ogd_result}")
-                    api_result.RequestErrored("FAIL: No valid session features")
+                    api_result.RequestErrored("No valid session features")
             finally:
                 return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
 
@@ -233,10 +233,10 @@ class SessionAPI:
         # 2. Perform actual variable parsing from Web Request
                 args = parser.parse_args()
 
-                _game_id = args.get("game_id", _game_id)
+                _game_id     =                     args.get("game_id", _game_id)
                 _metrics     = APIUtils.parse_list(args.get('metrics') or "")
                 _session_ids = APIUtils.parse_list(args.get('session_ids') or "[]")
-                ogd_result : RequestResult = RequestResult(msg="Empty result")
+                ogd_result : RequestResult = RequestResult(msg="No Request")
                 values_dict = {}
                 
         # 3. Set up OGD Request based on data in Web Request
@@ -257,7 +257,7 @@ class SessionAPI:
                 elif _interface is None:
                     current_app.logger.warning("_interface was None")
             except Exception as err:
-                api_result.ServerErrored(f"ERROR: {type(err).__name__} error while processing Sessions request")
+                api_result.ServerErrored(f"{type(err).__name__} error while processing Sessions request")
                 current_app.logger.error(f"Got exception for Sessions request:\ngame={_game_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
@@ -265,11 +265,11 @@ class SessionAPI:
                 val = values_dict.get("sessions")
                 if val is not None:
                     api_result.RequestSucceeded(
-                        msg="SUCCESS: Generated features for given sessions",
+                        msg="Generated features for given sessions",
                         val=val
                     )
                 else:
                     current_app.logger.debug(f"Couldn't find anything in result[sessions], result was:\n{ogd_result}")
-                    api_result.RequestErrored("FAIL: No valid session features")
+                    api_result.RequestErrored("No valid session features")
             finally:
                 return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
