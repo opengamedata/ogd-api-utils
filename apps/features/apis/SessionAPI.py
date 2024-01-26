@@ -70,8 +70,8 @@ class SessionAPI:
                     if ExportMode.SESSION in aggregate.Enabled:
                         feature_list.append(name)
             except Exception as err:
-                api_result.ServerErrored(f"ERROR: Unknown error while processing FeatureList request")
-                print(f"Got exception for FeatureList request:\ngame={game_id}\n{str(err)}")
+                api_result.ServerErrored(f"ERROR: {type(err).__name__} error while processing SessionFeatureList request")
+                print(f"Got exception for SessionFeatureList request:\ngame={game_id}\n{str(err)}")
                 print(traceback.format_exc())
             else:
                 if feature_list != []:
@@ -256,7 +256,6 @@ class SessionAPI:
                     current_app.logger.warning("_metrics was None")
                 elif _interface is None:
                     current_app.logger.warning("_interface was None")
-                # os.chdir(orig_cwd)
             except Exception as err:
                 api_result.ServerErrored(f"ERROR: {type(err).__name__} error while processing Sessions request")
                 current_app.logger.error(f"Got exception for Sessions request:\ngame={_game_id}\n{str(err)}")

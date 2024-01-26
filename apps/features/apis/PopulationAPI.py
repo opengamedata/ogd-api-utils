@@ -72,8 +72,8 @@ class PopulationAPI:
                     if ExportMode.POPULATION in aggregate.Enabled:
                         feature_list.append(name)
             except Exception as err:
-                api_result.ServerErrored(f"ERROR: Unknown error while processing FeatureList request")
-                print(f"Got exception for FeatureList request:\ngame={game_id}\n{str(err)}")
+                api_result.ServerErrored(f"ERROR: {type(err).__name__} error while processing FeatureList request")
+                print(f"Got exception for PopulationFeatureList request:\ngame={game_id}\n{str(err)}")
                 print(traceback.format_exc())
             else:
                 if feature_list != []:
@@ -141,8 +141,8 @@ class PopulationAPI:
                 elif _interface is None:
                     current_app.logger.warning("_interface was None")
             except Exception as err:
-                api_result.ServerErrored(f"Unknown error while processing Population request")
-                current_app.logger.error(f"Got exception for Population request:\ngame={_game_id}\n{str(err)}\n{traceback.format_exc()}")
+                api_result.ServerErrored(f"ERROR: {type(err).__name__}error while processing Population request")
+                current_app.logger.error(f"Got exception for PopulationMetrics request:\ngame={_game_id}\n{str(err)}\n{traceback.format_exc()}")
             else:
         # 5. If request succeeded, get into return format and send back data.
                 current_app.logger.info(f"The values_dict:\n{values_dict}")

@@ -69,7 +69,7 @@ class PlayerAPI:
                     if ExportMode.PLAYER in aggregate.Enabled:
                         feature_list.append(name)
             except Exception as err:
-                api_result.ServerErrored(f"ERROR: Unknown error while processing FeatureList request")
+                api_result.ServerErrored(f"ERROR: {type(err).__name__} error while processing FeatureList request")
                 current_app.logger.error(f"Got exception for FeatureList request:\ngame={game_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
