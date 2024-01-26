@@ -7,8 +7,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional, Union
 # import 3rd-party libraries
-from flask import Flask
-from flask import current_app
+from flask import Flask, Response, current_app
 from flask_restful import Resource, Api, reqparse
 from flask_restful.inputs import datetime_from_iso8601
 # import locals
@@ -49,7 +48,7 @@ class SessionAPI:
     
     class SessionList(Resource):
         """Class for handling requests for a list of sessions over a date range."""
-        def get(self, game_id):
+        def get(self, game_id) -> Response:
             """Handles a GET request for a list of sessions.
 
             :param game_id: _description_
@@ -57,9 +56,9 @@ class SessionAPI:
             :return: _description_
             :rtype: _type_
             """
-            current_app.logger.info("Received session list request.")
-            ret_val = APIResult.Default(req_type=RESTType.GET)
+            api_result = APIResult.Default(req_type=RESTType.GET)
 
+            current_app.logger.info("Received session list request.")
             _end_time   : datetime = datetime.now()
             _start_time : datetime = _end_time-timedelta(hours=1)
 
@@ -80,19 +79,20 @@ class SessionAPI:
                     _range = ExporterRange.FromDateRange(source=_interface, date_min=_start_time, date_max=_end_time)
                 # os.chdir(orig_cwd)
             except Exception as err:
-                ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing SessionList request")
+                api_result.ServerErrored(f"ERROR: {type(err).__name__} error while processing SessionList request")
                 current_app.logger.error(f"Got exception for SessionList request:\ngame={game_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
                 if _range is not None:
-                    ret_val.RequestSucceeded(msg="SUCCESS: Got ID list for given date range", val=_range.IDs)
+                    api_result.RequestSucceeded(msg="SUCCESS: Got ID list for given date range", val=_range.IDs)
                 else:
-                    ret_val.RequestErrored("FAIL: Did not find IDs in the given date range")
-            return ret_val.ToDict()
+                    api_result.RequestErrored("FAIL: Did not find IDs in the given date range")
+            finally:
+                return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
 
     class SessionsMetrics(Resource):
         """Class for handling requests for session-level features, given a list of session ids."""
-        def post(self):
+        def post(self) -> Response:
             """Handles a POST  request for session-level features for a list of sessions.
 
             :param game_id: _description_
@@ -100,8 +100,8 @@ class SessionAPI:
             :return: _description_
             :rtype: _type_
             """
+            api_result = APIResult.Default(req_type=RESTType.POST)
             current_app.logger.info("Received sessions request.")
-            ret_val = APIResult.Default(req_type=RESTType.POST)
 
             parser = reqparse.RequestParser()
             parser.add_argument("game_id", type=str, required=True)
@@ -138,24 +138,25 @@ class SessionAPI:
                     current_app.logger.warning("_interface was None")
                 # os.chdir(orig_cwd)
             except Exception as err:
-                ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing Sessions request")
+                api_result.ServerErrored(f"ERROR: {type(err).__name__} error while processing Sessions request")
                 current_app.logger.error(f"Got exception for Sessions request:\ngame={game_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
                 val = values_dict.get("sessions")
                 if val is not None:
-                    ret_val.RequestSucceeded(
+                    api_result.RequestSucceeded(
                         msg="SUCCESS: Generated features for given sessions",
                         val=val
                     )
                 else:
                     current_app.logger.debug(f"Couldn't find anything in result[sessions], result was:\n{result}")
-                    ret_val.RequestErrored("FAIL: No valid session features")
-            return ret_val.ToDict()
+                    api_result.RequestErrored("FAIL: No valid session features")
+            finally:
+                return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
     
     class SessionMetrics(Resource):
         """Class for handling requests for session-level features, given a session id."""
-        def post(self):
+        def post(self) -> Response:
             """Handles a GET request for session-level features of a single Session.
             Gives back a dictionary of the APIResult, with the val being a dictionary of columns to values for the given session.
 
@@ -166,8 +167,8 @@ class SessionAPI:
             :return: _description_
             :rtype: _type_
             """
+            api_result = APIResult.Default(req_type=RESTType.GET)
             current_app.logger.info("Received session request.")
-            ret_val = APIResult.Default(req_type=RESTType.GET)
 
             parser = reqparse.RequestParser()
             parser.add_argument("game_id", type=str, required=True)
@@ -204,7 +205,7 @@ class SessionAPI:
                     current_app.logger.warning("_interface was None")
                 # os.chdir(orig_cwd)
             except Exception as err:
-                ret_val.ServerErrored(f"ERROR: {type(err).__name__} error while processing Session request")
+                api_result.ServerErrored(f"ERROR: {type(err).__name__} error while processing Session request")
                 current_app.logger.error(f"Got exception for Session request:\ngame={game_id}, player={session_id}\n{str(err)}")
                 current_app.logger.error(traceback.format_exc())
             else:
@@ -213,14 +214,15 @@ class SessionAPI:
                 sess = self._findSession(session_list=sessions, target_id=session_id)
                 ct = min(len(cols), len(sess))
                 if ct > 0:
-                    ret_val.RequestSucceeded(
+                    api_result.RequestSucceeded(
                         msg="SUCCESS: Generated features for the given session",
                         val={cols[i] : sess[i] for i in range(ct)}
                     )
                 else:
                     current_app.logger.debug(f"Couldn't find anything in result[session], result was:\n{result}")
-                    ret_val.RequestErrored("FAIL: No valid session features")
-            return ret_val.ToDict()
+                    api_result.RequestErrored("FAIL: No valid session features")
+            finally:
+                return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
 
         def _findSession(self, session_list, target_id):
             ret_val = None
@@ -235,7 +237,7 @@ class SessionAPI:
 
     class SessionFeatureList(Resource):
         """Class for getting a full list of features for a given game."""
-        def get(self, game_id):
+        def get(self, game_id) -> Response:
             """Handles a GET request for a list of sessions.
 
             :param game_id: _description_
@@ -243,8 +245,8 @@ class SessionAPI:
             :return: _description_
             :rtype: _type_
             """
-            print("Received metric list request.")
-            ret_val = APIResult.Default(req_type=RESTType.GET)
+            api_result = APIResult.Default(req_type=RESTType.GET)
+            current_app.logger.info("Received metric list request.")
 
             try:
                 feature_list = []
@@ -261,12 +263,13 @@ class SessionAPI:
                         feature_list.append(name)
                 # os.chdir(orig_cwd)
             except Exception as err:
-                ret_val.ServerErrored(f"ERROR: Unknown error while processing FeatureList request")
+                api_result.ServerErrored(f"ERROR: Unknown error while processing FeatureList request")
                 print(f"Got exception for FeatureList request:\ngame={game_id}\n{str(err)}")
                 print(traceback.format_exc())
             else:
                 if feature_list != []:
-                    ret_val.RequestSucceeded(msg="SUCCESS: Got metric list for given game", val=feature_list)
+                    api_result.RequestSucceeded(msg="SUCCESS: Got metric list for given game", val=feature_list)
                 else:
-                    ret_val.RequestErrored("FAIL: Did not find any metrics for the given game")
-            return ret_val.ToDict()
+                    api_result.RequestErrored("FAIL: Did not find any metrics for the given game")
+            finally:
+                return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
