@@ -113,10 +113,10 @@ class PopulationAPI:
                 current_app.logger.info(f"About to parse args from request with args='{flask_request.args}', and form='{flask_request.form}', body='{flask_request.data}'")
                 args : Dict[str, Any] = parser.parse_args()
 
-                _game_id    =            args.get("game_id",        _game_id)
-                _end_time   =            args.get("end_datetime",   _end_time)
-                _start_time =            args.get("start_datetime", _start_time)
-                _metrics    = json.loads(args.get("metrics",        ""))
+                _game_id    =                     args.get("game_id",        _game_id)
+                _end_time   =                     args.get("end_datetime",   _end_time)
+                _start_time =                     args.get("start_datetime", _start_time)
+                _metrics    = APIUtils.parse_list(args.get("metrics",        ""))
 
         # 3. Set up OGD Request based on data in Web Request
                 ogd_result : RequestResult = RequestResult(msg="No Export")
