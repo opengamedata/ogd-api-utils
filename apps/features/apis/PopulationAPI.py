@@ -50,7 +50,7 @@ class PopulationAPI:
 
     class PopulationMetrics(Resource):
         """Class for handling requests for population-level features."""
-        def post(self):
+        def post(self) -> Response:
             """Handles a POST request for population-level features.
             Gives back a dictionary of the APIResult, with the val being a dictionary of columns to values for the given population.
 
@@ -126,7 +126,7 @@ class PopulationAPI:
 
     class PopulationFeatureList(Resource):
         """Class for getting a full list of features for a given game."""
-        def get(self, game_id):
+        def get(self, game_id) -> Response:
             """Handles a GET request for a list of sessions.
 
             :param game_id: _description_
