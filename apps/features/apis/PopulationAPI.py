@@ -135,7 +135,7 @@ class PopulationAPI:
             :rtype: _type_
             """
             print("Received metric list request. confirm latest version")
-            ret_val = APIResult.Default(req_type=RESTType.GET)
+            api_result = APIResult.Default(req_type=RESTType.GET)
 
             try:
                 feature_list = []
@@ -151,13 +151,14 @@ class PopulationAPI:
                         feature_list.append(name)
                 # os.chdir(orig_cwd)
             except Exception as err:
-                ret_val.ServerErrored(f"ERROR: Unknown error while processing FeatureList request")
+                api_result.ServerErrored(f"ERROR: Unknown error while processing FeatureList request")
                 print(f"Got exception for FeatureList request:\ngame={game_id}\n{str(err)}")
                 print(traceback.format_exc())
             else:
                 if feature_list != []:
-                    ret_val.RequestSucceeded(msg="SUCCESS: Got metric list for given game", val=feature_list)
+                    api_result.RequestSucceeded(msg="SUCCESS: Got metric list for given game", val=feature_list)
                 else:
-                    ret_val.RequestErrored("FAIL: Did not find any metrics for the given game")
+                    api_result.RequestErrored("FAIL: Did not find any metrics for the given game")
             finally:
-                return ret_val.ToDict()
+                return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
+                return api_result.ToDict()
