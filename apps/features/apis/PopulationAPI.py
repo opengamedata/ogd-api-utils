@@ -159,4 +159,4 @@ class PopulationAPI:
                 else:
                     api_result.RequestErrored("FAIL: Did not find any metrics for the given game")
             finally:
-                return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
+                return Response(response=json.dumps(api_result.ToDict()), status=api_result.Status.value, mimetype='application/json')
