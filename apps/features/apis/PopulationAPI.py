@@ -87,7 +87,7 @@ class PopulationAPI:
         """Class for handling requests for population-level features."""
         def post(self) -> Response:
             """Handles a POST request for population-level features.
-            Gives back a dictionary of the APIResult, with the val being a dictionary of columns to values for the given population.
+            Gives back a dictionary of the APIResponse, with the val being a dictionary of columns to values for the given population.
 
             :param game_id: _description_
             :type game_id: _type_

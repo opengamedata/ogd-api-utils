@@ -131,7 +131,7 @@ class PlayerAPI:
         """Class for handling requests for session-level features, given a session id."""
         def post(self) -> Response:
             """Handles a GET request for session-level features of a single Session.
-            Gives back a dictionary of the APIResult, with the val being a dictionary of columns to values for the given player.
+            Gives back a dictionary of the APIResponse, with the val being a dictionary of columns to values for the given player.
 
             :param game_id: _description_
             :type game_id: _type_
