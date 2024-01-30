@@ -53,7 +53,7 @@ class ResultStatus(IntEnum):
             case _:
                 return "INVALID STATUS TYPE"
 
-class APIResult:
+class APIResponse:
     def __init__(self, req_type:RESTType, val:Any, msg:str, status:ResultStatus):
         self._type   : RESTType       = req_type
         self._val    : Dict[str, Any] = val
@@ -65,7 +65,7 @@ class APIResult:
 
     @staticmethod
     def Default(req_type:RESTType):
-        return APIResult(
+        return APIResponse(
             req_type=req_type,
             val=None,
             msg="",
@@ -81,7 +81,7 @@ class APIResult:
             _status = ResultStatus.ERR_REQ
         else:
             _status = ResultStatus.ERR_SRV
-        ret_val = APIResult(req_type=req_type, val=None, msg=result.Message, status=_status)
+        ret_val = APIResponse(req_type=req_type, val=None, msg=result.Message, status=_status)
         return ret_val
 
     @property

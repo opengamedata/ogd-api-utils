@@ -24,7 +24,7 @@ from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.schemas.games.GameSchema import GameSchema
 from shared.schemas.ServerConfigSchema import ServerConfigSchema
-from shared.utils.APIResult import APIResult, RESTType, ResultStatus
+from shared.utils.APIResult import APIResponse, RESTType, ResultStatus
 from shared.utils import APIUtils
 
 class PopulationAPI:
@@ -59,7 +59,7 @@ class PopulationAPI:
             :rtype: _type_
             """
             print("Received metric list request. confirm latest version")
-            api_result = APIResult.Default(req_type=RESTType.GET)
+            api_result = APIResponse.Default(req_type=RESTType.GET)
 
             try:
                 feature_list = []
@@ -95,7 +95,7 @@ class PopulationAPI:
             :rtype: _type_
             """
             current_app.logger.info("Received population metrics request.")
-            api_result = APIResult.Default(req_type=RESTType.POST)
+            api_result = APIResponse.Default(req_type=RESTType.POST)
 
         # 1. Set up variables and parser for Web Request
             _game_id    : str      = "UNKOWN"

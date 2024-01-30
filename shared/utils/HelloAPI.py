@@ -2,7 +2,7 @@
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
 # import locals
-from shared.utils.APIResult import APIResult, RESTType, ResultStatus
+from shared.utils.APIResult import APIResponse, RESTType, ResultStatus
 
 class HelloAPI:
     @staticmethod
@@ -13,7 +13,7 @@ class HelloAPI:
 
     class Hello(Resource):
         def get(self):
-            ret_val = APIResult(
+            ret_val = APIResponse(
                 req_type = RESTType.GET,
                 val      = None,
                 msg      = "Hello! You GETted successfully!",
@@ -21,7 +21,7 @@ class HelloAPI:
             return ret_val.AsDict
 
         def post(self):
-            ret_val = APIResult(
+            ret_val = APIResponse(
                 req_type = RESTType.POST,
                 val      = None,
                 msg      = "Hello! You POSTed successfully!",
@@ -29,7 +29,7 @@ class HelloAPI:
             return ret_val.AsDict
 
         def put(self):
-            ret_val = APIResult(
+            ret_val = APIResponse(
                 req_type = RESTType.PUT,
                 val      = None,
                 msg      = "Hello! You PUTted successfully!",
@@ -38,7 +38,7 @@ class HelloAPI:
 
     class ParamHello(Resource):
         def get(self, name):
-            ret_val = APIResult(
+            ret_val = APIResponse(
                 req_type = RESTType.GET,
                 val      = None,
                 msg      = f"Hello {name}! You GETted successfully!",
@@ -46,7 +46,7 @@ class HelloAPI:
             return ret_val.AsDict
 
         def post(self, name):
-            ret_val = APIResult(
+            ret_val = APIResponse(
                 req_type = RESTType.POST,
                 val      = None,
                 msg      = f"Hello {name}! You POSTed successfully!",
@@ -54,7 +54,7 @@ class HelloAPI:
             return ret_val.AsDict
 
         def put(self, name):
-            ret_val = APIResult(
+            ret_val = APIResponse(
                 req_type = RESTType.PUT,
                 val      = None,
                 msg      = f"Hello {name}! You PUTted successfully!",

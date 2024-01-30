@@ -21,7 +21,7 @@ from ogd.core.schemas.ExportMode import ExportMode
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from shared.schemas.ServerConfigSchema import ServerConfigSchema
-from shared.utils.APIResult import APIResult, RESTType, ResultStatus
+from shared.utils.APIResult import APIResponse, RESTType, ResultStatus
 from shared.utils import APIUtils
 class PlayerAPI:
     """Class to define an API for the developer/designer dashboard"""
@@ -55,7 +55,7 @@ class PlayerAPI:
             :return: _description_
             :rtype: _type_
             """
-            api_result = APIResult.Default(req_type=RESTType.GET)
+            api_result = APIResponse.Default(req_type=RESTType.GET)
 
             current_app.logger.info("Received metric list request.")
             try:
@@ -90,7 +90,7 @@ class PlayerAPI:
             :return: _description_
             :rtype: _type_
             """
-            api_result = APIResult.Default(req_type=RESTType.GET)
+            api_result = APIResponse.Default(req_type=RESTType.GET)
             current_app.logger.info(f"Received request for {game_id} player list.")
 
         # 1. Set up variables and parser for Web Request
@@ -141,7 +141,7 @@ class PlayerAPI:
             :rtype: _type_
             """
             current_app.logger.info(f"Received player metric request.")
-            api_result = APIResult.Default(req_type=RESTType.GET)
+            api_result = APIResponse.Default(req_type=RESTType.GET)
 
         # 1. Set up variables and parser for Web Request
             _game_id   : str = "UNKOWN"
@@ -227,7 +227,7 @@ class PlayerAPI:
             :rtype: _type_
             """
             current_app.logger.info(f"Received players metrics request.")
-            api_result = APIResult.Default(req_type=RESTType.GET)
+            api_result = APIResponse.Default(req_type=RESTType.GET)
 
         # 1. Set up variables and parser for Web Request
             _game_id    : str                 = "UNKOWN"

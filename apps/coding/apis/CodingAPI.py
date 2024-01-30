@@ -12,7 +12,7 @@ from shared.config.config import settings
 from ogd.core.coding.Code import Code
 from ogd.core.coding.Coder import Coder
 from ogd.core.interfaces.CodingInterface import CodingInterface
-from shared.utils.APIResult import APIResult, RESTType, ResultStatus
+from shared.utils.APIResult import APIResponse, RESTType, ResultStatus
 from shared.utils import APIUtils
 
 class CodingAPI:
@@ -31,14 +31,14 @@ class CodingAPI:
     class CoderList(Resource):
         def get(self, game_id:str):
             current_app.logger.info(f"Received request for {game_id} players.")
-            ret_val = APIResult.Default(req_type=RESTType.GET)
+            ret_val = APIResponse.Default(req_type=RESTType.GET)
             ret_val.RequestSucceeded(msg=f"SUCCESS: Got a (fake) list of codes for {game_id}", val=["Code1", "Code2", "Code3"])
             return ret_val.AsDict
 
     class CodeList(Resource):
         def get(self, game_id:str):
             current_app.logger.info(f"Received request for {game_id} coders.")
-            ret_val = APIResult.Default(req_type=RESTType.GET)
+            ret_val = APIResponse.Default(req_type=RESTType.GET)
             ret_val.RequestSucceeded(msg=f"SUCCESS: Created a (fake) list of codes for {game_id}", val=["Code1", "Code2", "Code3"])
             return ret_val.AsDict
 
@@ -62,7 +62,7 @@ class CodingAPI:
             code = args["code"]
 
             current_app.logger.info(f"Received request for {game_id} players.")
-            ret_val = APIResult.Default(req_type=RESTType.POST)
+            ret_val = APIResponse.Default(req_type=RESTType.POST)
 
             _indices = APIUtils.parse_list(args.get('indices') or "[]")
             _events = []
