@@ -2,7 +2,7 @@
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
 # import locals
-from shared.utils.APIResult import APIResponse, RESTType, ResultStatus
+from shared.utils.APIResponse import APIResponse, RESTType, ResultStatus
 
 class HelloAPI:
     @staticmethod
