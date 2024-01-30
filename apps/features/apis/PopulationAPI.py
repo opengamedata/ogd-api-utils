@@ -81,7 +81,7 @@ class PopulationAPI:
                 else:
                     api_result.RequestErrored(msg=f"Did not find any metrics for {game_id}")
             finally:
-                return Response(response=json.dumps(api_result.ToDict()), status=api_result.Status.value, mimetype='application/json')
+                return Response(response=api_result.AsJSON, status=api_result.Status.value, mimetype='application/json')
 
     class PopulationMetrics(Resource):
         """Class for handling requests for population-level features."""
@@ -157,4 +157,4 @@ class PopulationAPI:
                 else:
                     api_result.RequestErrored(msg="No valid population features")
             finally:
-                return Response(response=json.dumps(api_result.ToDict()), status=api_result.Status.value, mimetype='application/json')
+                return Response(response=api_result.AsJSON, status=api_result.Status.value, mimetype='application/json')

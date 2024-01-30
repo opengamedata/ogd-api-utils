@@ -18,7 +18,7 @@ class HelloAPI:
                 val      = None,
                 msg      = "Hello! You GETted successfully!",
                 status   = ResultStatus.SUCCESS)
-            return ret_val.ToDict()
+            return ret_val.AsDict
 
         def post(self):
             ret_val = APIResult(
@@ -26,7 +26,7 @@ class HelloAPI:
                 val      = None,
                 msg      = "Hello! You POSTed successfully!",
                 status   = ResultStatus.SUCCESS)
-            return ret_val.ToDict()
+            return ret_val.AsDict
 
         def put(self):
             ret_val = APIResult(
@@ -34,7 +34,7 @@ class HelloAPI:
                 val      = None,
                 msg      = "Hello! You PUTted successfully!",
                 status   = ResultStatus.SUCCESS)
-            return ret_val.ToDict()
+            return ret_val.AsDict
 
     class ParamHello(Resource):
         def get(self, name):
@@ -43,7 +43,7 @@ class HelloAPI:
                 val      = None,
                 msg      = f"Hello {name}! You GETted successfully!",
                 status   = ResultStatus.SUCCESS)
-            return ret_val.ToDict()
+            return ret_val.AsDict
 
         def post(self, name):
             ret_val = APIResult(
@@ -51,7 +51,7 @@ class HelloAPI:
                 val      = None,
                 msg      = f"Hello {name}! You POSTed successfully!",
                 status   = ResultStatus.SUCCESS)
-            return ret_val.ToDict()
+            return ret_val.AsDict
 
         def put(self, name):
             ret_val = APIResult(
@@ -59,4 +59,4 @@ class HelloAPI:
                 val      = None,
                 msg      = f"Hello {name}! You PUTted successfully!",
                 status   = ResultStatus.SUCCESS)
-            return ret_val.ToDict()
+            return ret_val.AsDict

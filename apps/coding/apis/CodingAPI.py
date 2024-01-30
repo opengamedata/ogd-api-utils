@@ -33,14 +33,14 @@ class CodingAPI:
             current_app.logger.info(f"Received request for {game_id} players.")
             ret_val = APIResult.Default(req_type=RESTType.GET)
             ret_val.RequestSucceeded(msg=f"SUCCESS: Got a (fake) list of codes for {game_id}", val=["Code1", "Code2", "Code3"])
-            return ret_val.ToDict()
+            return ret_val.AsDict
 
     class CodeList(Resource):
         def get(self, game_id:str):
             current_app.logger.info(f"Received request for {game_id} coders.")
             ret_val = APIResult.Default(req_type=RESTType.GET)
             ret_val.RequestSucceeded(msg=f"SUCCESS: Created a (fake) list of codes for {game_id}", val=["Code1", "Code2", "Code3"])
-            return ret_val.ToDict()
+            return ret_val.AsDict
 
     class CodeCreate(Resource):
 
@@ -88,4 +88,4 @@ class CodingAPI:
                 else:
                     ret_val.RequestErrored(msg="FAIL: Unable to store code to database.")
                     ret_val.Value = _success
-            return ret_val.ToDict()
+            return ret_val.AsDict

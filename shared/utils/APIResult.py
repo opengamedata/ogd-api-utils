@@ -124,6 +124,19 @@ class APIResult:
         """
         return self._status
 
+    @property
+    def AsDict(self):
+        return {
+            "type"   : str(self._type),
+            "val"    : json.dumps(self._val),
+            "msg"    : self._msg,
+            "status" : str(self._status)
+        }
+
+    @property
+    def AsJSON(self):
+        return json.dumps(self.AsDict)
+
     def RequestErrored(self, msg:str):
         self._status = ResultStatus.ERR_REQ
         self._msg = f"ERROR: {msg}"
@@ -136,11 +149,3 @@ class APIResult:
         self._status = ResultStatus.SUCCESS
         self._msg = f"SUCCESS: {msg}"
         self._val = val
-
-    def ToDict(self):
-        return {
-            "type"   : str(self._type),
-            "val"    : json.dumps(self._val),
-            "msg"    : self._msg,
-            "status" : str(self._status)
-        }

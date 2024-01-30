@@ -79,7 +79,7 @@ class SessionAPI:
                 else:
                     api_result.RequestErrored(msg=f"Did not find any metrics for {game_id} game")
             finally:
-                return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
+                return Response(response=api_result.AsJSON, status=api_result.Status.value, mimetype='application/json')
     
     class SessionList(Resource):
         """Class for handling requests for a list of sessions over a date range."""
@@ -123,7 +123,7 @@ class SessionAPI:
                 else:
                     api_result.RequestErrored(msg="Did not find IDs in the given date range")
             finally:
-                return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
+                return Response(response=api_result.AsJSON, status=api_result.Status.value, mimetype='application/json')
     
     class SessionMetrics(Resource):
         """Class for handling requests for session-level features, given a session id."""
@@ -195,7 +195,7 @@ class SessionAPI:
                     current_app.logger.debug(f"Couldn't find anything in result[session], result was:\n{ogd_result}")
                     api_result.RequestErrored("No valid session features")
             finally:
-                return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
+                return Response(response=api_result.AsJSON, status=api_result.Status.value, mimetype='application/json')
 
         def _findSession(self, session_list, target_id):
             ret_val = None
@@ -272,4 +272,4 @@ class SessionAPI:
                     current_app.logger.debug(f"Couldn't find anything in result[sessions], result was:\n{ogd_result}")
                     api_result.RequestErrored("No valid session features")
             finally:
-                return Response(response=api_result.ToDict(), status=api_result.Status.value, mimetype='application/json')
+                return Response(response=api_result.AsJSON, status=api_result.Status.value, mimetype='application/json')
