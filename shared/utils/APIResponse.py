@@ -27,7 +27,7 @@ class RESTType(IntEnum):
             case _:
                 return "INVALID REST TYPE"
 
-class ResultStatus(IntEnum):
+class ResponseStatus(IntEnum):
     """Simple enumerated type to track the status of an API request result.
     """
     NONE = 1
@@ -36,29 +36,29 @@ class ResultStatus(IntEnum):
     ERR_SRV = 500
 
     def __str__(self):
-        """Stringify function for ResultStatus objects.
+        """Stringify function for ResponseStatus objects.
 
-        :return: Simple string version of the name of a ResultStatus
+        :return: Simple string version of the name of a ResponseStatus
         :rtype: _type_
         """
         match self.value:
-            case ResultStatus.NONE:
+            case ResponseStatus.NONE:
                 return "NONE"
-            case ResultStatus.SUCCESS:
+            case ResponseStatus.SUCCESS:
                 return "SUCCESS"
-            case ResultStatus.ERR_SRV:
+            case ResponseStatus.ERR_SRV:
                 return "SERVER ERROR"
-            case ResultStatus.ERR_REQ:
+            case ResponseStatus.ERR_REQ:
                 return "REQUEST ERROR"
             case _:
                 return "INVALID STATUS TYPE"
 
 class APIResponse:
-    def __init__(self, req_type:RESTType, val:Any, msg:str, status:ResultStatus):
+    def __init__(self, req_type:RESTType, val:Any, msg:str, status:ResponseStatus):
         self._type   : RESTType       = req_type
         self._val    : Dict[str, Any] = val
         self._msg    : str            = msg
-        self._status : ResultStatus   = status
+        self._status : ResponseStatus   = status
 
     def __str__(self):
         return f"{self.Type.name} request: {self.Status}\n{self.Message}\nValues: {self.Value}"
@@ -69,18 +69,18 @@ class APIResponse:
             req_type=req_type,
             val=None,
             msg="",
-            status=ResultStatus.NONE
+            status=ResponseStatus.NONE
         )
 
     @staticmethod
     def FromRequestResult(result:RequestResult.RequestResult, req_type:RESTType):
-        _status : ResultStatus
-        if result.Status == RequestResult.ResultStatus.SUCCESS:
-            _status = ResultStatus.SUCCESS 
-        elif result.Status == RequestResult.ResultStatus.FAILURE:
-            _status = ResultStatus.ERR_REQ
+        _status : ResponseStatus
+        if result.Status == RequestResult.ResponseStatus.SUCCESS:
+            _status = ResponseStatus.SUCCESS 
+        elif result.Status == RequestResult.ResponseStatus.FAILURE:
+            _status = ResponseStatus.ERR_REQ
         else:
-            _status = ResultStatus.ERR_SRV
+            _status = ResponseStatus.ERR_SRV
         ret_val = APIResponse(req_type=req_type, val=None, msg=result.Message, status=_status)
         return ret_val
 
@@ -116,11 +116,11 @@ class APIResponse:
         return self._msg
 
     @property
-    def Status(self) -> ResultStatus:
+    def Status(self) -> ResponseStatus:
         """Property for the status of the request.
 
-        :return: A ResultStatus indicating whether request is/was successful, incomplete, failed, etc.
-        :rtype: ResultStatus
+        :return: A ResponseStatus indicating whether request is/was successful, incomplete, failed, etc.
+        :rtype: ResponseStatus
         """
         return self._status
 
@@ -138,14 +138,14 @@ class APIResponse:
         return json.dumps(self.AsDict)
 
     def RequestErrored(self, msg:str):
-        self._status = ResultStatus.ERR_REQ
+        self._status = ResponseStatus.ERR_REQ
         self._msg = f"ERROR: {msg}"
 
     def ServerErrored(self, msg:str):
-        self._status = ResultStatus.ERR_SRV
+        self._status = ResponseStatus.ERR_SRV
         self._msg = f"SERVER ERROR: {msg}"
 
     def RequestSucceeded(self, msg:str, val:Any):
-        self._status = ResultStatus.SUCCESS
+        self._status = ResponseStatus.SUCCESS
         self._msg = f"SUCCESS: {msg}"
         self._val = val

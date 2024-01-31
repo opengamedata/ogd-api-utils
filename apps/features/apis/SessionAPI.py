@@ -21,7 +21,7 @@ from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.schemas.games.GameSchema import GameSchema
 from shared.schemas.ServerConfigSchema import ServerConfigSchema
-from shared.utils.APIResponse import APIResponse, RESTType, ResultStatus
+from shared.utils.APIResponse import APIResponse, RESTType, ResponseStatus
 from shared.utils import APIUtils
 
 class SessionAPI:

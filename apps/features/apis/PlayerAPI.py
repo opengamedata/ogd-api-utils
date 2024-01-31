@@ -21,7 +21,7 @@ from ogd.core.schemas.ExportMode import ExportMode
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from shared.schemas.ServerConfigSchema import ServerConfigSchema
-from shared.utils.APIResponse import APIResponse, RESTType, ResultStatus
+from shared.utils.APIResponse import APIResponse, RESTType, ResponseStatus
 from shared.utils import APIUtils
 class PlayerAPI:
     """Class to define an API for the developer/designer dashboard"""

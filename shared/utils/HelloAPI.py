@@ -2,7 +2,7 @@
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
 # import locals
-from shared.utils.APIResponse import APIResponse, RESTType, ResultStatus
+from shared.utils.APIResponse import APIResponse, RESTType, ResponseStatus
 
 class HelloAPI:
     @staticmethod
@@ -17,7 +17,7 @@ class HelloAPI:
                 req_type = RESTType.GET,
                 val      = None,
                 msg      = "Hello! You GETted successfully!",
-                status   = ResultStatus.SUCCESS)
+                status   = ResponseStatus.SUCCESS)
             return ret_val.AsDict
 
         def post(self):
@@ -25,7 +25,7 @@ class HelloAPI:
                 req_type = RESTType.POST,
                 val      = None,
                 msg      = "Hello! You POSTed successfully!",
-                status   = ResultStatus.SUCCESS)
+                status   = ResponseStatus.SUCCESS)
             return ret_val.AsDict
 
         def put(self):
@@ -33,7 +33,7 @@ class HelloAPI:
                 req_type = RESTType.PUT,
                 val      = None,
                 msg      = "Hello! You PUTted successfully!",
-                status   = ResultStatus.SUCCESS)
+                status   = ResponseStatus.SUCCESS)
             return ret_val.AsDict
 
     class ParamHello(Resource):
@@ -42,7 +42,7 @@ class HelloAPI:
                 req_type = RESTType.GET,
                 val      = None,
                 msg      = f"Hello {name}! You GETted successfully!",
-                status   = ResultStatus.SUCCESS)
+                status   = ResponseStatus.SUCCESS)
             return ret_val.AsDict
 
         def post(self, name):
@@ -50,7 +50,7 @@ class HelloAPI:
                 req_type = RESTType.POST,
                 val      = None,
                 msg      = f"Hello {name}! You POSTed successfully!",
-                status   = ResultStatus.SUCCESS)
+                status   = ResponseStatus.SUCCESS)
             return ret_val.AsDict
 
         def put(self, name):
@@ -58,5 +58,5 @@ class HelloAPI:
                 req_type = RESTType.PUT,
                 val      = None,
                 msg      = f"Hello {name}! You PUTted successfully!",
-                status   = ResultStatus.SUCCESS)
+                status   = ResponseStatus.SUCCESS)
             return ret_val.AsDict

@@ -12,7 +12,7 @@ from shared.config.config import settings
 from ogd.core.coding.Code import Code
 from ogd.core.coding.Coder import Coder
 from ogd.core.interfaces.CodingInterface import CodingInterface
-from shared.utils.APIResponse import APIResponse, RESTType, ResultStatus
+from shared.utils.APIResponse import APIResponse, RESTType, ResponseStatus
 from shared.utils import APIUtils
 
 class CodingAPI:
