@@ -75,9 +75,9 @@ class APIResponse:
     @staticmethod
     def FromRequestResult(result:RequestResult.RequestResult, req_type:RESTType):
         _status : ResponseStatus
-        if result.Status == RequestResult.ResponseStatus.SUCCESS:
+        if result.Status == RequestResult.ResultStatus.SUCCESS:
             _status = ResponseStatus.SUCCESS 
-        elif result.Status == RequestResult.ResponseStatus.FAILURE:
+        elif result.Status == RequestResult.ResultStatus.FAILURE:
             _status = ResponseStatus.ERR_REQ
         else:
             _status = ResponseStatus.ERR_SRV
