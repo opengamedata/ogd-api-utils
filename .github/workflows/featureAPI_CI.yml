@@ -11,8 +11,8 @@ on:
 
 env:
   CI: ""
-  TARGET_PATH: ${{ vars.WSGI_PATH }}${{ github.event.repository.name }}/${{ github.ref_name }}/features
-  TARGET_HOST: ${{ vars.OGD_STAGING_HOST }}
+  DEPLOY_DIR: ${{ vars.WSGI_PATH }}${{ github.event.repository.name }}/${{ github.ref_name }}/features
+  DEPLOY_HOST: ${{ vars.OGD_STAGING_HOST }}
   TARGET_URL:  ${{ vars.OGD_STAGING_HOST }}${{ github.event.repository.name }}/${{ github.ref_name }}/features
 
 jobs:
@@ -34,7 +34,7 @@ jobs:
         id_gen_db_name: ${{ secrets.DBNAME_ID_GEN }}
         fd_users_db_name: ${{ secrets.DBNAME_FD_USERS }}
         app_path: "apps/features/data.wsgi"
-        deploy_path: ${{ env.TARGET_PATH }}
+        deploy_path: ${{ env.DEPLOY_DIR }}
     - name: Set up Core Config File
       uses: ./.github/actions/OGD_config
       with:
@@ -60,15 +60,15 @@ jobs:
         echo '${{secrets.DEPLOY_KEY}}' >> ./key.txt
         chmod 600 ./key.txt
     - name: Ensure directory exists
-      run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.TARGET_HOST }} "mkdir -p ${{ env.TARGET_PATH }}"
+      run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "mkdir -p ${{ env.DEPLOY_DIR }}"
       # Actual upload
     - name: Upload *shared code* to web server via rsync
       uses: burnett01/rsync-deployments@5.2
       with:
         switches: -vrc --exclude-from rsync-exclude
         path: shared/*
-        remote_path: ${{ env.TARGET_PATH }}/shared
-        remote_host: ${{ env.TARGET_HOST }}
+        remote_path: ${{ env.DEPLOY_DIR }}/shared
+        remote_host: ${{ env.DEPLOY_HOST }}
         remote_user: ${{ secrets.DEPLOY_USER }}
         remote_key:  ${{ secrets.DEPLOY_KEY  }}
     - name: Upload *App* to web server via rsync
@@ -76,14 +76,14 @@ jobs:
       with:
         switches: -vrc --exclude-from rsync-exclude
         path: apps/features/*
-        remote_path: ${{ env.TARGET_PATH }}
-        remote_host: ${{ env.TARGET_HOST }}
+        remote_path: ${{ env.DEPLOY_DIR }}
+        remote_host: ${{ env.DEPLOY_HOST }}
         remote_user: ${{ secrets.DEPLOY_USER }}
         remote_key:  ${{ secrets.DEPLOY_KEY  }}
     - name: Upload OGD access key
       run: |
         echo '${{secrets.OGD_SELECTOR_BQ_KEY}}' >> ./ogd.json
-        scp -o StrictHostKeyChecking=no -i ./key.txt ./ogd.json ${{ secrets.VPN_USER }}@${{ env.TARGET_HOST }}:${{env.TARGET_PATH}}/shared/config/ogd.json
+        scp -o StrictHostKeyChecking=no -i ./key.txt ./ogd.json ${{ secrets.VPN_USER }}@${{ env.DEPLOY_HOST }}:${{env.DEPLOY_DIR}}/shared/config/ogd.json
     - name: Trigger Graceful Reboot
       run: sudo apachectl -k graceful
     - name: Announce deploy
