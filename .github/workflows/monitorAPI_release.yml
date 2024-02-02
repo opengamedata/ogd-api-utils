@@ -11,7 +11,7 @@ on:
 
 env:
   CI: ""
-  DEPLOY_DIR: ${{ vars.WSGI_PATH }}${{ github.event.repository.name }}/${{ github.ref_name }}/monitor
+  DEPLOY_DIR: ${{ vars.WSGI_PATH }}/${{ github.event.repository.name }}/${{ github.ref_name }}/monitor
   DEPLOY_HOST: ${{ vars.OGD_MONITOR_HOST }}
 
 jobs:
