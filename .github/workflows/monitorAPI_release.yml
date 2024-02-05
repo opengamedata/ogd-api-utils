@@ -22,14 +22,14 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
 
-    # 1. Local checkout & config
+  # 1. Local checkout & config
     - uses: actions/checkout@v3
       with:
         submodules: 'true'
 
-    # 2. Build 
+  # 2. Build 
 
-    # 3. Remote config & deploy
+  # 3. Remote config & deploy
     - name: Get OpenConnect installed
       run: sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Connect VPN
