@@ -6,3 +6,4 @@ google-cloud-bigquery==3.4.0
 opengamedata-core==0.0.1
 mysql-connector-python==8.0.25
 typing==3.7.4.3
+werkzeug==2.2.0
