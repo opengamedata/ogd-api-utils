@@ -10,10 +10,10 @@ on:
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 
 env:
-  CI: ""
-  DEPLOY_DIR: ${{ vars.WSGI_PATH }}/${{ github.event.repository.name }}/${{ github.ref_name }}/features
   DEPLOY_HOST: ${{ vars.OGD_STAGING_HOST }}
-  TARGET_URL:  ${{ vars.OGD_STAGING_HOST }}${{ github.event.repository.name }}/${{ github.ref_name }}/features
+  DEPLOY_DIR:  ${{ vars.WSGI_PATH }}/${{ github.event.repository.name }}/${{ github.ref_name }}/features
+  DEPLOY_URL:  ${{ vars.OGD_STAGING_HOST }}/${{ github.event.repository.name }}/${{ github.ref_name }}/features
+  URL_PATH:    ${{ github.event.repository.name }}/${{ github.ref_name }}/features
 
 jobs:
   ci_deploy:
@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
 
-    # 1. Local checkout & config
+  # 1. Local checkout & config
     - uses: actions/checkout@v3
       with:
         submodules: 'true'
@@ -46,14 +46,14 @@ jobs:
         slice_size: 1000
         log_level: "INFO"
 
-    # 2. Build 
+  # 2. Build 
 
-    # 3. Remote config & deploy
+  # 3. Remote config & deploy
     - name: Get OpenConnect installed
       run: sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-      # Prepare directory structure for deploy
+
     - name: Setup Access Key
       run: |
         mkdir -p ~/.ssh
@@ -61,7 +61,7 @@ jobs:
         chmod 600 ./key.txt
     - name: Ensure directory exists
       run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "mkdir -p ${{ env.DEPLOY_DIR }}"
-      # Actual upload
+
     - name: Upload *shared code* to web server via rsync
       uses: burnett01/rsync-deployments@5.2
       with:
@@ -84,10 +84,12 @@ jobs:
       run: |
         echo '${{secrets.OGD_SELECTOR_BQ_KEY}}' >> ./ogd.json
         scp -o StrictHostKeyChecking=no -i ./key.txt ./ogd.json ${{ secrets.VPN_USER }}@${{ env.DEPLOY_HOST }}:${{env.DEPLOY_DIR}}/shared/config/ogd.json
+
+  # 4. Cleanup & complete
     - name: Trigger Graceful Reboot
-      run: sudo apachectl -k graceful
+      run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "sudo apachectl -k graceful"
     - name: Announce deploy
-      run: echo "Deployed to ${{ env.TARGET_URL }}"
+      run: echo "Deployed to ${{ env.DEPLOY_URL }}"
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v2
       with:
