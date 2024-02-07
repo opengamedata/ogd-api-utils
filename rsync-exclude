@@ -10,7 +10,6 @@ tests/
 .pylintrc
 Makefile
 README.md
-requirements.txt
 rsync-exclude
 TestDriver.py
 *.log
