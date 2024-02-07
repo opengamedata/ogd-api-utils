@@ -1,4 +1,5 @@
 # import libraries
+import json
 import os
 from flask import current_app
 from typing import Any, Dict, List, Optional
@@ -14,17 +15,22 @@ from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 
 def parse_list(list_str:str) -> Optional[List[Any]]:
     """Simple utility to parse a string containing a bracketed list into a Python list.
+    Returns None if the list was empty
 
     :param list_str: _description_
     :type list_str: str
-    :return: _description_
+    :return: A list parsed from the input string, or None if the string list was invalid or empty.
     :rtype: Union[List[Any], None]
     """
-    ret_val = None
-    if ("[" in list_str) and ("]" in list_str):
-        start = list_str.index("[")
-        end   = list_str.index("]")
-        ret_val = list_str[start+1:end].split(",")
+    ret_val : Optional[List[Any]] = None
+    try:
+        ret_val = json.loads(list_str)
+    except json.decoder.JSONDecodeError as e:
+        current_app.logger.warn(f"Could not parse '{list_str}' as a list, format was not valid!")
+    else:
+        if ret_val is not None and len(ret_val) == 0:
+            # If we had empty list, just treat as null.
+            ret_val = None
     return ret_val
 
 def gen_interface(game_id) -> Optional[DataInterface]:
