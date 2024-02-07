@@ -42,6 +42,8 @@ jobs:
         chmod 600 ./key.txt
     - name: Ensure directory exists
       run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "mkdir -p ${{ env.DEPLOY_DIR }}"
+    - name: Install Python packages from requirements.txt
+      run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "sudo pip install " < requirements.txt
 
     - name: Upload *App* to web server via rsync
       uses: burnett01/rsync-deployments@5.2
