@@ -42,6 +42,9 @@ jobs:
         chmod 600 ./key.txt
     - name: Ensure directory exists
       run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "mkdir -p ${{ env.DEPLOY_DIR }}"
+
+    - name: Upload requirements.txt file
+      run: scp -o StrictHostKeyChecking=no -i ./key.txt ./requirements.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }}:${{env.DEPLOY_DIR}}/requirements.txt
     - name: Install Python packages from requirements.txt
       run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "sudo pip install ${{ env.DEPLOY_DIR }}/requirements.txt"
 
