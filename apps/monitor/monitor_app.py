@@ -18,6 +18,7 @@ game_rooms = {}
 
 @app.route('/')
 def index():
+    print("Rendering index.html")
     return render_template('index.html')
 
 # given client session id
