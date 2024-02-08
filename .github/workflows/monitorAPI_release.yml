@@ -46,7 +46,7 @@ jobs:
     - name: Upload requirements.txt file
       run: scp -o StrictHostKeyChecking=no -i ./key.txt ./requirements.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }}:${{env.DEPLOY_DIR}}/requirements.txt
     - name: Install Python packages from requirements.txt
-      run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "sudo pip install ${{ env.DEPLOY_DIR }}/requirements.txt"
+      run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "sudo pip install -r ${{ env.DEPLOY_DIR }}/requirements.txt"
 
     - name: Upload *App* to web server via rsync
       uses: burnett01/rsync-deployments@5.2
