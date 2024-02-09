@@ -3,10 +3,10 @@ name: OpenGameData Event Monitor API CI
 on:
   push:
     paths:
-    - '.github/workflows/monitorAPI_CI.yml'
-    - '.github/actions/**'
-    - 'shared/**'
-    - 'apps/monitor/**'
+    # - '.github/workflows/monitorAPI_CI.yml'
+    # - '.github/actions/**'
+    # - 'shared/**'
+    # - 'apps/monitor/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 
 env:
