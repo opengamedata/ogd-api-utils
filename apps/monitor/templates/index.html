@@ -68,7 +68,7 @@
 
     <script>
         // note that socket has to be variable in order to have both flask-socketio and flask-restful working
-        var socket = io.connect('http://127.0.0.1:5000');
+        var socket = io.connect('https://ogd-monitor.fielddaylab.wisc.edu');
 
         // when a client is connected, print it
         socket.on('connect', () => {
