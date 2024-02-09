@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title> Real-Time OGD (from templates)</title>
+    <title> Real-Time OGD Event Monitor</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles.css') }}">
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"
         integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
@@ -22,6 +22,8 @@
                     <option>journalism</option>
                     <option>mashopolis</option>
                     <option>penguins</option>
+                    <option>thermovr</option>
+                    <option>transformation_quest</option>
                     <option>bacteria</option>
                     <option>balloon</option>
                     <option>crystal</option>
@@ -57,6 +59,7 @@
                         <th>event_data</th>
                         <th>game_state</th>
                         <th>user_data</th>
+                        <th>event_sequence_index</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -91,7 +94,8 @@
             "event_name",
             "event_data",
             "game_state",
-            "user_data"
+            "user_data",
+            "event_sequence_index"
         ]
 
         const MAX_DATA_ROWS = 10;
