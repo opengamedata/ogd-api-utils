@@ -1,8 +1,8 @@
 # Workflow to build and deploy designer dashboard to server.
 name: OpenGameData Event Monitor API CI
 on:
-  push:
-    paths:
+  # push:
+  #   paths:
     # - '.github/workflows/monitorAPI_CI.yml'
     # - '.github/actions/**'
     # - 'shared/**'
