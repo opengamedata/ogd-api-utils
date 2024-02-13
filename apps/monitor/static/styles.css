@@ -45,7 +45,7 @@ label {
 }
 
 table {
-  width: 100%;
+  /* width: 100%; */
   border-collapse: collapse;
   background-color: #fff;
   border: 1px solid #ddd;
