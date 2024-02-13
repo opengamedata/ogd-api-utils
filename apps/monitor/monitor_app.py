@@ -82,7 +82,7 @@ class LoggerReceiver(Resource):
     """
     def post(self):
         json_data = request.get_json() or {}
-        print(f"Received LoggerReceiver request, with data {json_data}")
+        # print(f"Received LoggerReceiver request, with data {json_data}")
         socketio.emit('logger_data', json_data, to=json_data.get('app_id'))
         return {'message': 'Received logger data successfully'}
 
