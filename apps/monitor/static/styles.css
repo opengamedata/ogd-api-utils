@@ -50,7 +50,3 @@ select {
   border: 1px solid #ccc;
   border-radius: 3px;
 }
-
-tbody tr:hover {
-  background-color: #e0e0e0;
-}
