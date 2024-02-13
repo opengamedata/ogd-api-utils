@@ -18,8 +18,8 @@
     <div class="table-container">
         <div class="selector-container">
             <form>
-                <label for="toggle">Choose a game:</label>
-                <select id="toggle" name="toggle" onchange="selectGame(this.value)">
+                <label for="select_game">Choose a game:</label>
+                <select id="select_game" name="select_game" onchange="selectGame(this.value)">
                     <option selected>AQUALAB</option>
                     <option>BACTERIA</option>
                     <option>BALLOON</option>
@@ -48,8 +48,8 @@
         </div>
 
         <div class="table-container table-responsive">
-            <table class="table" id="logger-table" border="1">
-                <thead class="thead dark">
+            <table class="table table-striped" id="logger-table">
+                <thead class="thead-dark">
                     <tr>
                         <th>app_id</th>
                         <th>app_branch</th>
