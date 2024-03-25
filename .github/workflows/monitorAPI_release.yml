@@ -5,7 +5,7 @@ on:
   push: # Trigger automatically when we do a merge to production
     branches: [ production ]
     paths:
-    - '.github/workflows/monitorAPI_CI.yml'
+    - '.github/workflows/monitorAPI_release.yml'
     - 'shared/**'
     - 'apps/monitor/**'
 
@@ -43,6 +43,11 @@ jobs:
     - name: Ensure directory exists
       run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "mkdir -p ${{ env.DEPLOY_DIR }}"
 
+    - name: Upload requirements.txt file
+      run: scp -o StrictHostKeyChecking=no -i ./key.txt ./requirements.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }}:${{env.DEPLOY_DIR}}/requirements.txt
+    - name: Install Python packages from requirements.txt
+      run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "sudo pip install -r ${{ env.DEPLOY_DIR }}/requirements.txt"
+
     - name: Upload *App* to web server via rsync
       uses: burnett01/rsync-deployments@5.2
       with:
@@ -56,6 +61,7 @@ jobs:
   # 4. Cleanup & complete
     - name: Trigger service restart
       run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "sudo systemctl restart monitor-api"
+
     - name: Announce deploy
       run: echo "Deployed to ${{ env.DEPLOY_URL }}"
     - name: Upload logs as artifacts
