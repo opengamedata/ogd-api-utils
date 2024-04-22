@@ -83,7 +83,7 @@ jobs:
     - name: Upload OGD access key
       run: |
         echo '${{secrets.OGD_SELECTOR_BQ_KEY}}' >> ./ogd.json
-        scp -o StrictHostKeyChecking=no -i ./key.txt ./ogd.json ${{ secrets.VPN_USER }}@${{ env.DEPLOY_HOST }}:${{env.DEPLOY_DIR}}/shared/config/ogd.json
+        scp -o StrictHostKeyChecking=no -i ./key.txt ./ogd.json ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }}:${{env.DEPLOY_DIR}}/shared/config/ogd.json
 
   # 4. Cleanup & complete
     - name: Trigger Graceful Reboot
