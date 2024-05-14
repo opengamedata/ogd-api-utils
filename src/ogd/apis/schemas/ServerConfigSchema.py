@@ -1,10 +1,21 @@
+"""
+ServerConfigSchema
+
+Contains a Schema class for managing config data for server configurations.
+"""
+
 # import standard libraries
 import logging
 from pathlib import Path
-from typing import Any, Dict, Optional, Type
-# import local files
+from typing import Any, Dict, List
+
+# import 3rd-party libraries
+
+# import OGD libraries
 from ogd.core.schemas.Schema import Schema
 from ogd.core.schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
+
+# import local files
 
 class ServerConfigSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any], logger:logging.Logger):
