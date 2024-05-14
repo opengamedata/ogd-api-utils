@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools >= 61.0", "wheel", "setuptools-git-versioning >= 1.13"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools-git-versioning]
+enabled = true
+
+[project]
+name = "opengamedata-api-utils"
+dynamic = ["version"]
+authors = [
+   { name="Luke Swanson", email="superscription58@gmail.com" },
+   { name="Ryan Wilkinson" },
+   { name="Glenn Palmer" },
+   { name="Daus Husaini" }
+]
+description = "Package of utilities for server-side scripts in OpenGameData."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/opengamedata/opengamedata-api-utils"
+"Bug Tracker" = "https://github.com/opengamedata/opengamedata-api-utils/issues"
