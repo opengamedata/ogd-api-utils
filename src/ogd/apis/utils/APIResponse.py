@@ -1,8 +1,21 @@
+"""
+APIResponse
+
+Contains class for representing a response from an OGD API,
+as well as utility enums used by the APIResponse class.
+"""
+
+# import standard libraries
 import json
 from enum import IntEnum
 from typing import Any, Dict
-# Import local files
+
+# import 3rd-party libraries
+
+# import OGD libraries
 import ogd.core.requests.RequestResult as RequestResult
+
+# Import local files
 
 class RESTType(IntEnum):
     """Simple enumerated type to track type of a REST request.

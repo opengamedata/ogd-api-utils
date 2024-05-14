@@ -1,8 +1,19 @@
+"""
+HelloAPI
+
+Contains the HelloAPI class, which we register to all API apps as a way to test that the app is active.
+"""
+
 # import libraries
+
+# import 3rd-party libraries
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
+
+# import OGD libraries
+from ogd.apis.utils.APIResponse import APIResponse, RESTType, ResponseStatus
+
 # import locals
-from shared.utils.APIResponse import APIResponse, RESTType, ResponseStatus
 
 class HelloAPI:
     @staticmethod

@@ -1,15 +1,26 @@
-# import libraries
+"""
+APIUtils
+
+Contains general utility functions for common  tasks when setting up our flask/flask-restful API functions.
+In particular, has functions to assist in parsing certain kinds of data, and for generating OGD-core objects.
+"""
+
+# import standard libraries
 import json
 import os
+from typing import Any, List, Optional
+
+# import 3rd-party libraries
 from flask import current_app
-from typing import Any, Dict, List, Optional
-# from ogd.core.interfaces.CodingInterface import CodingInterface
+
+# import OGD libraries
 from ogd.core.interfaces.DataInterface import DataInterface
 from ogd.core.interfaces.MySQLInterface import MySQLInterface
 from ogd.core.interfaces.BigQueryInterface import BigQueryInterface
-# from ogd.core.interfaces.BigQueryCodingInterface import BigQueryCodingInterface
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
+
+# import local files
 
 def parse_list(list_str:str) -> Optional[List[Any]]:
     """Simple utility to parse a string containing a bracketed list into a Python list.
@@ -24,7 +35,7 @@ def parse_list(list_str:str) -> Optional[List[Any]]:
     try:
         ret_val = json.loads(list_str)
     except json.decoder.JSONDecodeError as e:
-        current_app.logger.warn(f"Could not parse '{list_str}' as a list, format was not valid!")
+        current_app.logger.warn(f"Could not parse '{list_str}' as a list, format was not valid!\nGot Error {e}")
     else:
         if ret_val is not None and len(ret_val) == 0:
             # If we had empty list, just treat as null.
@@ -51,7 +62,7 @@ def gen_interface(game_id, core_config:ConfigSchema) -> Optional[DataInterface]:
         elif _game_source.Source.Type.upper() == "BIGQUERY":
             current_app.logger.info(f"Generating BigQueryInterface for {game_id}, from directory {os.getcwd()}...")
             ret_val = BigQueryInterface(game_id=game_id, config=_game_source, fail_fast=False)
-            current_app.logger.info(f"Done")
+            current_app.logger.info("Done")
         else:
             ret_val = MySQLInterface(game_id, config=_game_source, fail_fast=False)
             current_app.logger.warning(f"Could not find a valid interface for {game_id}, defaulting to MySQL!")
