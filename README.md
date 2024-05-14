@@ -1,8 +1,11 @@
 # opengamedata-server
+
 Repository for server-side scripts in opengamedata. In particular, this is where we have code for the OGD APIs.
 
-# Getting Started:
-## Hello World of Flask:
+## Getting Started
+
+### Hello World of Flask
+
 Steps to run:
 1. Check out latest `opengamedata-server`.
 2. Run `pip install -r requirements.txt` to ensure you've got flask.
@@ -12,32 +15,19 @@ Steps to run:
 If Flask doesn't run, it's possible you'd need to first export FLASK_APP as an environment variable, set to "wsgi" (so in Bash, export FLASK_APP=wsgi).
 However, the script is named wsgi.py specifically because Flask is supposed to auto-detect it. So if this issue ever did come up, please ping Luke so he can look into it.
 
-# APIs
+## APIs
 
 Below is a listing of the current API calls available, in function format to indicate what the request parameters.
 For each API, there is also an api path, with path parameters in angle bracket (<, >) format.
 Lastly, at this point in time, the `<server_path>` is `https://fieldday-web.wcer.wisc.edu/opengamedata.wsgi`
 
-## Classroom API
+### Classroom API
 
-## Dashboard API
+### Dashboard API
 
-## GameState API
+### Hello API
 
-### Save and retrieve game states
-
-`<server_path>/player/<player_id>/game/<game_id>/state:`  
-`GET(int count = 1, int offset = 0)`  
-
-- Returns a list of game states, length == count, starting from the nth most-recent state, where n == offset, or a null value and an error message.
-
-`POST(str state)`
-
-- Attemps to save the state. Returns a null value and a success/error message.
-
-## Hello API
-
-### Verify the API is alive
+#### Verify the API is alive
 
 `<server_path>/hello`  
 `GET()`
@@ -53,7 +43,7 @@ Lastly, at this point in time, the `<server_path>` is `https://fieldday-web.wcer
 - returns no value, and a success message
 
 
-## Player API
+### Player API
 
 ### Generate and save players
 
