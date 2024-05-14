@@ -1,9 +1,9 @@
-# Workflow to build and deploy a new release of OGDUtils to PyPi.
-name: OGDUtils Release
+# Workflow to build and deploy a new release of OGD API utilities to PyPi.
+name: API Utils Release
 on:
   release:
     types: [prereleased, released]
-  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+  workflow_dispatch:
 
 jobs:
   build:
@@ -20,13 +20,13 @@ jobs:
     #   with:
     #     upload_url: ${{ github.event.release.upload_url }}
     #     asset_path: ./dist/*.whl
-    #     asset_name: OGDUtils.whl
+    #     asset_name: opengamedata-api-utils.whl
         # asset_content_type: application/zip
     - name: Cache Build for Publishing
       id: cache-build
       uses: actions/cache/save@v3
       with:
-        key: OGDUtils-build-${{ github.run_id }}-${{ github.run_attempt }}
+        key: opengamedata-api-utils-build-${{ github.run_id }}-${{ github.run_attempt }}
         path: ./dist/
     - name: Print event type
       run: echo ${{ github.event.action }}
@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-22.04
     environment:
       name: pypi_release
-      url: https://pypi.org/manage/project/OGDUtils/
+      url: https://pypi.org/manage/project/opengamedata-api-utils/
     permissions:
       id-token: write
     steps:
@@ -46,7 +46,7 @@ jobs:
       id: cached-build
       uses: actions/cache/restore@v3
       with:
-        key: OGDUtils-build-${{ github.run_id }}-${{ github.run_attempt }}
+        key: opengamedata-api-utils-build-${{ github.run_id }}-${{ github.run_attempt }}
         path: ./dist/
         fail-on-cache-miss: true
     - name: Publish to PyPI
@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-22.04
     environment:
       name: pypi_prerelease
-      url: https://pypi.org/manage/project/OGDUtils/
+      url: https://pypi.org/manage/project/opengamedata-api-utils/
     permissions:
       id-token: write
     steps:
@@ -70,7 +70,7 @@ jobs:
       id: cached-build
       uses: actions/cache/restore@v3
       with:
-        key: OGDUtils-build-${{ github.run_id }}-${{ github.run_attempt }}
+        key: opengamedata-api-utils-build-${{ github.run_id }}-${{ github.run_attempt }}
         path: ./dist/
         fail-on-cache-miss: true
     - name: Publish to PyPI
