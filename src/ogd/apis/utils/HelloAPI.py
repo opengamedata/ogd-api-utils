@@ -11,16 +11,20 @@ from flask import Flask
 from flask_restful import Resource, Api
 
 # import OGD libraries
-from ogd.apis.utils.APIResponse import APIResponse, RESTType, ResponseStatus
 
 # import locals
+from ogd.apis.utils.APIResponse import APIResponse, RESTType, ResponseStatus
+from ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
 
 class HelloAPI:
     @staticmethod
-    def register(app:Flask):
+    def register(app:Flask, server_config:ServerConfigSchema):
         api = Api(app)
         api.add_resource(HelloAPI.Hello, '/hello')
         api.add_resource(HelloAPI.ParamHello, '/p_hello/<name>')
+        api.add_resource(HelloAPI.Hello, '/version')
+
+        HelloAPI.server_config = server_config
 
     class Hello(Resource):
         def get(self):
@@ -69,5 +73,14 @@ class HelloAPI:
                 req_type = RESTType.PUT,
                 val      = None,
                 msg      = f"Hello {name}! You PUTted successfully!",
+                status   = ResponseStatus.SUCCESS)
+            return ret_val.AsDict
+    
+    class Version(Resource):
+        def get(self):
+            ret_val = APIResponse(
+                req_type = RESTType.GET,
+                val      = HelloAPI.server_config.Version,
+                msg      = f"Successfully retrieved API version.",
                 status   = ResponseStatus.SUCCESS)
             return ret_val.AsDict
