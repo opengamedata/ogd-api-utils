@@ -1,0 +1,16 @@
+# Workflow to build and deploy a new release of OGDUtils to PyPi.
+name: OGDUtils CI Build
+on:
+  push:
+  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+
+jobs:
+  build:
+    name: Build Package for Release
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
+    - name: Build Package
+      run: python -m build
