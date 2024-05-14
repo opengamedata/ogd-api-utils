@@ -3,8 +3,6 @@ import json
 import os
 from flask import current_app
 from typing import Any, Dict, List, Optional
-# import locals
-from shared.config.coreconfig import settings as core_settings
 # from ogd.core.interfaces.CodingInterface import CodingInterface
 from ogd.core.interfaces.DataInterface import DataInterface
 from ogd.core.interfaces.MySQLInterface import MySQLInterface
@@ -33,7 +31,7 @@ def parse_list(list_str:str) -> Optional[List[Any]]:
             ret_val = None
     return ret_val
 
-def gen_interface(game_id) -> Optional[DataInterface]:
+def gen_interface(game_id, core_config:ConfigSchema) -> Optional[DataInterface]:
     """Utility to set up an Interface object for use by the API, given a game_id.
 
     :param game_id: _description_
@@ -43,8 +41,7 @@ def gen_interface(game_id) -> Optional[DataInterface]:
     """
     ret_val = None
     
-    _core_config = ConfigSchema(name="Core Config", all_elements=core_settings)
-    _game_source : GameSourceSchema = _core_config.GameSourceMap.get(game_id, GameSourceSchema.EmptySchema())
+    _game_source : GameSourceSchema = core_config.GameSourceMap.get(game_id, GameSourceSchema.EmptySchema())
 
     if _game_source.Source is not None:
         # set up interface and request
