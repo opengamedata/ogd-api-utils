@@ -8,7 +8,7 @@ Contains the HelloAPI class, which we register to all API apps as a way to test 
 
 # import 3rd-party libraries
 from flask import Flask
-from flask_restful import Resource, Api, reqparse
+from flask_restful import Resource, Api
 
 # import OGD libraries
 from ogd.apis.utils.APIResponse import APIResponse, RESTType, ResponseStatus
