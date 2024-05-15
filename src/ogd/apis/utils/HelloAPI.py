@@ -22,7 +22,7 @@ class HelloAPI:
         api = Api(app)
         api.add_resource(HelloAPI.Hello, '/hello')
         api.add_resource(HelloAPI.ParamHello, '/p_hello/<name>')
-        api.add_resource(HelloAPI.Hello, '/version')
+        api.add_resource(HelloAPI.Version, '/version')
 
         HelloAPI.server_config = server_config
 
