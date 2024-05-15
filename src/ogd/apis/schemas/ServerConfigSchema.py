@@ -18,7 +18,7 @@ from ogd.core.schemas.Schema import Schema
 class ServerConfigSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any], logger:logging.Logger):
         self._dbg_level        : int
-        self._version          : int
+        self._version          : str
 
         if "DEBUG_LEVEL" in all_elements.keys():
             self._dbg_level = ServerConfigSchema._parseDebugLevel(all_elements["DEBUG_LEVEL"], logger=logger)
@@ -28,7 +28,7 @@ class ServerConfigSchema(Schema):
         if "VER" in all_elements.keys():
             self._version = ServerConfigSchema._parseVersion(all_elements["VER"], logger=logger)
         else:
-            self._version = -1
+            self._version = "UNKNOWN VERSION"
             logger.warn(f"{name} config does not have a 'VER' element; defaulting to version={self._version}", logging.WARN)
 
         _used = {"DB_CONFIG", "OGD_CORE_PATH", "GOOGLE_CLIENT_ID", "DEBUG_LEVEL", "VER"}
@@ -40,7 +40,7 @@ class ServerConfigSchema(Schema):
         return self._dbg_level
 
     @property
-    def Version(self) -> int:
+    def Version(self) -> str:
         return self._version
 
     @property
@@ -72,13 +72,13 @@ class ServerConfigSchema(Schema):
         return ret_val
 
     @staticmethod
-    def _parseVersion(version, logger:logging.Logger) -> int:
-        ret_val : int
+    def _parseVersion(version, logger:logging.Logger) -> str:
+        ret_val : str
         if isinstance(version, int):
-            ret_val = version
+            ret_val = str(version)
         elif isinstance(version, str):
-            ret_val = int(version)
+            ret_val = version
         else:
-            ret_val = int(str(version))
-            logger.warn(f"Config version was unexpected type {type(version)}, defaulting to int(str(version))={ret_val}.", logging.WARN)
+            ret_val = str(version)
+            logger.warn(f"Config version was unexpected type {type(version)}, defaulting to str(version)={ret_val}.", logging.WARN)
         return ret_val
