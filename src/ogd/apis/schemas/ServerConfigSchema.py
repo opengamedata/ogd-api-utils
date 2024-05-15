@@ -12,13 +12,14 @@ from typing import Any, Dict
 
 # import OGD libraries
 from ogd.core.schemas.Schema import Schema
+from ogd.core.utils.SemanticVersion import SemanticVersion
 
 # import local files
 
 class ServerConfigSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any], logger:logging.Logger):
-        self._dbg_level        : int
-        self._version          : str
+        self._dbg_level : int
+        self._version   : SemanticVersion
 
         if "DEBUG_LEVEL" in all_elements.keys():
             self._dbg_level = ServerConfigSchema._parseDebugLevel(all_elements["DEBUG_LEVEL"], logger=logger)
@@ -40,7 +41,7 @@ class ServerConfigSchema(Schema):
         return self._dbg_level
 
     @property
-    def Version(self) -> str:
+    def Version(self) -> SemanticVersion:
         return self._version
 
     @property
@@ -72,13 +73,13 @@ class ServerConfigSchema(Schema):
         return ret_val
 
     @staticmethod
-    def _parseVersion(version, logger:logging.Logger) -> str:
-        ret_val : str
+    def _parseVersion(version, logger:logging.Logger) -> SemanticVersion:
+        ret_val : SemanticVersion
         if isinstance(version, int):
-            ret_val = str(version)
+            ret_val = SemanticVersion(major=version)
         elif isinstance(version, str):
-            ret_val = version
+            ret_val = SemanticVersion.FromString(semver=version)
         else:
-            ret_val = str(version)
-            logger.warn(f"Config version was unexpected type {type(version)}, defaulting to str(version)={ret_val}.", logging.WARN)
+            ret_val = SemanticVersion.FromString(str(version))
+            logger.warn(f"Config version was unexpected type {type(version)}, defaulting to SemanticVersion(str(version))={ret_val}.", logging.WARN)
         return ret_val
