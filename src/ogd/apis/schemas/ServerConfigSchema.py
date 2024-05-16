@@ -29,7 +29,7 @@ class ServerConfigSchema(Schema):
         if "VER" in all_elements.keys():
             self._version = ServerConfigSchema._parseVersion(all_elements["VER"], logger=logger)
         else:
-            self._version = "UNKNOWN VERSION"
+            self._version = SemanticVersion.FromString("UNKNOWN VERSION")
             logger.warn(f"{name} config does not have a 'VER' element; defaulting to version={self._version}", logging.WARN)
 
         _used = {"DB_CONFIG", "OGD_CORE_PATH", "GOOGLE_CLIENT_ID", "DEBUG_LEVEL", "VER"}
