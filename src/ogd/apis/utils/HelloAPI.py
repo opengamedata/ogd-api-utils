@@ -80,7 +80,7 @@ class HelloAPI:
         def get(self):
             ret_val = APIResponse(
                 req_type = RESTType.GET,
-                val      = {"version":HelloAPI.server_config.Version},
+                val      = { "version" : str(HelloAPI.server_config.Version) },
                 msg      = f"Successfully retrieved API version.",
                 status   = ResponseStatus.SUCCESS)
             return ret_val.AsDict
