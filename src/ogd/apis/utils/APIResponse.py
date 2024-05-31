@@ -8,7 +8,7 @@ as well as utility enums used by the APIResponse class.
 # import standard libraries
 import json
 from enum import IntEnum
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 # import 3rd-party libraries
 
@@ -71,7 +71,7 @@ class APIResponse:
         self._type   : RESTType       = req_type
         self._val    : Dict[str, Any] = val
         self._msg    : str            = msg
-        self._status : ResponseStatus   = status
+        self._status : ResponseStatus = status
 
     def __str__(self):
         return f"{self.Type.name} request: {self.Status}\n{self.Message}\nValues: {self.Value}"
@@ -149,6 +149,24 @@ class APIResponse:
     @property
     def AsJSON(self):
         return json.dumps(self.AsDict)
+    
+    @staticmethod
+    def FromDict(all_elements:Dict[str, Any]) -> Optional["APIResponse"]:
+        ret_val : Optional["APIResponse"] = None
+
+        _type_str   = all_elements.get("type", "NOT FOUND").upper()
+        _val        = all_elements.get("val", {})
+        _msg        = all_elements.get("msg", "NOT FOUND")
+        _status_str = all_elements.get("status", "NOT FOUND").upper()
+        try:
+            _type   = RESTType[_type_str]
+            _status = ResponseStatus[_status_str]
+        except KeyError as err:
+            pass
+        else:
+            ret_val = APIResponse(req_type=_type, val=_val, msg=_msg, status=_status)
+        finally:
+            return ret_val
 
     def RequestErrored(self, msg:str):
         self._status = ResponseStatus.ERR_REQ
