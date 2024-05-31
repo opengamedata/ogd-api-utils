@@ -103,12 +103,13 @@ class APIResponse:
         ret_val : Optional["APIResponse"] = None
 
         _type_str   = all_elements.get("type", "NOT FOUND").upper()
-        _val        = all_elements.get("val", {})
+        _val_str    = all_elements.get("val", {})
         _msg        = all_elements.get("msg", "NOT FOUND")
         _status_str = all_elements.get("status", "NOT FOUND").upper()
         try:
             _type   = RESTType[_type_str]
             _status = ResponseStatus[_status_str]
+            _val    = _val_str if isinstance(_val_str, dict) else json.loads(_val_str)
         except KeyError as err:
             pass
         else:
