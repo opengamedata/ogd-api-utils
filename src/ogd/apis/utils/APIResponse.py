@@ -96,6 +96,24 @@ class APIResponse:
             _status = ResponseStatus.ERR_SRV
         ret_val = APIResponse(req_type=req_type, val=None, msg=result.Message, status=_status)
         return ret_val
+    
+    @staticmethod
+    def FromDict(all_elements:Dict[str, Any]) -> Optional["APIResponse"]:
+        ret_val : Optional["APIResponse"] = None
+
+        _type_str   = all_elements.get("type", "NOT FOUND").upper()
+        _val        = all_elements.get("val", {})
+        _msg        = all_elements.get("msg", "NOT FOUND")
+        _status_str = all_elements.get("status", "NOT FOUND").upper()
+        try:
+            _type   = RESTType[_type_str]
+            _status = ResponseStatus[_status_str]
+        except KeyError as err:
+            pass
+        else:
+            ret_val = APIResponse(req_type=_type, val=_val, msg=_msg, status=_status)
+        finally:
+            return ret_val
 
     @property
     def Type(self) -> RESTType:
@@ -149,24 +167,6 @@ class APIResponse:
     @property
     def AsJSON(self):
         return json.dumps(self.AsDict)
-    
-    @staticmethod
-    def FromDict(all_elements:Dict[str, Any]) -> Optional["APIResponse"]:
-        ret_val : Optional["APIResponse"] = None
-
-        _type_str   = all_elements.get("type", "NOT FOUND").upper()
-        _val        = all_elements.get("val", {})
-        _msg        = all_elements.get("msg", "NOT FOUND")
-        _status_str = all_elements.get("status", "NOT FOUND").upper()
-        try:
-            _type   = RESTType[_type_str]
-            _status = ResponseStatus[_status_str]
-        except KeyError as err:
-            pass
-        else:
-            ret_val = APIResponse(req_type=_type, val=_val, msg=_msg, status=_status)
-        finally:
-            return ret_val
 
     def RequestErrored(self, msg:str):
         self._status = ResponseStatus.ERR_REQ
