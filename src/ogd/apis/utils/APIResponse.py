@@ -11,6 +11,7 @@ from enum import IntEnum
 from typing import Any, Dict, Optional
 
 # import 3rd-party libraries
+from flask import Response
 
 # import OGD libraries
 import ogd.core.requests.RequestResult as RequestResult
@@ -167,6 +168,10 @@ class APIResponse:
     @property
     def AsJSON(self):
         return json.dumps(self.AsDict)
+
+    @property
+    def AsFlaskResponse(self) -> Response:
+        return Response(response=self.AsJSON, status=self.Status.value, mimetype='application/json')
 
     def RequestErrored(self, msg:str):
         self._status = ResponseStatus.ERR_REQ
