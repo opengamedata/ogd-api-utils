@@ -9,7 +9,7 @@ jobs:
   build:
     name: Build Package for Release
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
       cancel-in-progress: true
     runs-on: ubuntu-22.04
     steps:
