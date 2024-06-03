@@ -2,10 +2,18 @@
 import unittest
 from unittest import TestCase
 # import locals
-from shared.utils.APIUtils import parse_list, gen_interface
-from tests.t_config import settings
+from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
+from ogd.apis.utils.APIUtils import parse_list, gen_interface
+from tests.config.t_config import settings
 
-class t_APIUtils(TestCase):
+_config = TestConfigSchema.FromDict(name="APIUtilsTestConfig", all_elements=settings, logger=None)
+
+class t_APIUtils:
+    @staticmethod
+    def RunAll():
+        pass
+
+class t_ParseList(TestCase):
     def test_parse_list_empty(self):
         list_str = "[]"
         parsed = parse_list(list_str=list_str)
@@ -25,6 +33,11 @@ class t_APIUtils(TestCase):
         list_str = "Not a [list] type of thing"
         parsed = parse_list(list_str=list_str)
         self.assertEqual(parsed, None)
+
+@unittest.skip("No tests written yet")
+class t_GenInterface(TestCase):
+    def test_gen_anything(self):
+        pass
 
 if __name__ == '__main__':
     unittest.main()
