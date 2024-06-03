@@ -35,7 +35,7 @@ runs:
       run: sed -i 's@"VERBOSE":False@"VERBOSE":${{inputs.verbose_output}}@g' tests/config/t_config.py
       shell: bash
     - name: Set ServerConfigSchema test to run or not
-      run: sed -i 's@"CONFIG":True@"CONFIG":${{inputs.with_server_confi_schema}}@g' tests/config/t_config.py
+      run: sed -i 's@"CONFIG":True@"CONFIG":${{inputs.with_server_config_schema}}@g' tests/config/t_config.py
       shell: bash
     - name: Set APIResponse test to run or not
       run: sed -i 's@"RESPONSE":True@"RESPONSE":${{inputs.with_api_response}}@g' tests/config/t_config.py
