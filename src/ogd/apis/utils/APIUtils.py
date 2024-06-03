@@ -8,6 +8,7 @@ In particular, has functions to assist in parsing certain kinds of data, and for
 # import standard libraries
 import json
 import os
+from json.decoder import JSONDecodeError
 from logging import Logger
 from typing import Any, List, Optional
 
@@ -35,7 +36,7 @@ def parse_list(list_str:str, logger:Optional[Logger]=None) -> Optional[List[Any]
     ret_val : Optional[List[Any]] = None
     try:
         ret_val = json.loads(list_str)
-    except json.decoder.JSONDecodeError as e:
+    except JSONDecodeError as e:
         if logger:
             logger.warning(f"Could not parse '{list_str}' as a list, format was not valid!\nGot Error {e}")
     else:
