@@ -1,6 +1,6 @@
 build>=0.10.*
 flask==2.3.2
 flask-restful==0.3.10
-opengamedata-core==0.0.9
+opengamedata-core==0.0.10
 twine>=4.0.*
 werkzeug==2.3.*
