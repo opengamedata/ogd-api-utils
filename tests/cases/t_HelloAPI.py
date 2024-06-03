@@ -2,8 +2,9 @@
 import requests
 import unittest
 from unittest import TestCase
-# import locals
+# import ogd libraries.
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
+# import locals
 from tests.config.t_config import settings
 
 _config = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)

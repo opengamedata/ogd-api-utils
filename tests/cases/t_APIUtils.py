@@ -1,9 +1,10 @@
 # import libraries
 import unittest
 from unittest import TestCase
-# import locals
+# import ogd libraries.
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
-from ogd.apis.utils.APIUtils import parse_list, gen_interface
+# import locals
+from src.ogd.apis.utils.APIUtils import parse_list, gen_interface
 from tests.config.t_config import settings
 
 _config = TestConfigSchema.FromDict(name="APIUtilsTestConfig", all_elements=settings, logger=None)
