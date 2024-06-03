@@ -2,8 +2,13 @@
 name: OGD APIUtils - CI Script
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 on:
-  push:
   workflow_dispatch:
+  push:
+    paths:
+    - '.github/workflows/APIUtils_CI.yml'
+    - '.github/actions/**'
+    - 'src/**'
+    - 'requirements.txt'
 
 jobs:
   build:
