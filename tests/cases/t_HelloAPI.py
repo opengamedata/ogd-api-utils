@@ -6,7 +6,7 @@ from unittest import TestCase
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
 from tests.config.t_config import settings
 
-_config = TestConfigSchema.FromDict(name="APIUtilsTestConfig", all_elements=settings, logger=None)
+_config = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
 
 class t_HelloAPI:
     def RunAll(self):
