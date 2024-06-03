@@ -24,7 +24,7 @@ jobs:
     needs: build
     runs-on: ubuntu-22.04
     concurrency:
-      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-test-server-config-schema
       cancel-in-progress: false
 
     steps:
@@ -54,7 +54,7 @@ jobs:
     needs: build
     runs-on: ubuntu-22.04
     concurrency:
-      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-test-hello
       cancel-in-progress: false
 
     steps:
@@ -83,7 +83,7 @@ jobs:
     needs: build
     runs-on: ubuntu-22.04
     concurrency:
-      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-test-api-response
       cancel-in-progress: false
 
     steps:
@@ -112,7 +112,7 @@ jobs:
     needs: build
     runs-on: ubuntu-22.04
     concurrency:
-      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-test-api-utils
       cancel-in-progress: false
 
     steps:
