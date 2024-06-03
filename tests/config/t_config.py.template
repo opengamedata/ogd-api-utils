@@ -3,6 +3,7 @@ settings = {
     "ENABLED" : {
         "RESPONSE":True,
         "UTILS":True,
+        "CONFIG":True,
         "HELLO":True
     }
 }
