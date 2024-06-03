@@ -1,6 +1,6 @@
-from tests.cases.t_HelloAPI import t_HelloAPI
-from tests.cases.t_APIResponse import t_APIResponse
-from tests.cases.t_APIUtils import t_APIUtils
+from tests.cases.utils.t_HelloAPI import t_HelloAPI
+from tests.cases.utils.t_APIResponse import t_APIResponse
+from tests.cases.utils.t_APIUtils import t_APIUtils
 
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
 from tests.config.t_config import settings
