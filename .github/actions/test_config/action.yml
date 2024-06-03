@@ -9,6 +9,10 @@ inputs:
     description: "Whether to output extra debugging lines from tests."
     required: false
     default: "False"
+  with_server_config_schema:
+    description: "Whether to run the ServerConfigSchema tests."
+    required: false
+    default: "True"
   with_api_response:
     description: "Whether to run the APIResponse tests."
     required: false
@@ -29,6 +33,9 @@ runs:
       shell: bash
     - name: Set Output Verbosity
       run: sed -i 's@"VERBOSE":False@"VERBOSE":${{inputs.verbose_output}}@g' tests/config/t_config.py
+      shell: bash
+    - name: Set ServerConfigSchema test to run or not
+      run: sed -i 's@"CONFIG":True@"CONFIG":${{inputs.with_server_confi_schema}}@g' tests/config/t_config.py
       shell: bash
     - name: Set APIResponse test to run or not
       run: sed -i 's@"RESPONSE":True@"RESPONSE":${{inputs.with_api_response}}@g' tests/config/t_config.py
