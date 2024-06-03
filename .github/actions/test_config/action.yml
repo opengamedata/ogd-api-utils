@@ -1,4 +1,4 @@
-name: "Configure t_config.py file for testing a deploy"
+name: "Configure t_config.py file for testing the package"
 author: Luke Swanson
 description: "Given a set of appropriate inputs, this action prepares the t_config.py file for running the API testbed."
 branding:
