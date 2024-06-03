@@ -7,7 +7,7 @@ on:
     paths:
     - '.github/workflows/APIUtils_test_HelloAPI.yml'
     - '.github/actions/test_config/**'
-    - 'tests/cases/t_HelloAPI.py'
+    - 'tests/cases/utils/t_HelloAPI.py'
     - 'tests/config/**'
     - 'requirements.txt'
 
@@ -35,7 +35,7 @@ jobs:
 
   # 3. Perform export
     - name: Execute testbed
-      run: python -m unittest ./tests/cases/t_HelloAPI.py 
+      run: python -m unittest ./tests/cases/utils/t_HelloAPI.py 
 
   # 4. Cleanup & complete
     - name: Upload logs as artifacts
