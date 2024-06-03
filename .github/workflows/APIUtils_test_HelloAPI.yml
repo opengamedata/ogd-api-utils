@@ -12,7 +12,7 @@ on:
     - 'requirements.txt'
 
 jobs:
-  run_testbed_files:
+  run_testbed_hello:
     name: Run HelloAPI Testbed
     runs-on: ubuntu-22.04
     concurrency:
