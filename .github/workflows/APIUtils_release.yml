@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Get Dependencies
-      uses: ./.github/actions/OGD_dependencies
+      uses: ./.github/actions/install_dependencies
     - name: Build Package
       run: python -m build
     # - name: Upload Wheel to GitHub Release
