@@ -9,6 +9,14 @@ inputs:
     description: "Whether to output extra debugging lines from tests."
     required: false
     default: "False"
+  with_api_response:
+    description: "Whether to run the APIResponse tests."
+    required: false
+    default: "True"
+  with_api_utils:
+    description: "Whether to run the APIUtils tests."
+    required: false
+    default: "True"
   with_hello_api:
     description: "Whether to run the HelloAPI tests."
     required: false
@@ -21,6 +29,12 @@ runs:
       shell: bash
     - name: Set Output Verbosity
       run: sed -i 's@"VERBOSE":False@"VERBOSE":${{inputs.verbose_output}}@g' tests/config/t_config.py
+      shell: bash
+    - name: Set APIResponse test to run or not
+      run: sed -i 's@"RESPONSE":True@"RESPONSE":${{inputs.with_api_response}}@g' tests/config/t_config.py
+      shell: bash
+    - name: Set APIUtils test to run or not
+      run: sed -i 's@"UTILS":True@"UTILS":${{inputs.with_api_utils}}@g' tests/config/t_config.py
       shell: bash
     - name: Set HelloAPI test to run or not
       run: sed -i 's@"HELLO":True@"HELLO":${{inputs.with_hello_api}}@g' tests/config/t_config.py
