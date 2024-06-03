@@ -1,5 +1,6 @@
 # Workflow to build and deploy a new release of OGDUtils to PyPi.
-name: API Utils CI Build
+name: OGD APIUtils - CI Script
+run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 on:
   push:
   workflow_dispatch:
