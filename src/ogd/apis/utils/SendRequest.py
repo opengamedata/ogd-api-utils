@@ -1,7 +1,7 @@
 import requests
 from typing import Any, Dict, Optional
 
-from tests.schemas.TestConfigSchema import TestConfigSchema
+from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
 
 def SendTestRequest(url:str, request:str, params:Dict[str, Any], config:TestConfigSchema) -> Optional[requests.Response]:
     result : Optional[requests.Response] = None
