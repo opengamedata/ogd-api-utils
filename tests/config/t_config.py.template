@@ -1,6 +1,6 @@
 settings = {
     "VERBOSE" : False,
-    "EnabledTests" : {
+    "ENABLED" : {
         "RESPONSE":True,
         "UTILS":True,
         "HELLO":True
