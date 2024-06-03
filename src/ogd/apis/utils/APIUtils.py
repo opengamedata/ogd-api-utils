@@ -37,7 +37,7 @@ def parse_list(list_str:str, logger:Optional[Logger]=None) -> Optional[List[Any]
         ret_val = json.loads(list_str)
     except json.decoder.JSONDecodeError as e:
         if logger:
-            logger.warn(f"Could not parse '{list_str}' as a list, format was not valid!\nGot Error {e}")
+            logger.warning(f"Could not parse '{list_str}' as a list, format was not valid!\nGot Error {e}")
     else:
         if ret_val is not None and len(ret_val) == 0:
             # If we had empty list, just treat as null.
