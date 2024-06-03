@@ -34,7 +34,7 @@ class t_ParseList(TestCase):
     def test_parse_list_three_elem(self):
         list_str = "[FeatureName1, FeatureName2, FeatureName3]"
         parsed = parse_list(list_str=list_str, logger=Logger.std_logger)
-        self.assertEqual(parsed, ["FeatureName1, FeatureName2, FeatureName3"])
+        self.assertEqual(parsed, ["FeatureName1", "FeatureName2", "FeatureName3"])
 
     def test_parse_list_invalid(self):
         list_str = "Not a [list] type of thing"
