@@ -8,13 +8,12 @@ from tests.config.t_config import settings
 
 _config = TestConfigSchema.FromDict(name="APIUtilsTestConfig", all_elements=settings, logger=None)
 
-class t_APIResponse:
+@unittest.skip("No tests implemented yet")
+class t_APIResponse(TestCase):
     @staticmethod
     def RunAll():
         pass
 
-@unittest.skip("No tests implemented yet")
-class t_ParseList(TestCase):
     def test_FromRequestResult(self):
         pass
 
