@@ -29,7 +29,6 @@ jobs:
     - name: Set up Config File
       uses: ./.github/actions/test_config
       with:
-          endpoint: ${{ env.DEPLOY_URL }}
           verbose_output: "True"
 
   # 2. Build & configure remote environments
