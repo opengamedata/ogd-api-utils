@@ -8,6 +8,7 @@ In particular, has functions to assist in parsing certain kinds of data, and for
 # import standard libraries
 import json
 import os
+from logging import Logger
 from typing import Any, List, Optional
 
 # import 3rd-party libraries
@@ -22,7 +23,7 @@ from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 
 # import local files
 
-def parse_list(list_str:str) -> Optional[List[Any]]:
+def parse_list(list_str:str, logger:Optional[Logger]=None) -> Optional[List[Any]]:
     """Simple utility to parse a string containing a bracketed list into a Python list.
     Returns None if the list was empty
 
@@ -35,14 +36,15 @@ def parse_list(list_str:str) -> Optional[List[Any]]:
     try:
         ret_val = json.loads(list_str)
     except json.decoder.JSONDecodeError as e:
-        current_app.logger.warn(f"Could not parse '{list_str}' as a list, format was not valid!\nGot Error {e}")
+        if logger:
+            logger.warn(f"Could not parse '{list_str}' as a list, format was not valid!\nGot Error {e}")
     else:
         if ret_val is not None and len(ret_val) == 0:
             # If we had empty list, just treat as null.
             ret_val = None
     return ret_val
 
-def gen_interface(game_id, core_config:ConfigSchema) -> Optional[DataInterface]:
+def gen_interface(game_id, core_config:ConfigSchema, logger:Optional[Logger]=None) -> Optional[DataInterface]:
     """Utility to set up an Interface object for use by the API, given a game_id.
 
     :param game_id: _description_
@@ -58,14 +60,18 @@ def gen_interface(game_id, core_config:ConfigSchema) -> Optional[DataInterface]:
         # set up interface and request
         if _game_source.Source.Type.upper() == "MYSQL":
             ret_val = MySQLInterface(game_id, config=_game_source, fail_fast=False)
-            current_app.logger.info(f"Using MySQLInterface for {game_id}")
+            if logger:
+                logger.info(f"Using MySQLInterface for {game_id}")
         elif _game_source.Source.Type.upper() == "BIGQUERY":
-            current_app.logger.info(f"Generating BigQueryInterface for {game_id}, from directory {os.getcwd()}...")
+            if logger:
+                logger.info(f"Generating BigQueryInterface for {game_id}, from directory {os.getcwd()}...")
             ret_val = BigQueryInterface(game_id=game_id, config=_game_source, fail_fast=False)
-            current_app.logger.info("Done")
+            if logger:
+                logger.info("Done")
         else:
             ret_val = MySQLInterface(game_id, config=_game_source, fail_fast=False)
-            current_app.logger.warning(f"Could not find a valid interface for {game_id}, defaulting to MySQL!")
+            if logger:
+                logger.warning(f"Could not find a valid interface for {game_id}, defaulting to MySQL!")
     return ret_val
 
 # def gen_coding_interface(game_id) -> Optional[CodingInterface]:
