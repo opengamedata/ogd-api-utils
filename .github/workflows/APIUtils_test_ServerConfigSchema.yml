@@ -7,7 +7,7 @@ on:
     paths:
     - '.github/workflows/APIUtils_test_ServerConfigSchema.yml'
     - '.github/actions/test_config/**'
-    - 'tests/cases/utils/t_ServerConfigSchema.py'
+    - 'tests/cases/schemas/t_ServerConfigSchema.py'
     - 'tests/config/**'
     - 'requirements.txt'
 
@@ -35,7 +35,7 @@ jobs:
 
   # 3. Perform export
     - name: Execute testbed
-      run: python -m unittest ./tests/cases/utils/t_ServerConfigSchema.py 
+      run: python -m unittest ./tests/cases/schemas/t_ServerConfigSchema.py 
 
   # 4. Cleanup & complete
     - name: Upload logs as artifacts
