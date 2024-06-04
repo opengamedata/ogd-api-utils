@@ -25,12 +25,12 @@ class ServerConfigSchema(Schema):
             self._dbg_level = ServerConfigSchema._parseDebugLevel(all_elements["DEBUG_LEVEL"], logger=logger)
         else:
             self._dbg_level = logging.INFO
-            logger.warn(f"{name} config does not have a 'DEBUG_LEVEL' element; defaulting to dbg_level={self._dbg_level}", logging.WARN)
+            logger.warning(f"{name} config does not have a 'DEBUG_LEVEL' element; defaulting to dbg_level={self._dbg_level}", logging.WARN)
         if "VER" in all_elements.keys():
             self._version = ServerConfigSchema._parseVersion(all_elements["VER"], logger=logger)
         else:
             self._version = SemanticVersion.FromString("UNKNOWN VERSION")
-            logger.warn(f"{name} config does not have a 'VER' element; defaulting to version={self._version}", logging.WARN)
+            logger.warning(f"{name} config does not have a 'VER' element; defaulting to version={self._version}", logging.WARN)
 
         _used = {"DB_CONFIG", "OGD_CORE_PATH", "GOOGLE_CLIENT_ID", "DEBUG_LEVEL", "VER"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
@@ -66,10 +66,10 @@ class ServerConfigSchema(Schema):
                     ret_val = logging.DEBUG
                 case _:
                     ret_val = logging.INFO
-                    logger.warn(f"Config debug level had unexpected value {level}, defaulting to logging.INFO.", logging.WARN)
+                    logger.warning(f"Config debug level had unexpected value {level}, defaulting to logging.INFO.", logging.WARN)
         else:
             ret_val = logging.INFO
-            logger.warn(f"Config debug level was unexpected type {type(level)}, defaulting to logging.INFO.", logging.WARN)
+            logger.warning(f"Config debug level was unexpected type {type(level)}, defaulting to logging.INFO.", logging.WARN)
         return ret_val
 
     @staticmethod
@@ -81,5 +81,5 @@ class ServerConfigSchema(Schema):
             ret_val = SemanticVersion.FromString(semver=version)
         else:
             ret_val = SemanticVersion.FromString(str(version))
-            logger.warn(f"Config version was unexpected type {type(version)}, defaulting to SemanticVersion(str(version))={ret_val}.", logging.WARN)
+            logger.warning(f"Config version was unexpected type {type(version)}, defaulting to SemanticVersion(str(version))={ret_val}.", logging.WARN)
         return ret_val

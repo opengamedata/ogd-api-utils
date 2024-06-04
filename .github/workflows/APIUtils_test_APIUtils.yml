@@ -1,0 +1,44 @@
+# Workflow to test Files API on the CI server
+name: OGD APIUtils - APIUtils Testbed
+run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
+on:
+  workflow_dispatch:
+  push:
+    paths:
+    - '.github/workflows/APIUtils_test_APIUtils.yml'
+    - '.github/actions/test_config/**'
+    - 'tests/cases/utils/t_APIUtils.py'
+    - 'tests/config/**'
+    - 'requirements.txt'
+
+jobs:
+  run_testbed_api_utils:
+    name: Run APIUtils Testbed
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
+      cancel-in-progress: false
+
+    steps:
+
+  # 1. Local checkout 
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Get Dependencies
+      uses: ./.github/actions/install_dependencies
+    - name: Set up Config File
+      uses: ./.github/actions/test_config
+      with:
+          verbose_output: "True"
+
+  # 2. Build & configure remote environments
+
+  # 3. Perform export
+    - name: Execute testbed
+      run: python -m unittest ./tests/cases/utils/t_APIUtils.py 
+
+  # 4. Cleanup & complete
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./*.log

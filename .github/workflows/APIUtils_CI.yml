@@ -1,8 +1,14 @@
 # Workflow to build and deploy a new release of OGDUtils to PyPi.
-name: API Utils CI Build
+name: OGD APIUtils - CI Script
+run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 on:
-  push:
   workflow_dispatch:
+  push:
+    paths:
+    - '.github/workflows/APIUtils_CI.yml'
+    - '.github/actions/**'
+    - 'src/**'
+    - 'requirements.txt'
 
 jobs:
   build:
@@ -14,6 +20,123 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Get Dependencies
-      uses: ./.github/actions/OGD_dependencies
+      uses: ./.github/actions/install_dependencies
     - name: Build Package
       run: python -m build
+
+  run_testbed_server_config_schema:
+    name: Run ServerConfigSchema Testbed
+    needs: build
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-test-server-config-schema
+      cancel-in-progress: false
+
+    steps:
+    # 1. Local checkout 
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Get Dependencies
+      uses: ./.github/actions/install_dependencies
+    - name: Set up Config File
+      uses: ./.github/actions/test_config
+      with:
+          verbose_output: "True"
+    # 2. Build & configure remote environments
+
+    # 3. Perform export
+    - name: Execute testbed
+      run: python -m unittest ./tests/cases/schemas/t_ServerConfigSchema.py 
+    # 4. Cleanup & complete
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./*.log
+
+
+  run_testbed_hello:
+    name: Run HelloAPI Testbed
+    needs: build
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-test-hello
+      cancel-in-progress: false
+
+    steps:
+    # 1. Local checkout 
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Get Dependencies
+      uses: ./.github/actions/install_dependencies
+    - name: Set up Config File
+      uses: ./.github/actions/test_config
+      with:
+          verbose_output: "True"
+    # 2. Build & configure remote environments
+
+    # 3. Perform export
+    - name: Execute testbed
+      run: python -m unittest ./tests/cases/utils/t_HelloAPI.py 
+    # 4. Cleanup & complete
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./*.log
+
+  run_testbed_api_response:
+    name: Run APIResponse Testbed
+    needs: build
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-test-api-response
+      cancel-in-progress: false
+
+    steps:
+    # 1. Local checkout 
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Get Dependencies
+      uses: ./.github/actions/install_dependencies
+    - name: Set up Config File
+      uses: ./.github/actions/test_config
+      with:
+          verbose_output: "True"
+    # 2. Build & configure remote environments
+
+    # 3. Perform export
+    - name: Execute testbed
+      run: python -m unittest ./tests/cases/utils/t_APIResponse.py 
+    # 4. Cleanup & complete
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./*.log
+
+  run_testbed_api_utils:
+    name: Run APIUtils Testbed
+    needs: build
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-test-api-utils
+      cancel-in-progress: false
+
+    steps:
+    # 1. Local checkout 
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Get Dependencies
+      uses: ./.github/actions/install_dependencies
+    - name: Set up Config File
+      uses: ./.github/actions/test_config
+      with:
+          verbose_output: "True"
+    # 2. Build & configure remote environments
+
+    # 3. Perform export
+    - name: Execute testbed
+      run: python -m unittest ./tests/cases/utils/t_APIUtils.py 
+    # 4. Cleanup & complete
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./*.log

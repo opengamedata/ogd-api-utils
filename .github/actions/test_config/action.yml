@@ -1,0 +1,48 @@
+name: "Configure t_config.py file for testing the package"
+author: Luke Swanson
+description: "Given a set of appropriate inputs, this action prepares the t_config.py file for running the API testbed."
+branding:
+  icon: 'clipboard'
+  color: 'blue'
+inputs:
+  verbose_output:
+    description: "Whether to output extra debugging lines from tests."
+    required: false
+    default: "False"
+  with_server_config_schema:
+    description: "Whether to run the ServerConfigSchema tests."
+    required: false
+    default: "True"
+  with_api_response:
+    description: "Whether to run the APIResponse tests."
+    required: false
+    default: "True"
+  with_api_utils:
+    description: "Whether to run the APIUtils tests."
+    required: false
+    default: "True"
+  with_hello_api:
+    description: "Whether to run the HelloAPI tests."
+    required: false
+    default: "True"
+runs:
+  using: "composite"
+  steps:
+    - name: Set up config
+      run: cp tests/config/t_config.py.template tests/config/t_config.py 
+      shell: bash
+    - name: Set Output Verbosity
+      run: sed -i 's@"VERBOSE":False@"VERBOSE":${{inputs.verbose_output}}@g' tests/config/t_config.py
+      shell: bash
+    - name: Set ServerConfigSchema test to run or not
+      run: sed -i 's@"CONFIG":True@"CONFIG":${{inputs.with_server_config_schema}}@g' tests/config/t_config.py
+      shell: bash
+    - name: Set APIResponse test to run or not
+      run: sed -i 's@"RESPONSE":True@"RESPONSE":${{inputs.with_api_response}}@g' tests/config/t_config.py
+      shell: bash
+    - name: Set APIUtils test to run or not
+      run: sed -i 's@"UTILS":True@"UTILS":${{inputs.with_api_utils}}@g' tests/config/t_config.py
+      shell: bash
+    - name: Set HelloAPI test to run or not
+      run: sed -i 's@"HELLO":True@"HELLO":${{inputs.with_hello_api}}@g' tests/config/t_config.py
+      shell: bash

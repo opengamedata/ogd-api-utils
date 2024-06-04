@@ -21,9 +21,9 @@ import ogd.core.requests.RequestResult as RequestResult
 class RESTType(IntEnum):
     """Simple enumerated type to track type of a REST request.
     """
-    GET = 1
+    GET  = 1
     POST = 2
-    PUT = 3
+    PUT  = 3
 
     def __str__(self):
         """Stringify function for RESTTypes.
@@ -44,7 +44,7 @@ class RESTType(IntEnum):
 class ResponseStatus(IntEnum):
     """Simple enumerated type to track the status of an API request result.
     """
-    NONE = 1
+    NONE    =   1
     SUCCESS = 200
     ERR_REQ = 400
     ERR_SRV = 500

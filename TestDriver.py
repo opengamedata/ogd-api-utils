@@ -1,33 +1,31 @@
-from tests.t_CodingAPI import t_CodingAPI
-from tests.t_HelloAPI import t_HelloAPI
-from tests.t_GameStateAPI import t_GameStateAPI
-from tests.t_DashboardAPI import t_DashboardAPI
-from tests.t_PlayerIDAPI import t_PlayerIDAPI
-from tests.t_config import EnabledTests
+from tests.cases.utils.t_APIResponse import t_APIResponse
+from tests.cases.utils.t_APIUtils import t_APIUtils
+from tests.cases.schemas.t_ServerConfigSchema import t_ServerConfigSchema
+from tests.cases.utils.t_HelloAPI import t_HelloAPI
+
+from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
+from tests.config.t_config import settings
+
+_config = TestConfigSchema.FromDict(name="APIUtilsTestConfig", all_elements=settings, logger=None)
 
 
-if EnabledTests.get('HELLO'):
+if _config.EnabledTests.get('CONFIG'):
+    test_Utils = t_ServerConfigSchema()
+    print("***\nRunning test_ServerConfigSchema:\n")
+    test_Utils.RunAll()
+    print("Done\n***")
+if _config.EnabledTests.get('RESPONSE'):
+    test_APIResponse = t_APIResponse()
+    print("***\nRunning test_APIResponse:")
+    test_APIResponse.RunAll()
+    print("Done\n***")
+if _config.EnabledTests.get('UTILS'):
+    test_Utils = t_APIUtils()
+    print("***\nRunning test_APIUtils:\n")
+    test_Utils.RunAll()
+    print("Done\n***")
+if _config.EnabledTests.get('HELLO'):
     test_Hello = t_HelloAPI()
     print("***\nRunning test_Hello:")
     test_Hello.RunAll()
-    print("Done\n***")
-if EnabledTests.get('CODE'):
-    test_Coding = t_CodingAPI()
-    print("***\nRunning test_Coding:")
-    test_Coding.RunAll()
-    print("Done\n***")
-if EnabledTests.get('DASHBOARD'):
-    test_Dash = t_DashboardAPI()
-    print("***\nRunning test_Dashboard:\n")
-    test_Dash.RunAll()
-    print("Done\n***")
-if EnabledTests.get('PLAYER'):
-    test_PlayerID = t_PlayerIDAPI()
-    print("***\nRunning test_PlayerID:\n")
-    test_PlayerID.RunAll()
-    print("Done\n***")
-if EnabledTests.get('GAME_STATE'):
-    test_GameState = t_GameStateAPI()
-    print("***\nRunning test_GameState:\n")
-    test_GameState.RunAll()
     print("Done\n***")
