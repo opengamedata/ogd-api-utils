@@ -27,12 +27,12 @@ class t_ParseList(TestCase):
         self.assertEqual(parsed, [])
 
     def test_parse_list_one_elem(self):
-        list_str = "[FeatureName]"
+        list_str = '["FeatureName"]'
         parsed = parse_list(list_str=list_str, logger=Logger.std_logger)
         self.assertEqual(parsed, ["FeatureName"])
 
     def test_parse_list_three_elem(self):
-        list_str = "[FeatureName1, FeatureName2, FeatureName3]"
+        list_str = '["FeatureName1", "FeatureName2", "FeatureName3"]'
         parsed = parse_list(list_str=list_str, logger=Logger.std_logger)
         self.assertEqual(parsed, ["FeatureName1", "FeatureName2", "FeatureName3"])
 
