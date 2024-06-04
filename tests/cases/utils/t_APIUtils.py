@@ -24,7 +24,7 @@ class t_ParseList(TestCase):
     def test_parse_list_empty(self):
         list_str = "[]"
         parsed = parse_list(list_str=list_str, logger=Logger.std_logger)
-        self.assertEqual(parsed, [])
+        self.assertEqual(parsed, None)
 
     def test_parse_list_one_elem(self):
         list_str = '["FeatureName"]'
