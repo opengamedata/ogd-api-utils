@@ -57,8 +57,6 @@ jobs:
         remote_key:  ${{ secrets.VPN_KEY  }}
 
   # 4. Cleanup & complete
-    - name: Trigger Graceful Reboot
-      run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "sudo systemctl restart apache2"
     - name: Announce deploy
       run: echo "Deployed to ${{ env.DEPLOY_URL }}"
     - name: Upload logs as artifacts
