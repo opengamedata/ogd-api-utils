@@ -75,14 +75,14 @@ def index_meta(root:Path, name:str, indexed_files:Dict):
 
 def index_zip(root:Path, name:str, indexed_files):
     # for reference, here's how the indices of a tsv file should look, if we're not dealing with a "cycle" game.
-    PIECE_INDICES = {'name':0, 'start_date':1, 'to':2, 'end_date':3, 'id':4, 'file_type':5}
+    PIECE_INDICES = {'name':-6, 'start_date':-5, 'to':-4, 'end_date':-3, 'id':-2, 'file_type':-1}
     top = name.split('.')
     pieces = top[0].split('_')
-    game_id = '_'.join(pieces[:-5]) # game_id is just the reassembly of everything up to start_date
-    start_date = pieces[-5]
-    end_date = pieces[-5]
+    game_id = '_'.join(pieces[:PIECE_INDICES['start_date']]) # game_id is just the reassembly of everything up to start_date
+    start_date = pieces[PIECE_INDICES['start_date']]
+    end_date   = pieces[PIECE_INDICES['end_date']]
     dataset_id  = f"{game_id}_{start_date}_to_{end_date}"
-    kind = pieces[-1]
+    kind = pieces[PIECE_INDICES['file_type']]
     if not game_id in indexed_files.keys():
         indexed_files[game_id] = {}
     # if we already indexed something with this dataset id, then only update if this one is newer.
