@@ -78,9 +78,9 @@ def index_zip(root:Path, name:str, indexed_files):
     PIECE_INDICES = {'name':0, 'start_date':1, 'to':2, 'end_date':3, 'id':4, 'file_type':5}
     top = name.split('.')
     pieces = top[0].split('_')
-    game_id = '_'.join(pieces[:-4]) # game_id is just the reassembly of everything up to start_date
-    start_date = pieces[-4]
-    end_date = pieces[-2]
+    game_id = '_'.join(pieces[:-5]) # game_id is just the reassembly of everything up to start_date
+    start_date = pieces[-5]
+    end_date = pieces[-5]
     dataset_id  = f"{game_id}_{start_date}_to_{end_date}"
     kind = pieces[-1]
     if not game_id in indexed_files.keys():
@@ -171,7 +171,7 @@ elif args.level == 'INFO':
     logging.basicConfig(level=logging.INFO)
 elif args.level == 'DEBUG':
     logging.basicConfig(level=logging.DEBUG)
-data_dirs = os.walk("./data/")
+data_dirs = os.walk("./")
 indexed_files = generate_index(data_dirs)
 if not "CONFIG" in indexed_files.keys():
     indexed_files["CONFIG"] = {
