@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  DEPLOY_HOST: ${{ vars.FD_WEB_HOST }}
+  DEPLOY_HOST: fieldday-web.wcer.wisc.edu
   DEPLOY_DIR:                         /var/www/opengamedata/data/
   DEPLOY_URL:  ${{ vars.FD_WEB_HOST }}/var/www/opengamedata/data/reindexer.py
 
