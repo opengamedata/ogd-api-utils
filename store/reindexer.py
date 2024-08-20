@@ -78,9 +78,9 @@ def index_zip(root:Path, name:str, indexed_files):
     PIECE_INDICES = {'name':0, 'start_date':1, 'to':2, 'end_date':3, 'id':4, 'file_type':5}
     top = name.split('.')
     pieces = top[0].split('_')
-    game_id = pieces[0] if pieces[0] != 'CYCLE' else f"{pieces[0]}_{pieces[1]}"
-    start_date = pieces[-5]
-    end_date = pieces[-3]
+    game_id = '_'.join(pieces[:-4]) # game_id is just the reassembly of everything up to start_date
+    start_date = pieces[-4]
+    end_date = pieces[-2]
     dataset_id  = f"{game_id}_{start_date}_to_{end_date}"
     kind = pieces[-1]
     if not game_id in indexed_files.keys():
