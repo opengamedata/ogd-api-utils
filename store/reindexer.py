@@ -61,9 +61,9 @@ def index_meta(root:Path, name:str, indexed_files:Dict):
     next_meta : Dict = {}
     with open(root / name, 'r') as next_file:
         next_meta = json.load(next_file)
-    next_game  = next_meta['game_id']
-    next_id    = next_meta['dataset_id']
-    next_mod   = next_meta['date_modified']
+    next_game = next_meta['game_id']
+    next_id   = next_meta['dataset_id']
+    next_mod  = next_meta['date_modified']
     if not next_game in indexed_files.keys():
         indexed_files[next_game] = {}
     # if we already indexed something with this dataset id, and this was older, do nothing..
@@ -158,6 +158,7 @@ def generate_index(walk_data):
             else:
                 logging.log(msg=f"Doing nothing with {root_path / name}", level=logging.DEBUG)
     for root_path,name in zips:
+        logging.log(msg=f"Indexing previously-reserved {root_path / name}", level=logging.INFO)
         indexed_files = index_zip(root_path, name, indexed_files)
     return indexed_files
 
