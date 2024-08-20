@@ -142,10 +142,10 @@ def index_zip(root:Path, name:str, indexed_files):
 def generate_index(walk_data):
     indexed_files = {}
     zips = []
-    for root, subdirs, files in walk_data:
+    for directory, subdirs, files in walk_data:
         for name in files:
-            root_path = Path(root)
-            if not 'BACKUP' in root:
+            root_path = Path(directory)
+            if not 'BACKUP' in directory and not 'config' in directory:
                 ext = name.split('.')[-1]
                 if (ext == 'meta'):
                     logging.log(msg=f"Indexing {root_path / name}", level=logging.INFO)
