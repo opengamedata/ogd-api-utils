@@ -32,7 +32,7 @@ class ServerConfigSchema(Schema):
             self._version = SemanticVersion.FromString("UNKNOWN VERSION")
             logger.warning(f"{name} config does not have a 'VER' element; defaulting to version={self._version}", logging.WARN)
 
-        _used = {"DB_CONFIG", "OGD_CORE_PATH", "GOOGLE_CLIENT_ID", "DEBUG_LEVEL", "VER"}
+        _used = {"DEBUG_LEVEL", "VER"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 
