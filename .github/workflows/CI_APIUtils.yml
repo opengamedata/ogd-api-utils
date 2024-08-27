@@ -29,9 +29,8 @@ jobs:
     needs: build
     uses: ./.github/workflows/TEST_ServerConfigSchema.yml
 
-
-  run_testbed_hello:
-    name: Run HelloAPI Testbed
+  testbed_hello:
+    name: HelloAPI Testbed
     needs: build
     uses: ./.github/workflows/TEST_HelloAPI.yml
 
@@ -40,7 +39,7 @@ jobs:
     needs: build
     uses: ./.github/workflows/TEST_APIResponse.yml
 
-  run_testbed_api_utils:
-    name: Run APIUtils Testbed
+  testbed_api_utils:
+    name: APIUtils Testbed
     needs: build
     uses: ./.github/workflows/TEST_APIUtils.yml
