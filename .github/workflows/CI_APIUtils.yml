@@ -84,7 +84,7 @@ jobs:
         path: ./*.log
 
   run_testbed_api_response:
-    # name: Run APIResponse Testbed
+    name: Run APIResponse Testbed
     needs: build
     uses: ./.github/workflows/TEST_APIResponse.yml
 
