@@ -84,33 +84,9 @@ jobs:
         path: ./*.log
 
   run_testbed_api_response:
-    name: Run APIResponse Testbed
+    # name: Run APIResponse Testbed
     needs: build
-    runs-on: ubuntu-22.04
-    concurrency:
-      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-test-api-response
-      cancel-in-progress: false
-
-    steps:
-    # 1. Local checkout 
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Get Dependencies
-      uses: ./.github/actions/install_dependencies
-    - name: Set up Config File
-      uses: ./.github/actions/test_config
-      with:
-          verbose_output: "True"
-    # 2. Build & configure remote environments
-
-    # 3. Perform export
-    - name: Execute testbed
-      run: python -m unittest ./tests/cases/utils/t_APIResponse.py 
-    # 4. Cleanup & complete
-    - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        path: ./*.log
+    uses: opengamedata/opengamedata-api-utils/.github/workflows/APIUtiles_test_APIResponse.yml
 
   run_testbed_api_utils:
     name: Run APIUtils Testbed
