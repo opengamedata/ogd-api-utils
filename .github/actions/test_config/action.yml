@@ -25,24 +25,28 @@ inputs:
     description: "Whether to run the HelloAPI tests."
     required: false
     default: "True"
+  config_path:
+    description: "Local path to test config folder"
+    required: false
+    default: 'tests/config'
 runs:
   using: "composite"
   steps:
     - name: Set up config
-      run: cp tests/config/t_config.py.template tests/config/t_config.py 
+      run: cp ${{ inputs.config_path }}/t_config.py.template ${{ inputs.config_path }}/t_config.py 
       shell: bash
     - name: Set Output Verbosity
-      run: sed -i 's@"VERBOSE":False@"VERBOSE":${{inputs.verbose_output}}@g' tests/config/t_config.py
+      run: sed -i 's@"VERBOSE":False@"VERBOSE":${{ inputs.verbose_output }}@g'         ${{ inputs.config_path }}/t_config.py
       shell: bash
     - name: Set ServerConfigSchema test to run or not
-      run: sed -i 's@"CONFIG":True@"CONFIG":${{inputs.with_server_config_schema}}@g' tests/config/t_config.py
+      run: sed -i 's@"CONFIG":True@"CONFIG":${{ inputs.with_server_config_schema }}@g' ${{ inputs.config_path }}/t_config.py
       shell: bash
     - name: Set APIResponse test to run or not
-      run: sed -i 's@"RESPONSE":True@"RESPONSE":${{inputs.with_api_response}}@g' tests/config/t_config.py
+      run: sed -i 's@"RESPONSE":True@"RESPONSE":${{ inputs.with_api_response }}@g'     ${{ inputs.config_path }}/t_config.py
       shell: bash
     - name: Set APIUtils test to run or not
-      run: sed -i 's@"UTILS":True@"UTILS":${{inputs.with_api_utils}}@g' tests/config/t_config.py
+      run: sed -i 's@"UTILS":True@"UTILS":${{ inputs.with_api_utils }}@g'              ${{ inputs.config_path }}/t_config.py
       shell: bash
     - name: Set HelloAPI test to run or not
-      run: sed -i 's@"HELLO":True@"HELLO":${{inputs.with_hello_api}}@g' tests/config/t_config.py
+      run: sed -i 's@"HELLO":True@"HELLO":${{ inputs.with_hello_api }}@g'              ${{ inputs.config_path }}/t_config.py
       shell: bash
