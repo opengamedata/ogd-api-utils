@@ -5,14 +5,10 @@ branding:
   icon: 'download'
   color: 'blue'
 inputs:
-  python_major_version:
-    description: "Which major version of Python to install on local GitHub Actions runner."
+  python__version:
+    description: "Which version of Python to install on local GitHub Actions runner."
     required: false
-    default: "3"
-  python_minor_version:
-    description: "Which minor version of Python to install on local GitHub Actions runner."
-    required: false
-    default: "10"
+    default: "3.10"
 runs:
   using: "composite"
   steps:
@@ -22,16 +18,16 @@ runs:
     - name: Get correct Python
       uses: actions/setup-python@v4
       with:
-        python-version: "${{ inputs.python_major_version }}.${{ inputs.python_minor_version }}.x"
+        python-version: "${{ inputs.python_version }}.x"
     - name: Set up pip
       env:
-        python_command: python${{ inputs.python_major_version }}.${{ inputs.python_minor_version }}
+        python_command: python${{ inputs.python_version }}
       run: |
         ${{ env.python_command }} -m pip install --upgrade pip
       shell: bash
     - name: Set up Python libraries
       env:
-        python_command: python${{ inputs.python_major_version }}.${{ inputs.python_minor_version }}
+        python_command: python${{ inputs.python_version }}
       # if: steps.cache.outputs.cache-hit != 'true'
       run: |
         ${{ env.python_command }} -m pip install setuptools --quiet
