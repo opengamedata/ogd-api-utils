@@ -5,7 +5,7 @@ branding:
   icon: 'download'
   color: 'blue'
 inputs:
-  python__version:
+  python_version:
     description: "Which version of Python to install on local GitHub Actions runner."
     required: false
     default: "3.10"
