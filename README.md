@@ -13,11 +13,17 @@ The available modules include:
 * `schemas` : Contains a base class for server config schemas to handle version and debug-level config items
 * `utils` : Contains helper classes for API requests and responses, as well as general-purpose parsing and setup functions.
 
+### Data Store Utilities
+
+The `store` directory contains a script for reindexing a folder of OGD datasets after new datasets have been added.
+This index is used by the FileAPI to check what datasets are available on the server.
+
 ## Getting Started
 
 ### Hello World of Flask
 
 Steps to run:
+
 1. Check out latest `opengamedata-server`.
 2. Run `pip install -r requirements.txt` to ensure you've got flask.
 3. Run `flask run`.
