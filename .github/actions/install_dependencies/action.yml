@@ -1,9 +1,18 @@
 name: "Set up OGD dependencies"
 author: Luke Swanson
-description: "Given a game and a date range, this action will export the range's data for that game."
+description: "This action installs the necessary dependencies for OGD to run."
 branding:
   icon: 'download'
   color: 'blue'
+inputs:
+  python_major_version:
+    description: "Which major version of Python to install on local GitHub Actions runner."
+    required: false
+    default: "3"
+  python_minor_version:
+    description: "Which minor version of Python to install on local GitHub Actions runner."
+    required: false
+    default: "10"
 runs:
   using: "composite"
   steps:
@@ -13,15 +22,19 @@ runs:
     - name: Get correct Python
       uses: actions/setup-python@v4
       with:
-        python-version: "3.10.x"
+        python-version: "${{ inputs.python_major_version }}.${{ inputs.python_minor_version }}.x"
     - name: Set up pip
+      env:
+        python_command: python${{ inputs.python_major_version }}.${{ inputs.python_minor_version }}
       run: |
-        python3.10 -m pip install --upgrade pip
+        ${{ env.python_command }} -m pip install --upgrade pip
       shell: bash
     - name: Set up Python libraries
+      env:
+        python_command: python${{ inputs.python_major_version }}.${{ inputs.python_minor_version }}
       # if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        python3.10 -m pip install setuptools --quiet
-        python3.10 -m pip install wheel --quiet
-        python3.10 -m pip install -r requirements.txt --quiet
+        ${{ env.python_command }} -m pip install setuptools --quiet
+        ${{ env.python_command }} -m pip install wheel --quiet
+        ${{ env.python_command }} -m pip install -r requirements.txt --quiet
       shell: bash
