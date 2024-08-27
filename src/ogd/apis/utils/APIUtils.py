@@ -16,7 +16,7 @@ from typing import Any, List, Optional
 from flask import current_app
 
 # import OGD libraries
-from ogd.core.interfaces.DataInterface import DataInterface
+from ogd.core.interfaces.EventInterface import EventInterface
 from ogd.core.interfaces.MySQLInterface import MySQLInterface
 from ogd.core.interfaces.BigQueryInterface import BigQueryInterface
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
@@ -45,7 +45,7 @@ def parse_list(list_str:str, logger:Optional[Logger]=None) -> Optional[List[Any]
             ret_val = None
     return ret_val
 
-def gen_interface(game_id, core_config:ConfigSchema, logger:Optional[Logger]=None) -> Optional[DataInterface]:
+def gen_interface(game_id, core_config:ConfigSchema, logger:Optional[Logger]=None) -> Optional[EventInterface]:
     """Utility to set up an Interface object for use by the API, given a game_id.
 
     :param game_id: _description_
