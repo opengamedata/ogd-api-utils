@@ -2,9 +2,9 @@
 name: OGD APIUtils - Release Script
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'release' && github.ref || 'Manual Run') }}
 on:
+  workflow_dispatch:
   release:
     types: [prereleased, released]
-  workflow_dispatch:
 
 jobs:
   build:
