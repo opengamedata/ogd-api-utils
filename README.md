@@ -2,6 +2,17 @@
 
 Repository for utility server-side script and classes used by OpenGameData APIs.
 
+## Contents
+
+### Python Package
+
+The `utils` repository contains a package that can be installed from `pip`, and places its classes under the `ogd.apis` namespace.
+The available modules include:
+
+* `HelloAPI.py` : Class for creating a "Hello, World" API to aid in testing deploys of other APIs.
+* `schemas` : Contains a base class for server config schemas to handle version and debug-level config items
+* `utils` : Contains helper classes for API requests and responses, as well as general-purpose parsing and setup functions.
+
 ## Getting Started
 
 ### Hello World of Flask
