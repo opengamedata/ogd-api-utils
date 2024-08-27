@@ -24,95 +24,23 @@ jobs:
     - name: Build Package
       run: python -m build
 
-  run_testbed_server_config_schema:
-    name: Run ServerConfigSchema Testbed
+  testbed_server_config_schema:
+    name: ServerConfigSchema Testbed
     needs: build
-    runs-on: ubuntu-22.04
-    concurrency:
-      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-test-server-config-schema
-      cancel-in-progress: false
-
-    steps:
-    # 1. Local checkout 
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Get Dependencies
-      uses: ./.github/actions/install_dependencies
-    - name: Set up Config File
-      uses: ./.github/actions/test_config
-      with:
-          verbose_output: "True"
-    # 2. Build & configure remote environments
-
-    # 3. Perform export
-    - name: Execute testbed
-      run: python -m unittest ./tests/cases/schemas/t_ServerConfigSchema.py 
-    # 4. Cleanup & complete
-    - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        path: ./*.log
+    uses: ./.github/workflows/TEST_ServerConfigSchema.yml
 
 
   run_testbed_hello:
     name: Run HelloAPI Testbed
     needs: build
-    runs-on: ubuntu-22.04
-    concurrency:
-      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-test-hello
-      cancel-in-progress: false
+    uses: ./.github/workflows/TEST_HelloAPI.yml
 
-    steps:
-    # 1. Local checkout 
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Get Dependencies
-      uses: ./.github/actions/install_dependencies
-    - name: Set up Config File
-      uses: ./.github/actions/test_config
-      with:
-          verbose_output: "True"
-    # 2. Build & configure remote environments
-
-    # 3. Perform export
-    - name: Execute testbed
-      run: python -m unittest ./tests/cases/utils/t_HelloAPI.py 
-    # 4. Cleanup & complete
-    - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        path: ./*.log
-
-  run_testbed_api_response:
-    name: Run APIResponse Testbed
+  testbed_api_response:
+    name: APIResponse Testbed
     needs: build
     uses: ./.github/workflows/TEST_APIResponse.yml
 
   run_testbed_api_utils:
     name: Run APIUtils Testbed
     needs: build
-    runs-on: ubuntu-22.04
-    concurrency:
-      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-test-api-utils
-      cancel-in-progress: false
-
-    steps:
-    # 1. Local checkout 
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Get Dependencies
-      uses: ./.github/actions/install_dependencies
-    - name: Set up Config File
-      uses: ./.github/actions/test_config
-      with:
-          verbose_output: "True"
-    # 2. Build & configure remote environments
-
-    # 3. Perform export
-    - name: Execute testbed
-      run: python -m unittest ./tests/cases/utils/t_APIUtils.py 
-    # 4. Cleanup & complete
-    - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        path: ./*.log
+    uses: ./.github/workflows/TEST_APIUtils.yml
