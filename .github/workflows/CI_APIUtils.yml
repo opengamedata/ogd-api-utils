@@ -86,7 +86,7 @@ jobs:
   run_testbed_api_response:
     # name: Run APIResponse Testbed
     needs: build
-    uses: opengamedata/opengamedata-api-utils/.github/workflows/APIUtiles_test_APIResponse.yml
+    uses: ./.github/workflows/TEST_APIResponse.yml
 
   run_testbed_api_utils:
     name: Run APIUtils Testbed
