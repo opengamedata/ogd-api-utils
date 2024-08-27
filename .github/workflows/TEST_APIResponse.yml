@@ -18,7 +18,7 @@ jobs:
     name: Run APIResponse Testbed
     runs-on: ubuntu-22.04
     concurrency:
-      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-APIResponse
       cancel-in-progress: false
 
     steps:
