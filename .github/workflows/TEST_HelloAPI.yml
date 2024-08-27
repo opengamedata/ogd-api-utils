@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-22.04
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-HelloAPI
-      cancel-in-progress: false
+      cancel-in-progress: true
 
     steps:
   # 1. Local checkout 
