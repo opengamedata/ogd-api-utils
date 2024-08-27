@@ -7,6 +7,7 @@ on:
     types: [prereleased, released]
 
 jobs:
+
   build:
     name: Build Package for Release
     concurrency:
