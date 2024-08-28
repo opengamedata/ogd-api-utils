@@ -18,8 +18,9 @@ def SendTestRequest(url:str, request:str, params:Dict[str, Any], verbose:bool) -
     :type params: Dict[str, Any]
     :param verbose: Whether to use verbose debugging outputs or not.
     :type verbose: bool
-    :raises err: _description_
-    :return: _description_
+    :raises err: Currently, any exceptions that occur during the request will be raised up.
+        If verbose logging is on, a simple debug message indicating the request type and URL is printed first.
+    :return: The `Response` object from the request, or None if an error occurred.
     :rtype: Optional[requests.Response]
     """
     result : Optional[requests.Response] = None
