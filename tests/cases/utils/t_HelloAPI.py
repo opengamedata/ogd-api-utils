@@ -4,6 +4,7 @@ import unittest
 from unittest import TestCase
 # import ogd libraries.
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
+from ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
 # import locals
 from tests.config.t_config import settings
 
@@ -21,6 +22,7 @@ class t_HelloAPI:
 @unittest.skip("Not set up to test directly, need to have a setup that spins up local HelloAPI instance.")
 class t_Hello(TestCase):
     def test_home(self):
+        _config.NonStandardElements.get('EXTERN_SERVER')
         base = settings['EXTERN_SERVER']
         print(f"GET test at {base}")
         result = requests.get(url=base)
