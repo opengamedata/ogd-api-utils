@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional
 
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
 
-def SendTestRequest(url:str, request:str, params:Dict[str, Any], verbose:bool) -> Optional[requests.Response]:
+def TestRequest(url:str, request:str, params:Dict[str, Any], verbose:bool) -> Optional[requests.Response]:
     """Utility function to make it easier to send requests to a remote server during unit testing.
 
     This function does some basic sanity checking of the target URL,
