@@ -22,17 +22,17 @@ class ServerConfigSchema(Schema):
         self._version   : SemanticVersion
 
         if "API_VERSION" in all_elements.keys():
-            self._version = ServerConfigSchema._parseVersion(all_elements["VER"], logger=logger)
+            self._version = ServerConfigSchema._parseVersion(all_elements["API_VERSION"], logger=logger)
         else:
             self._version = SemanticVersion.FromString("UNKNOWN VERSION")
-            logger.warning(f"{name} config does not have a 'VER' element; defaulting to version={self._version}", logging.WARN)
+            logger.warning(f"{name} config does not have an 'API_VERSION' element; defaulting to version={self._version}", logging.WARN)
         if "DEBUG_LEVEL" in all_elements.keys():
             self._dbg_level = ServerConfigSchema._parseDebugLevel(all_elements["DEBUG_LEVEL"], logger=logger)
         else:
             self._dbg_level = logging.INFO
             logger.warning(f"{name} config does not have a 'DEBUG_LEVEL' element; defaulting to dbg_level={self._dbg_level}", logging.WARN)
 
-        _used = {"DEBUG_LEVEL", "VER"}
+        _used = {"DEBUG_LEVEL", "API_VERSION"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 
