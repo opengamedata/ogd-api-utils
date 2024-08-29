@@ -6,7 +6,7 @@ on:
   workflow_call:
   push:
     paths:
-    - '.github/workflows/APIUtils_test_APIResponse.yml'
+    - '.github/workflows/TEST_APIResponse.yml'
     - '.github/actions/test_config/**'
     - 'tests/cases/utils/t_APIResponse.py'
     - 'tests/config/**'

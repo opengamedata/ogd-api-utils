@@ -6,7 +6,7 @@ on:
   workflow_call:
   push:
     paths:
-    - '.github/workflows/APIUtils_test_ServerConfigSchema.yml'
+    - '.github/workflows/TEST_ServerConfigSchema.yml'
     - '.github/actions/test_config/**'
     - 'tests/cases/schemas/t_ServerConfigSchema.py'
     - 'tests/config/**'
