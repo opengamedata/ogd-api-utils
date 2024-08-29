@@ -30,7 +30,6 @@ class t_Hello_local(TestCase):
         cls.application.secret_key = b'thisisafakesecretkey'
 
         _cfg_elems = {
-            "VER" : "0.0.0-Testing", # need this until we get the new release of ogd-core.
             "API_VERSION" : "0.0.0-Testing",
             "DEBUG_LEVEL" : "DEBUG"
         }
@@ -43,19 +42,13 @@ class t_Hello_local(TestCase):
     def tearDownClass(cls):
         pass
 
-    def test_home(self):
-        _url = "/"
-        Logger.Log(f"GET test at {_url}")
-        result = self.server.get(_url)
-        self.assertNotEqual(result, None)
-        Logger.Log(f"Result: {result}")
-
     def test_get(self):
         _url = "/hello"
         Logger.Log(f"GET test at {_url}")
         result = self.server.get(_url)
         self.assertNotEqual(result, None)
-        Logger.Log(f"Result: {result}")
+        self.assertEqual(result.status, "200 OK")
+        Logger.Log(f"Result: {result}, with status '{result.status}', and data <{result.data}>")
 
     def test_post(self):
         _url = f"/hello"
@@ -65,8 +58,7 @@ class t_Hello_local(TestCase):
         Logger.Log(f"Result: {result}")
 
     def test_put(self):
-        base = settings['EXTERN_SERVER']
-        url = f"{base}/hello"
+        url = f"/hello"
         Logger.Log(f"PUT test at {url}")
         result = self.server.put(url)
         self.assertNotEqual(result, None)
