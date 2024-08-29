@@ -1,8 +1,8 @@
 # import libraries
 import logging
+import json
 import requests
 import unittest
-from multiprocessing import Process
 from unittest import TestCase
 # import 3rd-party libraries
 from flask import Flask
@@ -14,14 +14,16 @@ from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
 from src.ogd.apis.HelloAPI import HelloAPI
 from tests.config.t_config import settings
 
-_config = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
 
 class t_Hello_local(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
+        # 1. Get testing config
+        cls.testing_config = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
+
+        # 2. Set up local Flask app to run tests
         cls.application = Flask(__name__)
-        cls.application.logger.setLevel('DEBUG')
+        cls.application.logger.setLevel('DEBUG' if cls.testing_config.Verbose else 'INFO')
         cls.application.secret_key = b'thisisafakesecretkey'
 
         _cfg_elems = {
@@ -35,75 +37,89 @@ class t_Hello_local(TestCase):
 
     def test_get(self):
         _url = "/hello"
-        Logger.Log(f"GET test at {_url}")
+        # 1. Run request
+        self.application.logger.debug(f"GET test at {_url}")
         result = self.server.get(_url)
+        self.application.logger.debug(f"Result: status '{result.status}', and data <{result.data}>")
+        body = json.loads(result.get_data(as_text=True))
+        # 2. Perform assertions
         self.assertNotEqual(result, None)
         self.assertEqual(result.status, "200 OK")
-        Logger.Log(f"Result: {result}, with status '{result.status}', and data <{result.data}>")
+        self.assertEqual(body.get("type"), "GET")
+        self.assertEqual(body.get("val"), "null")
+        self.assertEqual(body.get("msg"), "Hello! You GETted successfully!")
+        self.assertEqual(body.get("status"), "SUCCESS")
 
     def test_post(self):
         _url = f"/hello"
-        Logger.Log(f"POST test at {_url}")
+        # 1. Run request
+        self.application.logger.debug(f"POST test at {_url}")
         result = self.server.post(_url)
+        self.application.logger.debug(f"Result: status '{result.status}', and data <{result.data}>")
+        body = json.loads(result.get_data(as_text=True))
+        # 2. Perform assertions
         self.assertNotEqual(result, None)
-        Logger.Log(f"Result: {result}")
+        self.assertEqual(result.status, "200 OK")
+        self.assertEqual(body.get("type"), "POST")
+        self.assertEqual(body.get("val"), "null")
+        self.assertEqual(body.get("msg"), "Hello! You POSTed successfully!")
+        self.assertEqual(body.get("status"), "SUCCESS")
 
     def test_put(self):
         url = f"/hello"
-        Logger.Log(f"PUT test at {url}")
+        # 1. Run request
+        self.application.logger.debug(f"PUT test at {url}")
         result = self.server.put(url)
+        self.application.logger.debug(f"Result: status '{result.status}', and data <{result.data}>")
+        body = json.loads(result.get_data(as_text=True))
+        # 2. Perform assertions
         self.assertNotEqual(result, None)
-        Logger.Log(f"Result: {result}")
+        self.assertEqual(result.status, "200 OK")
+        self.assertEqual(body.get("type"), "PUT")
+        self.assertEqual(body.get("val"), "null")
+        self.assertEqual(body.get("msg"), "Hello! You PUTted successfully!")
+        self.assertEqual(body.get("status"), "SUCCESS")
 
 class t_Hello_remote(TestCase):
+    DEFAULT_ADDRESS = "127.0.0.1:5000"
+
     @classmethod
     def setUpClass(cls) -> None:
-        Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
-        cls.application = Flask(__name__)
-        cls.application.logger.setLevel('DEBUG')
-        cls.application.secret_key = b'thisisafakesecretkey'
+        testing_config = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
+        cls.base_url = testing_config.NonStandardElements.get("REMOTE_ADDRESS", t_Hello_remote.DEFAULT_ADDRESS)
 
-        _cfg_elems = {
-            "API_VERSION" : "0.0.0-Testing",
-            "DEBUG_LEVEL" : "DEBUG"
-        }
-        _cfg = ServerConfigSchema(name="HelloAPITestServer", all_elements=_cfg_elems, logger=cls.application.logger)
-        HelloAPI.register(app=cls.application, server_config=_cfg)
+        _level = logging.DEBUG if testing_config.Verbose else logging.INFO
+        Logger.InitializeLogger(level=_level, use_logfile=False)
 
-        cls.server = cls.application.test_client()
-
-    @classmethod
-    def tearDownClass(cls):
-        pass
-
-    @unittest.skip("Not yet set up to test Hello remote deploy.")
-    def test_home(self):
-        _config.NonStandardElements.get('EXTERN_SERVER')
-        base = settings['EXTERN_SERVER']
-        print(f"GET test at {base}")
-        result = self.server.get(url=base)
-        self.assertNotEqual(result, None)
-
-    @unittest.skip("Not yet set up to test Hello remote deploy.")
+    @unittest.skip("Not yet set up to test Hello remotely.")
     def test_get(self):
-        base = settings['EXTERN_SERVER']
-        url = f"{base}/hello"
-        print(f"GET test at {url}")
-        result = self.server.get(url=url)
-        self.assertNotEqual(result, None)
+        url = f"{self.base_url}/hello"
+        Logger.Log(f"GET test at {url}", logging.DEBUG)
+        try:
+            result = requests.get(url=url)
+        except Exception as err:
+            self.fail(str(err))
+        else:
+            self.assertNotEqual(result, None)
 
-    @unittest.skip("Not yet set up to test Hello remote deploy.")
+    @unittest.skip("Not yet set up to test Hello remotely.")
     def test_post(self):
-        base = settings['EXTERN_SERVER']
-        url = f"{base}/hello"
-        print(f"POST test at {url}")
-        result = self.server.post(url=url)
-        self.assertNotEqual(result, None)
+        url = f"{self.base_url}/hello"
+        Logger.Log(f"POST test at {url}", logging.DEBUG)
+        try:
+            result = requests.post(url=url)
+        except Exception as err:
+            self.fail(str(err))
+        else:
+            self.assertNotEqual(result, None)
 
-    @unittest.skip("Not yet set up to test Hello remote deploy.")
+    @unittest.skip("Not yet set up to test Hello remotely.")
     def test_put(self):
-        base = settings['EXTERN_SERVER']
-        url = f"{base}/hello"
-        print(f"PUT test at {url}")
-        result = self.server.put(url=url)
-        self.assertNotEqual(result, None)
+        url = f"{self.base_url}/hello"
+        Logger.Log(f"PUT test at {url}", logging.DEBUG)
+        try:
+            result = requests.put(url=url)
+        except Exception as err:
+            self.fail(str(err))
+        else:
+            self.assertNotEqual(result, None)
