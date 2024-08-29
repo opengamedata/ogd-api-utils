@@ -1,6 +1,6 @@
 # import libraries
-import logging
 import json
+import logging
 import requests
 import unittest
 from unittest import TestCase
@@ -9,6 +9,7 @@ from flask import Flask
 # import ogd-core libraries.
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
 from ogd.core.utils.Logger import Logger
+Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 # import locals
 from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
 from src.ogd.apis.HelloAPI import HelloAPI
@@ -22,6 +23,7 @@ class t_Hello_local(TestCase):
         _testing_cfg = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
         _level     = logging.DEBUG if _testing_cfg.Verbose else logging.INFO
         _str_level =       "DEBUG" if _testing_cfg.Verbose else "INFO"
+        Logger.std_logger.setLevel(_level)
 
         # 2. Set up local Flask app to run tests
         cls.application = Flask(__name__)
@@ -40,9 +42,9 @@ class t_Hello_local(TestCase):
     def test_get(self):
         _url = "/hello"
         # 1. Run request
-        self.application.logger.debug(f"GET test at {_url}")
+        Logger.Log(f"GET test at {_url}", logging.DEBUG)
         result = self.server.get(_url)
-        self.application.logger.debug(f"Result: status '{result.status}', and data <{result.data}>")
+        Logger.Log(f"Result: status '{result.status}', and data <{result.data}>", logging.DEBUG)
         body = json.loads(result.get_data(as_text=True))
         # 2. Perform assertions
         self.assertNotEqual(result, None)
@@ -55,9 +57,9 @@ class t_Hello_local(TestCase):
     def test_post(self):
         _url = f"/hello"
         # 1. Run request
-        self.application.logger.debug(f"POST test at {_url}")
+        Logger.Log(f"POST test at {_url}", logging.DEBUG)
         result = self.server.post(_url)
-        self.application.logger.debug(f"Result: status '{result.status}', and data <{result.data}>")
+        Logger.Log(f"Result: status '{result.status}', and data <{result.data}>", logging.DEBUG)
         body = json.loads(result.get_data(as_text=True))
         # 2. Perform assertions
         self.assertNotEqual(result, None)
@@ -70,9 +72,9 @@ class t_Hello_local(TestCase):
     def test_put(self):
         url = f"/hello"
         # 1. Run request
-        self.application.logger.debug(f"PUT test at {url}")
+        Logger.Log(f"PUT test at {url}", logging.DEBUG)
         result = self.server.put(url)
-        self.application.logger.debug(f"Result: status '{result.status}', and data <{result.data}>")
+        Logger.Log(f"Result: status '{result.status}', and data <{result.data}>", logging.DEBUG)
         body = json.loads(result.get_data(as_text=True))
         # 2. Perform assertions
         self.assertNotEqual(result, None)
@@ -91,7 +93,7 @@ class t_Hello_remote(TestCase):
         cls.base_url = testing_config.NonStandardElements.get("REMOTE_ADDRESS", t_Hello_remote.DEFAULT_ADDRESS)
 
         _level = logging.DEBUG if testing_config.Verbose else logging.INFO
-        Logger.InitializeLogger(level=_level, use_logfile=False)
+        Logger.std_logger.setLevel(_level)
 
     @unittest.skip("Not yet set up to test Hello remotely.")
     def test_get(self):
@@ -102,6 +104,7 @@ class t_Hello_remote(TestCase):
         except Exception as err:
             self.fail(str(err))
         else:
+            Logger.Log(f"Result: status '{result.status_code}', and data <{result.json()}>", logging.DEBUG)
             self.assertNotEqual(result, None)
 
     @unittest.skip("Not yet set up to test Hello remotely.")
@@ -113,6 +116,7 @@ class t_Hello_remote(TestCase):
         except Exception as err:
             self.fail(str(err))
         else:
+            Logger.Log(f"Result: status '{result.status_code}', and data <{result.json()}>", logging.DEBUG)
             self.assertNotEqual(result, None)
 
     @unittest.skip("Not yet set up to test Hello remotely.")
@@ -124,4 +128,5 @@ class t_Hello_remote(TestCase):
         except Exception as err:
             self.fail(str(err))
         else:
+            Logger.Log(f"Result: status '{result.status_code}', and data <{result.json()}>", logging.DEBUG)
             self.assertNotEqual(result, None)
