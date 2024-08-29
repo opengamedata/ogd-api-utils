@@ -70,10 +70,10 @@ class t_Hello_local(TestCase):
         self.assertEqual(body.get("status"), "SUCCESS")
 
     def test_put(self):
-        url = f"/hello"
+        _url = f"/hello"
         # 1. Run request
-        Logger.Log(f"PUT test at {url}", logging.DEBUG)
-        result = self.server.put(url)
+        Logger.Log(f"PUT test at {_url}", logging.DEBUG)
+        result = self.server.put(_url)
         Logger.Log(f"Result: status '{result.status}', and data <{result.data}>", logging.DEBUG)
         body = json.loads(result.get_data(as_text=True))
         # 2. Perform assertions
@@ -97,10 +97,10 @@ class t_Hello_remote(TestCase):
 
     @unittest.skip("Not yet set up to test Hello remotely.")
     def test_get(self):
-        url = f"{self.base_url}/hello"
-        Logger.Log(f"GET test at {url}", logging.DEBUG)
+        _url = f"{self.base_url}/hello"
+        Logger.Log(f"GET test at {_url}", logging.DEBUG)
         try:
-            result = requests.get(url=url)
+            result = requests.get(url=_url)
         except Exception as err:
             self.fail(str(err))
         else:
@@ -109,10 +109,10 @@ class t_Hello_remote(TestCase):
 
     @unittest.skip("Not yet set up to test Hello remotely.")
     def test_post(self):
-        url = f"{self.base_url}/hello"
-        Logger.Log(f"POST test at {url}", logging.DEBUG)
+        _url = f"{self.base_url}/hello"
+        Logger.Log(f"POST test at {_url}", logging.DEBUG)
         try:
-            result = requests.post(url=url)
+            result = requests.post(url=_url)
         except Exception as err:
             self.fail(str(err))
         else:
@@ -121,10 +121,10 @@ class t_Hello_remote(TestCase):
 
     @unittest.skip("Not yet set up to test Hello remotely.")
     def test_put(self):
-        url = f"{self.base_url}/hello"
-        Logger.Log(f"PUT test at {url}", logging.DEBUG)
+        _url = f"{self.base_url}/hello"
+        Logger.Log(f"PUT test at {_url}", logging.DEBUG)
         try:
-            result = requests.put(url=url)
+            result = requests.put(url=_url)
         except Exception as err:
             self.fail(str(err))
         else:
