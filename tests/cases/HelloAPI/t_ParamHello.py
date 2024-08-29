@@ -1,60 +1,137 @@
 # import libraries
+import json
 import logging
 import requests
 import unittest
-from multiprocessing import Process
 from unittest import TestCase
 # import 3rd-party libraries
 from flask import Flask
 # import ogd-core libraries.
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
 from ogd.core.utils.Logger import Logger
+Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 # import locals
 from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
 from src.ogd.apis.HelloAPI import HelloAPI
 from tests.config.t_config import settings
 
 class t_ParamHello_local(TestCase):
-    @unittest.skip("Not yet set up to test ParamHello locally.")
-    def test_home(self):
-        base = settings['EXTERN_SERVER']
-        print(f"GET test at {base}")
-        result = requests.get(url=base)
-        if result is not None:
-            print(f"Result of get:\n{result.text}")
-        else:
-            print(f"No response to GET request.")
-        print()
+    @classmethod
+    def setUpClass(cls) -> None:
+        # 1. Get testing config
+        _testing_cfg = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
+        _level     = logging.DEBUG if _testing_cfg.Verbose else logging.INFO
+        _str_level =       "DEBUG" if _testing_cfg.Verbose else "INFO"
+        Logger.std_logger.setLevel(_level)
 
-    @unittest.skip("Not yet set up to test ParamHello locally.")
+        # 2. Set up local Flask app to run tests
+        cls.application = Flask(__name__)
+        cls.application.logger.setLevel(_level)
+        cls.application.secret_key = b'thisisafakesecretkey'
+
+        _server_cfg_elems = {
+            "API_VERSION" : "0.0.0-Testing",
+            "DEBUG_LEVEL" : _str_level
+        }
+        _server_cfg = ServerConfigSchema(name="HelloAPITestServer", all_elements=_server_cfg_elems, logger=cls.application.logger)
+        HelloAPI.register(app=cls.application, server_config=_server_cfg)
+
+        cls.server = cls.application.test_client()
+
     def test_get(self):
-        base = settings['EXTERN_SERVER']
-        url = f"{base}/hello"
-        print(f"GET test at {url}")
-        result = requests.get(url=url)
-        if result is not None:
-            print(f"Result of get:\n{result.text}")
-        else:
-            print(f"No response to GET request.")
+        param = "Tester"
+        _url = f"/p_hello/{param}"
+        # 1. Run request
+        self.application.logger.debug(f"GET test at {_url}")
+        result = self.server.get(_url)
+        self.application.logger.debug(f"Result: status '{result.status}', and data <{result.data}>")
+        body = json.loads(result.get_data(as_text=True))
+        # 2. Perform assertions
+        self.assertNotEqual(result, None)
+        self.assertEqual(result.status, "200 OK")
+        self.assertEqual(body.get("type"), "GET")
+        self.assertEqual(body.get("val"), "null")
+        self.assertEqual(body.get("msg"), f"Hello {param}! You GETted successfully!")
+        self.assertEqual(body.get("status"), "SUCCESS")
 
-    @unittest.skip("Not yet set up to test ParamHello locally.")
     def test_post(self):
-        base = settings['EXTERN_SERVER']
-        url = f"{base}/hello"
-        print(f"POST test at {url}")
-        result = requests.post(url=url)
-        if result is not None:
-            print(f"Result of post:\n{result.text}")
-        else:
-            print(f"No response to POST request.")
+        param = "Tester"
+        _url = f"/p_hello/{param}"
+        # 1. Run request
+        self.application.logger.debug(f"POST test at {_url}")
+        result = self.server.post(_url)
+        self.application.logger.debug(f"Result: status '{result.status}', and data <{result.data}>")
+        body = json.loads(result.get_data(as_text=True))
+        # 2. Perform assertions
+        self.assertNotEqual(result, None)
+        self.assertEqual(result.status, "200 OK")
+        self.assertEqual(body.get("type"), "POST")
+        self.assertEqual(body.get("val"), "null")
+        self.assertEqual(body.get("msg"), f"Hello {param}! You POSTed successfully!")
+        self.assertEqual(body.get("status"), "SUCCESS")
 
-    @unittest.skip("Not yet set up to test ParamHello locally.")
     def test_put(self):
-        base = settings['EXTERN_SERVER']
-        url = f"{base}/hello"
-        print(f"PUT test at {url}")
-        result = requests.put(url=url)
-        if result is not None:
-            print(f"Result of put:\n{result.text}")
+        param = "Tester"
+        _url = f"/p_hello/{param}"
+        # 1. Run request
+        self.application.logger.debug(f"PUT test at {_url}")
+        result = self.server.put(_url)
+        self.application.logger.debug(f"Result: status '{result.status}', and data <{result.data}>")
+        body = json.loads(result.get_data(as_text=True))
+        # 2. Perform assertions
+        self.assertNotEqual(result, None)
+        self.assertEqual(result.status, "200 OK")
+        self.assertEqual(body.get("type"), "PUT")
+        self.assertEqual(body.get("val"), "null")
+        self.assertEqual(body.get("msg"), f"Hello {param}! You PUTted successfully!")
+        self.assertEqual(body.get("status"), "SUCCESS")
+
+class t_ParamHello_remote(TestCase):
+    DEFAULT_ADDRESS = "127.0.0.1:5000"
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        testing_config = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
+        cls.base_url = testing_config.NonStandardElements.get("REMOTE_ADDRESS", t_ParamHello_remote.DEFAULT_ADDRESS)
+
+        _level = logging.DEBUG if testing_config.Verbose else logging.INFO
+        Logger.std_logger.setLevel(_level)
+
+    @unittest.skip("Not yet set up to test ParamHello remotely.")
+    def test_get(self):
+        param = "Tester"
+        _url = f"{self.base_url}/p_hello/{param}"
+        Logger.Log(f"GET test at {_url}", logging.DEBUG)
+        try:
+            result = requests.get(url=_url)
+        except Exception as err:
+            self.fail(str(err))
         else:
-            print(f"No response to PUT request.")
+            Logger.Log(f"Result: status '{result.status_code}', and data <{result.json()}>", logging.DEBUG)
+            self.assertNotEqual(result, None)
+
+    @unittest.skip("Not yet set up to test ParamHello remotely.")
+    def test_post(self):
+        param = "Tester"
+        _url = f"{self.base_url}/p_hello/{param}"
+        Logger.Log(f"POST test at {_url}", logging.DEBUG)
+        try:
+            result = requests.post(url=_url)
+        except Exception as err:
+            self.fail(str(err))
+        else:
+            Logger.Log(f"Result: status '{result.status_code}', and data <{result.json()}>", logging.DEBUG)
+            self.assertNotEqual(result, None)
+
+    @unittest.skip("Not yet set up to test ParamHello remotely.")
+    def test_put(self):
+        param = "Tester"
+        _url = f"{self.base_url}/p_hello/{param}"
+        Logger.Log(f"PUT test at {_url}", logging.DEBUG)
+        try:
+            result = requests.put(url=_url)
+        except Exception as err:
+            self.fail(str(err))
+        else:
+            Logger.Log(f"Result: status '{result.status_code}', and data <{result.json()}>", logging.DEBUG)
+            self.assertNotEqual(result, None)
