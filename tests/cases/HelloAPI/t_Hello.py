@@ -59,7 +59,6 @@ class t_Hello_local(TestCase):
         self.assertNotEqual(result, None)
         Logger.Log(f"Result: {result}")
 
-@unittest.skip("Not yet set up to test remote deploy.")
 class t_Hello_remote(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -81,6 +80,7 @@ class t_Hello_remote(TestCase):
     def tearDownClass(cls):
         pass
 
+    @unittest.skip("Not yet set up to test Hello remote deploy.")
     def test_home(self):
         _config.NonStandardElements.get('EXTERN_SERVER')
         base = settings['EXTERN_SERVER']
@@ -88,6 +88,7 @@ class t_Hello_remote(TestCase):
         result = self.server.get(url=base)
         self.assertNotEqual(result, None)
 
+    @unittest.skip("Not yet set up to test Hello remote deploy.")
     def test_get(self):
         base = settings['EXTERN_SERVER']
         url = f"{base}/hello"
@@ -95,6 +96,7 @@ class t_Hello_remote(TestCase):
         result = self.server.get(url=url)
         self.assertNotEqual(result, None)
 
+    @unittest.skip("Not yet set up to test Hello remote deploy.")
     def test_post(self):
         base = settings['EXTERN_SERVER']
         url = f"{base}/hello"
@@ -102,6 +104,7 @@ class t_Hello_remote(TestCase):
         result = self.server.post(url=url)
         self.assertNotEqual(result, None)
 
+    @unittest.skip("Not yet set up to test Hello remote deploy.")
     def test_put(self):
         base = settings['EXTERN_SERVER']
         url = f"{base}/hello"

@@ -14,8 +14,8 @@ from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
 from src.ogd.apis.HelloAPI import HelloAPI
 from tests.config.t_config import settings
 
-@unittest.skip("Not yet set up to test locally.")
 class t_ParamHello_local(TestCase):
+    @unittest.skip("Not yet set up to test ParamHello locally.")
     def test_home(self):
         base = settings['EXTERN_SERVER']
         print(f"GET test at {base}")
@@ -26,6 +26,7 @@ class t_ParamHello_local(TestCase):
             print(f"No response to GET request.")
         print()
 
+    @unittest.skip("Not yet set up to test ParamHello locally.")
     def test_get(self):
         base = settings['EXTERN_SERVER']
         url = f"{base}/hello"
@@ -36,6 +37,7 @@ class t_ParamHello_local(TestCase):
         else:
             print(f"No response to GET request.")
 
+    @unittest.skip("Not yet set up to test ParamHello locally.")
     def test_post(self):
         base = settings['EXTERN_SERVER']
         url = f"{base}/hello"
@@ -46,6 +48,7 @@ class t_ParamHello_local(TestCase):
         else:
             print(f"No response to POST request.")
 
+    @unittest.skip("Not yet set up to test ParamHello locally.")
     def test_put(self):
         base = settings['EXTERN_SERVER']
         url = f"{base}/hello"
