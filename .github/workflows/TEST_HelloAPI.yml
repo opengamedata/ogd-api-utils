@@ -36,9 +36,9 @@ jobs:
 
   # 2. Build & configure remote environments
 
-  # 3. Perform export
+  # 3. Perform tests
     - name: Execute testbed
-      run: python -m unittest ./tests/cases/utils/t_HelloAPI.py 
+      run: python -m unittest discover ./tests/cases/t_HelloAI/ "t_*.py"
 
   # 4. Cleanup & complete
     - name: Upload logs as artifacts
