@@ -6,10 +6,9 @@ from multiprocessing import Process
 from unittest import TestCase
 # import 3rd-party libraries
 from flask import Flask
-# import ogd libraries.
+# import ogd-core libraries.
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
 from ogd.core.utils.Logger import Logger
-from ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
 # import locals
 from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
 from src.ogd.apis.HelloAPI import HelloAPI
@@ -19,11 +18,62 @@ _config = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=sett
 
 class t_HelloAPI:
     @staticmethod
-    def RunAll(self):
+    def RunAll():
         pass
 
-# TODO : Set up class to spin up local HelloAPI app for testing.
 class t_Hello_local(TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
+        cls.application = Flask(__name__)
+        cls.application.logger.setLevel('DEBUG')
+        cls.application.secret_key = b'thisisafakesecretkey'
+
+        _cfg_elems = {
+            "VER" : "0.0.0-Testing", # need this until we get the new release of ogd-core.
+            "API_VERSION" : "0.0.0-Testing",
+            "DEBUG_LEVEL" : "DEBUG"
+        }
+        _cfg = ServerConfigSchema(name="HelloAPITestServer", all_elements=_cfg_elems, logger=cls.application.logger)
+        HelloAPI.register(app=cls.application, server_config=_cfg)
+
+        cls.server = cls.application.test_client()
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
+
+    def test_home(self):
+        _url = "/"
+        Logger.Log(f"GET test at {_url}")
+        result = self.server.get(_url)
+        self.assertNotEqual(result, None)
+        Logger.Log(f"Result: {result}")
+
+    def test_get(self):
+        _url = "/hello"
+        Logger.Log(f"GET test at {_url}")
+        result = self.server.get(_url)
+        self.assertNotEqual(result, None)
+        Logger.Log(f"Result: {result}")
+
+    def test_post(self):
+        _url = f"/hello"
+        Logger.Log(f"POST test at {_url}")
+        result = self.server.post(_url)
+        self.assertNotEqual(result, None)
+        Logger.Log(f"Result: {result}")
+
+    def test_put(self):
+        base = settings['EXTERN_SERVER']
+        url = f"{base}/hello"
+        Logger.Log(f"PUT test at {url}")
+        result = self.server.put(url)
+        self.assertNotEqual(result, None)
+        Logger.Log(f"Result: {result}")
+
+@unittest.skip("Not yet set up to test remote deploy.")
+class t_Hello_remote(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
@@ -38,18 +88,11 @@ class t_Hello_local(TestCase):
         _cfg = ServerConfigSchema(name="HelloAPITestServer", all_elements=_cfg_elems, logger=cls.application.logger)
         HelloAPI.register(app=cls.application, server_config=_cfg)
 
-        # cls.server = Process(target=cls.application.run, )
-        # cls.server.start()
         cls.server = cls.application.test_client()
 
     @classmethod
     def tearDownClass(cls):
         pass
-        # cls.server.terminate()
-        # cls.server.join()
-
-# if __name__ == '__main__':
-# 	application.run(debug=True)
 
     def test_home(self):
         _config.NonStandardElements.get('EXTERN_SERVER')
@@ -79,7 +122,7 @@ class t_Hello_local(TestCase):
         result = self.server.put(url=url)
         self.assertNotEqual(result, None)
 
-@unittest.skip("Not set up to test directly, need to have a setup that spins up local HelloAPI instance.")
+@unittest.skip("Not yet set up to test locally.")
 class t_ParamHello_local(TestCase):
     def test_home(self):
         base = settings['EXTERN_SERVER']
@@ -121,7 +164,7 @@ class t_ParamHello_local(TestCase):
         else:
             print(f"No response to PUT request.")
 
-@unittest.skip("Not set up to test directly, need to have a setup that spins up local HelloAPI instance.")
+@unittest.skip("Not set up to test locally.")
 class t_Version(TestCase):
     def test_get(self):
         base = settings['EXTERN_SERVER']
