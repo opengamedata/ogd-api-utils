@@ -15,7 +15,6 @@ from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
 from src.ogd.apis.HelloAPI import HelloAPI
 from tests.config.t_config import settings
 
-
 class t_Hello_local(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
