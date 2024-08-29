@@ -33,10 +33,6 @@ class t_Hello_local(TestCase):
 
         cls.server = cls.application.test_client()
 
-    @classmethod
-    def tearDownClass(cls):
-        pass
-
     def test_get(self):
         _url = "/hello"
         Logger.Log(f"GET test at {_url}")
