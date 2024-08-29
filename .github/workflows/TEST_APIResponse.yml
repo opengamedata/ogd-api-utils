@@ -38,7 +38,7 @@ jobs:
 
   # 3. Perform export
     - name: Execute testbed
-      run: python -m unittest ./tests/cases/utils/t_APIResponse.py 
+      run: python -m unittest discover ./tests/cases/utils/t_APIResponse.py  "t_*.py"
 
   # 4. Cleanup & complete
     - name: Upload logs as artifacts
