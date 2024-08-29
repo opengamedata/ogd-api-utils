@@ -14,6 +14,7 @@ from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
 from ogd.core.utils.Logger import Logger
 Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 # import locals
+sys.path.insert(0, str(Path(os.getcwd()) / "src"))
 from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
 from src.ogd.apis.HelloAPI import HelloAPI
 from tests.config.t_config import settings
@@ -95,8 +96,6 @@ class t_Hello_remote(TestCase):
     def setUpClass(cls) -> None:
         testing_config = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
         cls.base_url = testing_config.NonStandardElements.get("REMOTE_ADDRESS", t_Hello_remote.DEFAULT_ADDRESS)
-
-        sys.path.insert(0, str(Path(os.getcwd()) / "src"))
 
         _level = logging.DEBUG if testing_config.Verbose else logging.INFO
         Logger.std_logger.setLevel(_level)
