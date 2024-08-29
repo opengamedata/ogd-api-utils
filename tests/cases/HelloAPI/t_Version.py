@@ -1,8 +1,11 @@
 # import libraries
 import json
 import logging
+import os
 import requests
+import sys
 import unittest
+from pathlib import Path
 from unittest import TestCase
 # import 3rd-party libraries
 from flask import Flask
@@ -23,6 +26,8 @@ class t_Version_local(TestCase):
         _level     = logging.DEBUG if _testing_cfg.Verbose else logging.INFO
         _str_level =       "DEBUG" if _testing_cfg.Verbose else "INFO"
         Logger.std_logger.setLevel(_level)
+
+        sys.path.insert(0, str(Path(os.getcwd()) / "src"))
 
         # 2. Set up local Flask app to run tests
         cls.application = Flask(__name__)
