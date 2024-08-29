@@ -16,11 +16,6 @@ from tests.config.t_config import settings
 
 _config = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
 
-class t_HelloAPI:
-    @staticmethod
-    def RunAll():
-        pass
-
 class t_Hello_local(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -113,57 +108,3 @@ class t_Hello_remote(TestCase):
         print(f"PUT test at {url}")
         result = self.server.put(url=url)
         self.assertNotEqual(result, None)
-
-@unittest.skip("Not yet set up to test locally.")
-class t_ParamHello_local(TestCase):
-    def test_home(self):
-        base = settings['EXTERN_SERVER']
-        print(f"GET test at {base}")
-        result = requests.get(url=base)
-        if result is not None:
-            print(f"Result of get:\n{result.text}")
-        else:
-            print(f"No response to GET request.")
-        print()
-
-    def test_get(self):
-        base = settings['EXTERN_SERVER']
-        url = f"{base}/hello"
-        print(f"GET test at {url}")
-        result = requests.get(url=url)
-        if result is not None:
-            print(f"Result of get:\n{result.text}")
-        else:
-            print(f"No response to GET request.")
-
-    def test_post(self):
-        base = settings['EXTERN_SERVER']
-        url = f"{base}/hello"
-        print(f"POST test at {url}")
-        result = requests.post(url=url)
-        if result is not None:
-            print(f"Result of post:\n{result.text}")
-        else:
-            print(f"No response to POST request.")
-
-    def test_put(self):
-        base = settings['EXTERN_SERVER']
-        url = f"{base}/hello"
-        print(f"PUT test at {url}")
-        result = requests.put(url=url)
-        if result is not None:
-            print(f"Result of put:\n{result.text}")
-        else:
-            print(f"No response to PUT request.")
-
-@unittest.skip("Not set up to test locally.")
-class t_Version(TestCase):
-    def test_get(self):
-        base = settings['EXTERN_SERVER']
-        url = f"{base}/hello"
-        print(f"GET test at {url}")
-        result = requests.get(url=url)
-        if result is not None:
-            print(f"Result of get:\n{result.text}")
-        else:
-            print(f"No response to GET request.")
