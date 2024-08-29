@@ -19,21 +19,21 @@ class t_Hello_local(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         # 1. Get testing config
-        _testing_config = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
-        _level     = logging.DEBUG if _testing_config.Verbose else logging.INFO
-        _str_level =       "DEBUG" if _testing_config.Verbose else "INFO"
+        _testing_cfg = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
+        _level     = logging.DEBUG if _testing_cfg.Verbose else logging.INFO
+        _str_level =       "DEBUG" if _testing_cfg.Verbose else "INFO"
 
         # 2. Set up local Flask app to run tests
         cls.application = Flask(__name__)
         cls.application.logger.setLevel(_level)
         cls.application.secret_key = b'thisisafakesecretkey'
 
-        _cfg_elems = {
+        _server_cfg_elems = {
             "API_VERSION" : "0.0.0-Testing",
             "DEBUG_LEVEL" : _str_level
         }
-        _cfg = ServerConfigSchema(name="HelloAPITestServer", all_elements=_cfg_elems, logger=cls.application.logger)
-        HelloAPI.register(app=cls.application, server_config=_cfg)
+        _server_cfg = ServerConfigSchema(name="HelloAPITestServer", all_elements=_server_cfg_elems, logger=cls.application.logger)
+        HelloAPI.register(app=cls.application, server_config=_server_cfg)
 
         cls.server = cls.application.test_client()
 
