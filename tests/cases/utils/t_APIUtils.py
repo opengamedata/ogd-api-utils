@@ -5,9 +5,14 @@ from unittest import TestCase
 # import ogd libraries.
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
 from ogd.core.utils.Logger import Logger
+# Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 # import locals
-from src.ogd.apis.utils.APIUtils import parse_list, gen_interface
-from tests.config.t_config import settings
+try:
+    from src.ogd.apis.utils.APIUtils import parse_list, gen_interface
+except ModuleNotFoundError as err:
+    Logger.Log(f"Import error: {err}")
+finally:
+    from tests.config.t_config import settings
 
 _config = TestConfigSchema.FromDict(name="APIUtilsTestConfig", all_elements=settings, logger=None)
 
@@ -19,7 +24,7 @@ class t_APIUtils:
 class t_ParseList(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
+        pass
 
     def test_parse_list_empty(self):
         list_str = "[]"

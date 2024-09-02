@@ -1,23 +1,23 @@
 # import libraries
 import json
 import logging
-import os
 import requests
-import sys
 import unittest
-from pathlib import Path
 from unittest import TestCase
 # import 3rd-party libraries
 from flask import Flask
 # import ogd-core libraries.
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
 from ogd.core.utils.Logger import Logger
-Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
+# Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 # import locals
-sys.path.insert(0, str(Path(os.getcwd()) / "src"))
-from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
-from src.ogd.apis.HelloAPI import HelloAPI
-from tests.config.t_config import settings
+try:
+    from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
+    from src.ogd.apis.HelloAPI import HelloAPI
+except ModuleNotFoundError as err:
+    Logger.Log(f"Import error: {err}")
+finally:
+    from tests.config.t_config import settings
 
 class t_Hello_local(TestCase):
     @classmethod
@@ -27,8 +27,6 @@ class t_Hello_local(TestCase):
         _level     = logging.DEBUG if _testing_cfg.Verbose else logging.INFO
         _str_level =       "DEBUG" if _testing_cfg.Verbose else "INFO"
         Logger.std_logger.setLevel(_level)
-
-        sys.path.insert(0, str(Path(os.getcwd()) / "src"))
 
         # 2. Set up local Flask app to run tests
         cls.application = Flask(__name__)
