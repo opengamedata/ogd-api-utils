@@ -1,7 +1,5 @@
-# Set up logging
-import logging
-from ogd.core.utils.Logger import Logger
-Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
+# Standard imports
+from unittest import defaultTestLoader, TestLoader, TestSuite, runner
 
 # Set up path
 import os, sys
@@ -9,18 +7,39 @@ from pprint import pprint
 from pathlib import Path
 
 sys.path.insert(0, str(Path(os.getcwd()) / "src"))
+# Set up logging
+import logging
+from ogd.core.utils.Logger import Logger
+Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 
-import unittest
-loader = unittest.TestLoader()
-print(f"Running discovery in {os.getcwd()}")
-tests = loader.discover('./tests/cases/HelloAPI/resources', pattern="t_Hello*.py", top_level_dir="./")
-print(f"Updated path:")
-pprint(sys.path[:5])
+from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
+from tests.config.t_config import settings
+
+_config = TestConfigSchema.FromDict(name="APIUtilsTestConfig", all_elements=settings, logger=None)
+
+# loader = TestLoader()
+suite = TestSuite()
+if _config.EnabledTests.get('CONFIG'):
+    print("***\nAdding t_ServerConfigSchema:")
+    suite.addTest(defaultTestLoader.discover('./tests/cases/schemas/', pattern="t_ServerConfigSchema.py", top_level_dir="./"))
+    print("Done\n***")
+if _config.EnabledTests.get('RESPONSE'):
+    print("***\nAdding t_APIResponse:")
+    suite.addTest(defaultTestLoader.discover('./tests/cases/utils/', pattern="t_APIResponse.py", top_level_dir="./"))
+    print("Done\n***")
+if _config.EnabledTests.get('UTILS'):
+    print("***\nAdding t_APIUtils:")
+    suite.addTest(defaultTestLoader.discover('./tests/cases/utils/', pattern="t_APIUtils.py", top_level_dir="./"))
+    print("Done\n***")
+if _config.EnabledTests.get('HELLO'):
+    print("***\nAdding test_Hello:")
+    suite.addTest(defaultTestLoader.discover('./tests/cases/t_HelloAPI', pattern="t_*.py", top_level_dir="./"))
+    print("Done\n***")
+
 print(f"Tests are:")
-for ts in tests._tests:
-    if isinstance(ts, unittest.TestSuite):
-        pprint([t._tests if isinstance(t, unittest.TestSuite) else t for t in ts])
+for ts in suite._tests:
+    if isinstance(ts, TestSuite):
+        pprint([t._tests if isinstance(t, TestSuite) else t for t in ts])
 
-testRunner = unittest.runner.TextTestRunner()
-testRunner.run(tests)
-print("Done with t_HelloAPI")
+testRunner = runner.TextTestRunner()
+testRunner.run(suite)
