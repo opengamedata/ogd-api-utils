@@ -11,13 +11,9 @@ from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
 from ogd.core.utils.Logger import Logger
 # Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 # import locals
-try:
-    from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
-    from src.ogd.apis.HelloAPI import HelloAPI
-except ModuleNotFoundError as err:
-    Logger.Log(f"Import error: {err}")
-finally:
-    from tests.config.t_config import settings
+from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
+from src.ogd.apis.HelloAPI import HelloAPI
+from tests.config.t_config import settings
 
 class t_Hello_local(TestCase):
     @classmethod
