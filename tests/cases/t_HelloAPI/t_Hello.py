@@ -41,9 +41,9 @@ class t_Hello_local(TestCase):
     def test_get(self):
         _url = "/hello"
         # 1. Run request
-        Logger.Log(f"GET test at {_url}", logging.DEBUG)
+        self.application.logger.debug(f"GET test at {_url}")
         result = self.server.get(_url)
-        Logger.Log(f"Result: status '{result.status}', and data <{result.data}>", logging.DEBUG)
+        self.application.logger.debug(f"Result: status '{result.status}', and data <{result.data}>")
         body = json.loads(result.get_data(as_text=True))
         # 2. Perform assertions
         self.assertNotEqual(result, None)
@@ -56,9 +56,9 @@ class t_Hello_local(TestCase):
     def test_post(self):
         _url = f"/hello"
         # 1. Run request
-        Logger.Log(f"POST test at {_url}", logging.DEBUG)
+        self.application.logger.debug(f"POST test at {_url}")
         result = self.server.post(_url)
-        Logger.Log(f"Result: status '{result.status}', and data <{result.data}>", logging.DEBUG)
+        self.application.logger.debug(f"Result: status '{result.status}', and data <{result.data}>")
         body = json.loads(result.get_data(as_text=True))
         # 2. Perform assertions
         self.assertNotEqual(result, None)
@@ -71,9 +71,9 @@ class t_Hello_local(TestCase):
     def test_put(self):
         _url = f"/hello"
         # 1. Run request
-        Logger.Log(f"PUT test at {_url}", logging.DEBUG)
+        self.application.logger.debug(f"PUT test at {_url}")
         result = self.server.put(_url)
-        Logger.Log(f"Result: status '{result.status}', and data <{result.data}>", logging.DEBUG)
+        self.application.logger.debug(f"Result: status '{result.status}', and data <{result.data}>")
         body = json.loads(result.get_data(as_text=True))
         # 2. Perform assertions
         self.assertNotEqual(result, None)
