@@ -41,9 +41,9 @@ def TestRequest(url:str, request:str, params:Dict[str, Any], verbose:bool) -> Op
         raise err
     else:
         if verbose:
-            print(f"Sent request to {result.url}")
+            print(f"Sent request to {url}")
             if result is not None:
-                print(f"Result of {request} request:\n{result.text}")
+                print(f"Result of {request} request from {result.url}:\n{result.text}")
             else:
                 print(f"No response to {request} request.")
             print()
