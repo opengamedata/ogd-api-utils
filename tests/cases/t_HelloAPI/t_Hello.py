@@ -9,9 +9,9 @@ from flask import Flask
 # import ogd-core libraries.
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
 from ogd.core.utils.Logger import Logger
-# Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 # import locals
 from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
+from src.ogd.apis.utils.TestRequest import TestRequest
 from src.ogd.apis.HelloAPI import HelloAPI
 from tests.config.t_config import settings
 
@@ -88,44 +88,42 @@ class t_Hello_remote(TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        testing_config = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
-        cls.base_url = testing_config.NonStandardElements.get("REMOTE_ADDRESS", t_Hello_remote.DEFAULT_ADDRESS)
+        cls.testing_config = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
+        cls.base_url = cls.testing_config.NonStandardElements.get("REMOTE_ADDRESS", t_Hello_remote.DEFAULT_ADDRESS)
 
-        _level = logging.DEBUG if testing_config.Verbose else logging.INFO
-        Logger.std_logger.setLevel(_level)
+        _level = logging.DEBUG if cls.testing_config.Verbose else logging.INFO
+        Logger.InitializeLogger(level=_level, use_logfile=False)
 
-    @unittest.skip("Not yet set up to test Hello remotely.")
     def test_get(self):
         _url = f"{self.base_url}/hello"
-        Logger.Log(f"GET test at {_url}", logging.DEBUG)
         try:
-            result = requests.get(url=_url)
+            result = TestRequest(url=_url, request="GET", params={}, logger=Logger.std_logger)
         except Exception as err:
             self.fail(str(err))
         else:
-            Logger.Log(f"Result: status '{result.status_code}', and data <{result.json()}>", logging.DEBUG)
+            if result is not None:
+                Logger.Log(f"Result: status '{result.status_code}', and data <{result.json()}>", logging.DEBUG)
             self.assertNotEqual(result, None)
 
-    @unittest.skip("Not yet set up to test Hello remotely.")
     def test_post(self):
         _url = f"{self.base_url}/hello"
-        Logger.Log(f"POST test at {_url}", logging.DEBUG)
         try:
-            result = requests.post(url=_url)
+            result = TestRequest(url=_url, request="POST", params={}, logger=Logger.std_logger)
         except Exception as err:
             self.fail(str(err))
         else:
-            Logger.Log(f"Result: status '{result.status_code}', and data <{result.json()}>", logging.DEBUG)
+            if result is not None:
+                Logger.Log(f"Result: status '{result.status_code}', and data <{result.json()}>", logging.DEBUG)
             self.assertNotEqual(result, None)
 
-    @unittest.skip("Not yet set up to test Hello remotely.")
     def test_put(self):
         _url = f"{self.base_url}/hello"
         Logger.Log(f"PUT test at {_url}", logging.DEBUG)
         try:
-            result = requests.put(url=_url)
+            result = TestRequest(url=_url, request="PUT", params={}, logger=Logger.std_logger)
         except Exception as err:
             self.fail(str(err))
         else:
-            Logger.Log(f"Result: status '{result.status_code}', and data <{result.json()}>", logging.DEBUG)
+            if result:
+                Logger.Log(f"Result: status '{result.status_code}', and data <{result.json()}>", logging.DEBUG)
             self.assertNotEqual(result, None)
