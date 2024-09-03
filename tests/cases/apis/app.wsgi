@@ -16,7 +16,7 @@ def _logImportErr(msg:str, err:Exception):
     application.logger.exception(err)
 
 try:
-    from apis.HelloAPI import HelloAPI
+    from ogd.apis.HelloAPI import HelloAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Hello API, an ImportError occurred:", err=err)
 except Exception as err:
