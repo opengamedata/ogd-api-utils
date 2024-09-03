@@ -1,7 +1,8 @@
+import logging
 import requests
 from typing import Any, Dict, Optional
 
-def TestRequest(url:str, request:str, params:Dict[str, Any], verbose:bool) -> Optional[requests.Response]:
+def TestRequest(url:str, request:str, params:Dict[str, Any], logger:Optional[logging.Logger]) -> Optional[requests.Response]:
     """Utility function to make it easier to send requests to a remote server during unit testing.
 
     This function does some basic sanity checking of the target URL,
@@ -33,19 +34,20 @@ def TestRequest(url:str, request:str, params:Dict[str, Any], verbose:bool) -> Op
             case "PUT":
                 result = requests.put(url, params=params)
             case _:
-                print(f"Bad request type {request}, defaulting to GET")
+                if logger:
+                    logger.warning(f"Bad request type {request}, defaulting to GET")
                 result = requests.get(url)
     except Exception as err:
-        if verbose:
-            print(f"Error on {request} request to {url} : {err}")
+        if logger:
+            logger.debug(f"Error on {request} request to {url} : {err}")
         raise err
     else:
-        if verbose:
-            print(f"Sent request to {url}")
+        if logger:
+            logger.debug(f"Sent request to {url}")
             if result is not None:
-                print(f"Result of {request} request from {result.url}:\n{result.text}")
+                logger.debug(f"Result of {request} request from {result.url}:\n{result.text}")
             else:
-                print(f"No response to {request} request.")
-            print()
+                logger.debug(f"No response to {request} request.")
+            logger.debug("")
     finally:
         return result
