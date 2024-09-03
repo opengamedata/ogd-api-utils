@@ -12,13 +12,9 @@ from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
 from ogd.core.utils.Logger import Logger
 # Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 # import locals
-try:
-    from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
-    from src.ogd.apis.HelloAPI import HelloAPI
-except ModuleNotFoundError as err:
-    Logger.Log(f"Import error: {err}")
-finally:
-    from tests.config.t_config import settings
+from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
+from src.ogd.apis.HelloAPI import HelloAPI
+from tests.config.t_config import settings
 
 class t_Version_local(TestCase):
     @classmethod
@@ -27,7 +23,6 @@ class t_Version_local(TestCase):
         _testing_cfg = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
         _level     = logging.DEBUG if _testing_cfg.Verbose else logging.INFO
         _str_level =       "DEBUG" if _testing_cfg.Verbose else "INFO"
-        Logger.std_logger.setLevel(_level)
 
         # 2. Set up local Flask app to run tests
         cls.application = Flask(__name__)
@@ -46,15 +41,15 @@ class t_Version_local(TestCase):
     def test_get(self):
         _url = "/version"
         # 1. Run request
-        Logger.Log(f"GET test at {_url}", logging.DEBUG)
+        self.application.logger.debug(f"GET test at {_url}")
         result = self.server.get(_url)
-        Logger.Log(f"Result: status '{result.status}', and data <{result.data}>", logging.DEBUG)
+        self.application.logger.debug(f"Result: status '{result.status}', and data <{result.data}>")
         body = json.loads(result.get_data(as_text=True))
         # 2. Perform assertions
         self.assertNotEqual(result, None)
         self.assertEqual(result.status, "200 OK")
         self.assertEqual(body.get("type"), "GET")
-        self.assertEqual(body.get("val"), '{"version":"0.0.0-Testing"}')
+        self.assertEqual(body.get("val"), '{"version": "0.0.0-Testing"}')
         self.assertEqual(body.get("msg"), "Successfully retrieved API version.")
         self.assertEqual(body.get("status"), "SUCCESS")
 
