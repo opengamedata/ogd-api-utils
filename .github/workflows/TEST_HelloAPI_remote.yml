@@ -12,6 +12,9 @@ on:
     - 'tests/config/**'
     - 'requirements.txt'
 
+env:
+  DEPLOY_URL: ${{ vars.OGD_STAGING_HOST }}/${{ vars.API_BASE_URL }}/${{ github.event.repository.name }}/${{ github.ref_name }}/app.wsgi
+
 jobs:
 
   run_testbed_hello_remote:
@@ -33,9 +36,7 @@ jobs:
       uses: ./.github/actions/test_config
       with:
           verbose_output: "True"
-          with_hello_api: "True"
-    - name: Dev Install of Module
-      run: pip install -e .
+          remote_url: ${{ env.DEPLOY_URL }}
 
   # 2. Build & configure remote environments
 

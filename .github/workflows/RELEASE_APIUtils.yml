@@ -9,25 +9,10 @@ on:
 jobs:
 
   build:
-    name: Build Package for Release
-    concurrency:
-      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
-      cancel-in-progress: true
-    runs-on: ubuntu-22.04
-    steps:
-    - uses: actions/checkout@v3
-    - name: Get Dependencies
-      uses: ./.github/actions/install_dependencies
-    - name: Build Package
-      run: python -m build
-    - name: Cache Build for Publishing
-      id: cache-build
-      uses: actions/cache/save@v3
-      with:
-        key: opengamedata-api-utils-build-${{ github.run_id }}-${{ github.run_attempt }}
-        path: ./dist/
-    - name: Print event type
-      run: echo ${{ github.event.action }}
+    name: Build Python Package
+    uses: ./.github/workflows/BUILD_APIUtils.yml
+    with:
+      with_caching: true
 
   testbed_server_config_schema:
     name: ServerConfigSchema Testbed
@@ -37,7 +22,7 @@ jobs:
   testbed_hello:
     name: HelloAPI Testbed
     needs: build
-    uses: ./.github/workflows/TEST_HelloAPI.yml
+    uses: ./.github/workflows/TEST_HelloAPI_local.yml
 
   testbed_api_response:
     name: APIResponse Testbed
