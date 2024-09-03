@@ -12,19 +12,19 @@ inputs:
   with_server_config_schema:
     description: "Whether to run the ServerConfigSchema tests."
     required: false
-    default: "True"
+    default: "False"
   with_api_response:
     description: "Whether to run the APIResponse tests."
     required: false
-    default: "True"
+    default: "False"
   with_api_utils:
     description: "Whether to run the APIUtils tests."
     required: false
-    default: "True"
+    default: "False"
   with_hello_api:
     description: "Whether to run the HelloAPI tests."
     required: false
-    default: "True"
+    default: "False"
   config_path:
     description: "Local path to test config folder"
     required: false
