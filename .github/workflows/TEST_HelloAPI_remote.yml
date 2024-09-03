@@ -1,5 +1,5 @@
 # Workflow to test Files API on the CI server
-name: OGD APIUtils - HelloAPI Testbed
+name: OGD APIUtils - HelloAPI Remote Calls Testbed
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 on:
   workflow_dispatch:
@@ -14,8 +14,8 @@ on:
 
 jobs:
 
-  run_testbed_hello:
-    name: Run HelloAPI Testbed
+  run_testbed_hello_remote:
+    name: Run HelloAPI Remote Testbed
     runs-on: ubuntu-22.04
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-HelloAPI
