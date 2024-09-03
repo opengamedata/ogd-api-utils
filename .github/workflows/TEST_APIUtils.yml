@@ -33,12 +33,13 @@ jobs:
       uses: ./.github/actions/test_config
       with:
           verbose_output: "True"
+          with_api_utils: "True"
 
   # 2. Build & configure remote environments
 
   # 3. Perform export
     - name: Execute testbed
-      run: python -m unittest discover ./tests/cases/utils/t_APIUtils.py "t_*.py"
+      run: python tests/TestDriver.py
 
   # 4. Cleanup & complete
     - name: Upload logs as artifacts

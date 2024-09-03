@@ -8,7 +8,7 @@ on:
     paths:
     - '.github/workflows/TEST_HelloAPI.yml'
     - '.github/actions/test_config/**'
-    - 'tests/cases/HelloAPI/**'
+    - 'tests/cases/t_HelloAPI/**'
     - 'tests/config/**'
     - 'requirements.txt'
 
@@ -33,12 +33,13 @@ jobs:
       uses: ./.github/actions/test_config
       with:
           verbose_output: "True"
+          with_hello_api: "True"
 
   # 2. Build & configure remote environments
 
   # 3. Perform tests
     - name: Execute testbed
-      run: python -m unittest discover ./tests/cases/HelloAPI/ "t_*.py"
+      run: python tests/TestDriver.py
 
   # 4. Cleanup & complete
     - name: Upload logs as artifacts
