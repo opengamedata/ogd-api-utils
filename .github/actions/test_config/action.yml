@@ -25,6 +25,10 @@ inputs:
     description: "Whether to run the HelloAPI tests."
     required: false
     default: "False"
+  remote_url:
+    description: "The URL for calls to a remote instance of the Hello API"
+    required: False
+    default: "127.0.0.1:5000"
   config_path:
     description: "Local path to test config folder"
     required: false
@@ -49,4 +53,7 @@ runs:
       shell: bash
     - name: Set HelloAPI test to run or not
       run: sed -i 's@"HELLO":True@"HELLO":${{ inputs.with_hello_api }}@g'              ${{ inputs.config_path }}/t_config.py
+      shell: bash
+    - name: Set HelloAPI test to run or not
+      run: sed -i 's@"address_placeholder"@"${{ inputs.remote_url }}"@g'               ${{ inputs.config_path }}/t_config.py
       shell: bash
