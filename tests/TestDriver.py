@@ -13,7 +13,7 @@ from ogd.core.utils.Logger import Logger
 Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
-from tests.config.t_config import settings
+from config.t_config import settings
 
 _config = TestConfigSchema.FromDict(name="APIUtilsTestConfig", all_elements=settings, logger=None)
 
