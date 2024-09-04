@@ -1,18 +1,13 @@
 # import libraries
 import json
 import logging
-import requests
-import unittest
 from unittest import TestCase
 # import 3rd-party libraries
-from flask import Flask
 # import ogd-core libraries.
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
 from ogd.core.utils.Logger import Logger
 # import locals
-from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
 from src.ogd.apis.utils.TestRequest import TestRequest
-from src.ogd.apis.HelloAPI import HelloAPI
 from tests.config.t_config import settings
 
 class t_Hello_remote(TestCase):
@@ -61,7 +56,7 @@ class t_Hello_remote(TestCase):
                 body = {}
             self.assertEqual(body.get("type"), "POST")
             self.assertEqual(body.get("val"), "null")
-            self.assertEqual(body.get("msg"), "Hello! You POSTted successfully!")
+            self.assertEqual(body.get("msg"), "Hello! You POSTed successfully!")
             self.assertEqual(body.get("status"), "SUCCESS")
 
     def test_put(self):
