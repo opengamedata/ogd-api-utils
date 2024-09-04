@@ -8,7 +8,8 @@ on:
     paths:
     - '.github/workflows/TEST_HelloAPI_remote.yml'
     - '.github/actions/test_config/**'
-    - 'tests/cases/t_HelloAPI/**'
+    - 'tests/cases/apis/HelloAPI/remote/**'
+    - 'tests/cases/apis/app.wsgi'
     - 'tests/config/**'
     - 'requirements.txt'
 

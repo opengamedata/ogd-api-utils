@@ -1,4 +1,4 @@
-# Workflow to build and deploy a new release of OGD API utilities to PyPi.
+# Workflow to build and release a new version of the APIUtils onto pypi.
 name: OGD APIUtils - Release Script
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'release' && github.ref || 'Manual Run') }}
 on:
