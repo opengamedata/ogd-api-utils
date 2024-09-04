@@ -2,6 +2,8 @@ import sys, os
 from pathlib import Path
 # import 3rd-party libraries
 from flask import Flask
+# imoprt local libraries
+from apis.schemas.ServerConfigSchema import ServerConfigSchema
 
 deploy_dir = "DEPLOY_DIR"
 if not deploy_dir in sys.path:
