@@ -60,7 +60,7 @@ jobs:
 
     # 3. Remote config & deploy
     - name: Connect to VPN
-      uses: opengamedata/actions-openconnect-vpn@v1.0
+      uses: opengamedata/actions-openconnect-vpn@v1.1
       with:
         username: ${{ secrets.VPN_USER }}
         password: ${{ secrets.VPN_PASS }}
