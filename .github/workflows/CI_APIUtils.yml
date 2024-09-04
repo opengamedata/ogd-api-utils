@@ -113,5 +113,5 @@ jobs:
 
   testbed_hello_remote:
     name: APIUtils Testbed
-    needs: build
+    needs: deploy_helloapi
     uses: ./.github/workflows/TEST_HelloAPI_remote.yml
