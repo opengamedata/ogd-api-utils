@@ -11,7 +11,6 @@ if not deploy_dir in sys.path:
 application = Flask(__name__)
 application.logger.setLevel("INFO")
 application.secret_key = b'thisisafakesecretkey'
-application.logger.info(f"Running request at HelloAPI test app from directory {os.getcwd()}")
 
 def _logImportErr(msg:str, err:Exception):
     application.logger.warning(msg)
