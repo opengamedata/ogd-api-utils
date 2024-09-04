@@ -68,9 +68,6 @@ jobs:
         username: ${{ secrets.VPN_USER }}
         password: ${{ secrets.VPN_PASS }}
         endpoint: "soe.vpn.wisc.edu"
-    #   run: sudo apt-get -q update && sudo apt-get -q install openconnect
-    # - name: Connect VPN
-    #   run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
 
     - name: Setup Access Key
       run: |
@@ -107,8 +104,6 @@ jobs:
         remote_host: ${{ env.DEPLOY_HOST }}
         remote_user: ${{ secrets.DEPLOY_USER }}
         remote_key:  ${{ secrets.DEPLOY_KEY  }}
-    # - name: Ensure init files exist
-    #   run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "touch ${{ env.DEPLOY_DIR }}/ogd/__init__.py"
 
     # 4. Cleanup & complete
     - name: Restart httpd via ssh
