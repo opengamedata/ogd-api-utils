@@ -25,7 +25,8 @@ class t_Hello_remote(TestCase):
 
         _level = logging.DEBUG if cls.testing_config.Verbose else logging.INFO
         Logger.InitializeLogger(level=_level, use_logfile=False)
-        Logger.Log(f"Set log level to {'debug' if _level==logging.DEBUG else 'info' if _level==logging.debug else 'unknown'}", logging.WARNING)
+        str_level = 'debug' if _level==logging.DEBUG else ('info' if _level==logging.debug else 'unknown')
+        Logger.Log(f"Set log level to {str_level}", logging.ERROR)
 
     def test_get(self):
         _url = f"{self.base_url}/hello"
