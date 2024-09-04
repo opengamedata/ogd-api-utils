@@ -34,7 +34,7 @@ class t_Hello_remote(TestCase):
             self.fail(str(err))
         else:
             if result is not None:
-                Logger.Log(f"Result: status '{result.status_code}', and data <{result.json()}>", logging.DEBUG)
+                Logger.Log(f"Result: status '{result.status_code}', and data <{result.text}>", logging.DEBUG)
             self.assertNotEqual(result, None)
 
     def test_post(self):
@@ -45,7 +45,7 @@ class t_Hello_remote(TestCase):
             self.fail(str(err))
         else:
             if result is not None:
-                Logger.Log(f"Result: status '{result.status_code}', and data <{result.json()}>", logging.DEBUG)
+                Logger.Log(f"Result: status '{result.status_code}', and data <{result.text}>", logging.DEBUG)
             self.assertNotEqual(result, None)
 
     def test_put(self):
@@ -57,5 +57,5 @@ class t_Hello_remote(TestCase):
             self.fail(str(err))
         else:
             if result:
-                Logger.Log(f"Result: status '{result.status_code}', and data <{result.json()}>", logging.DEBUG)
+                Logger.Log(f"Result: status '{result.status_code}', and data <{result.text}>", logging.DEBUG)
             self.assertNotEqual(result, None)
