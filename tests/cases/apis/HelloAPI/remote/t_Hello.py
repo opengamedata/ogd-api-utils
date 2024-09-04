@@ -24,7 +24,7 @@ class t_Hello_remote(TestCase):
         cls.base_url = cls.testing_config.NonStandardElements.get("REMOTE_ADDRESS", t_Hello_remote.DEFAULT_ADDRESS)
 
         _level = logging.DEBUG if cls.testing_config.Verbose else logging.INFO
-        print(f"Setting log level to {_level}")
+        print(f"Setting log level to {'debug' if _level==logging.DEBUG else 'info' if _level==logging.debug else 'unknown'}")
         Logger.InitializeLogger(level=_level, use_logfile=False)
 
     def test_get(self):
@@ -38,6 +38,7 @@ class t_Hello_remote(TestCase):
             self.assertNotEqual(result, None)
             if result is not None:
                 Logger.Log(f"Result: status '{result.status_code}', and data <{result.text}>", logging.DEBUG)
+                print(f"Result: status '{result.status_code}', and data <{result.text}>")
                 body = json.loads(result.text)
                 self.assertEqual(result.status_code, 200)
                 self.assertEqual(body.get("type"), "GET")
