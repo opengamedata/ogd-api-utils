@@ -39,7 +39,11 @@ class t_Hello_remote(TestCase):
             if result is not None:
                 Logger.Log(f"Result: status '{result.status_code}', and data <{result.text}>", logging.DEBUG)
                 print(f"Result: status '{result.status_code}', and data <{result.text}>")
-                body = json.loads(result.text)
+                try:
+                    body = json.loads(result.text)
+                except json.decoder.JSONDecodeError as err:
+                    Logger.Log(f"Could not parse json from {result.text}", logging.ERROR)
+                    body = {}
                 self.assertEqual(result.status_code, 200)
                 self.assertEqual(body.get("type"), "GET")
                 self.assertEqual(body.get("val"), "null")
