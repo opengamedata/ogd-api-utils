@@ -38,6 +38,8 @@ jobs:
       with:
           verbose_output: "True"
           remote_url: ${{ env.DEPLOY_URL }}
+    - name: Local self-install
+      run: python -m pip install -e .
 
   # 2. Build & configure remote environments
 
