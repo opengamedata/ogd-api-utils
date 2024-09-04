@@ -2,7 +2,7 @@ import logging
 import requests
 from typing import Any, Dict, Optional
 
-def TestRequest(url:str, request:str, params:Dict[str, Any], logger:Optional[logging.Logger]) -> Optional[requests.Response]:
+def TestRequest(url:str, request:str, params:Dict[str, Any], logger:Optional[logging.Logger]) -> requests.Response:
     """Utility function to make it easier to send requests to a remote server during unit testing.
 
     This function does some basic sanity checking of the target URL,
@@ -22,32 +22,30 @@ def TestRequest(url:str, request:str, params:Dict[str, Any], logger:Optional[log
     :return: The `Response` object from the request, or None if an error occurred.
     :rtype: Optional[requests.Response]
     """
-    result : Optional[requests.Response] = None
+    ret_val : requests.Response
+
     if not (url.startswith("https://") or url.startswith("http://")):
         url = f"https://{url}" # give url a default scheme
     try:
         match (request.upper()):
             case "GET":
-                result = requests.get(url, params=params)
+                ret_val = requests.get(url, params=params)
             case "POST":
-                result = requests.post(url, params=params)
+                ret_val = requests.post(url, params=params)
             case "PUT":
-                result = requests.put(url, params=params)
+                ret_val = requests.put(url, params=params)
             case _:
                 if logger:
                     logger.warning(f"Bad request type {request}, defaulting to GET")
-                result = requests.get(url)
+                ret_val = requests.get(url)
     except Exception as err:
         if logger:
             logger.debug(f"Error on {request} request to {url} : {err}")
         raise err
     else:
         if logger:
-            logger.debug(f"Sent request to {url}")
-            if result is not None:
-                logger.debug(f"Result of {request} request from {result.url}:\n{result.text}")
-            else:
-                logger.debug(f"No response to {request} request.")
-            logger.debug("")
-    finally:
-        return result
+            logger.debug(f"Request sent to:        {url}")
+            logger.debug(f"Response received from: {ret_val.url}")
+            logger.debug(f"   Status: {ret_val.status_code}")
+            logger.debug(f"   Data:   {ret_val.text}")
+        return ret_val
