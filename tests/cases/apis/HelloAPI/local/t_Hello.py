@@ -7,9 +7,9 @@ from flask import Flask
 # import ogd-core libraries.
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
 from ogd.core.utils.Logger import Logger
+Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 # import locals
 from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
-from src.ogd.apis.utils.TestRequest import TestRequest
 from src.ogd.apis.HelloAPI import HelloAPI
 from tests.config.t_config import settings
 
