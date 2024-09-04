@@ -6,6 +6,7 @@ on:
   push:
     paths:
     - '.github/workflows/CI_APIUtils.yml'
+    - '.github/workflows/BUILD_APIUtils.yml'
     - '.github/actions/**'
     - 'src/**'
     - 'requirements.txt'
