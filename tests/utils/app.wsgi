@@ -16,8 +16,6 @@ deploy_dir = "DEPLOY_DIR"
 if not deploy_dir in sys.path:
     sys.path.insert(0, deploy_dir)
     sys.path.insert(0, str(Path(deploy_dir) / "ogd"))
-    application.logger.info("Updated path:")
-    pprint(sys.path[:5])
 try:
     from apis.schemas.ServerConfigSchema import ServerConfigSchema
     from apis.HelloAPI import HelloAPI
