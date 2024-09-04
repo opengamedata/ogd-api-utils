@@ -30,8 +30,8 @@ else:
         "API_VERSION" : "0.0.0-Testing",
         "DEBUG_LEVEL" : "DEBUG"
     }
-    _server_cfg = ServerConfigSchema(name="HelloAPITestServer", all_elements=_server_cfg_elems, logger=cls.application.logger)
-    HelloAPI.register(application)
+    _server_cfg = ServerConfigSchema(name="HelloAPITestServer", all_elements=_server_cfg_elems, logger=application.logger)
+    HelloAPI.register(application, _server_cfg)
 
 # if __name__ == '__main__':
 # 	application.run(debug=True)
