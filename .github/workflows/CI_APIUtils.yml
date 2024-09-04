@@ -55,6 +55,9 @@ jobs:
 
     # 1. Local checkout & config
     - uses: actions/checkout@v3
+    - name: Set Deploy Dir in app.wsgi
+      run: sed -i 's@DEPLOY_DIR@${{ env.DEPLOY_DIR }}@g' ./tests/cases/apis/app.wsgi
+      shell: bash
 
     # 2. Build 
 
