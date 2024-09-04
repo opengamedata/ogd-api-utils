@@ -8,8 +8,9 @@ on:
     - '.github/workflows/CI_APIUtils.yml'
     - '.github/workflows/BUILD_APIUtils.yml'
     - '.github/actions/**'
-    - 'src/**'
     - 'requirements.txt'
+    - 'src/**'
+    - 'tests/utils/**'
 
 env:
   DEPLOY_HOST: ${{ vars.OGD_STAGING_HOST }}
@@ -99,7 +100,7 @@ jobs:
       uses: burnett01/rsync-deployments@5.2
       with:
         switches: -vrct --delete --exclude-from 'rsync-exclude' --chmod=Du=rwx,Dg=rwx,Do=rx,Fu=rwx,Fg=rwx,Fo=r
-        path: ./tests/cases/apis/app.wsgi
+        path: ./tests/utils/app.wsgi
         remote_path: ${{ env.DEPLOY_DIR }}
         remote_host: ${{ env.DEPLOY_HOST }}
         remote_user: ${{ secrets.DEPLOY_USER }}
