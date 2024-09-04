@@ -4,8 +4,9 @@ from typing import Any, Dict
 # import 3rd-party libraries
 from flask import Flask
 
-if not "/var/www/wsgi-bin" in sys.path:
-    sys.path.append("/var/www/wsgi-bin")
+deploy_dir = "DEPLOY_DIR"
+if not deploy_dir in sys.path:
+    sys.path.insert(0, deploy_dir)
 
 application = Flask(__name__)
 application.logger.setLevel("INFO")
