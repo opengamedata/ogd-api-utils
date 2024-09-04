@@ -1,4 +1,5 @@
 flask==2.3.3
 flask-restful==0.3.10
+requests==2.32.*
 # ogd packages
 opengamedata-core==0.0.14
