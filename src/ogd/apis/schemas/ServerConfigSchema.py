@@ -17,6 +17,15 @@ from ogd.core.utils.SemanticVersion import SemanticVersion
 # import local files
 
 class ServerConfigSchema(Schema):
+    @staticmethod
+    def DEFAULT():
+        return ServerConfigSchema(
+            name="DefaultServerConfig",
+            debug_level=logging.DEBUG,
+            version=SemanticVersion.FromString("0.0.0-Testing"),
+            other_elements={}
+        )
+
     def __init__(self, name:str, debug_level:int, version:SemanticVersion, other_elements:Dict[str, Any]):
         self._dbg_level : int             = debug_level
         self._version   : SemanticVersion = version
