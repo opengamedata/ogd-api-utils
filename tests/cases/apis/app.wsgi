@@ -1,12 +1,12 @@
 import sys, os
-from logging.config import dictConfig
-from typing import Any, Dict
+from pathlib import Path
 # import 3rd-party libraries
 from flask import Flask
 
 deploy_dir = "DEPLOY_DIR"
 if not deploy_dir in sys.path:
     sys.path.insert(0, deploy_dir)
+    sys.path.insert(0, str(Path(deploy_dir) / "ogd"))
 
 application = Flask(__name__)
 application.logger.setLevel("INFO")
