@@ -33,20 +33,17 @@ class t_Hello_remote(TestCase):
         except Exception as err:
             self.fail(str(err))
         else:
-            # 2. Perform assertions
             self.assertNotEqual(result, None)
-            if result is not None:
-                Logger.Log(f"Result: status '{result.status_code}', and data <{result.text}>", logging.DEBUG)
-                self.assertEqual(result.status_code, 200)
-                try:
-                    body = json.loads(result.text)
-                except json.decoder.JSONDecodeError as err:
-                    Logger.Log(f"Could not parse json from {result.text}", logging.ERROR)
-                    body = {}
-                self.assertEqual(body.get("type"), "GET")
-                self.assertEqual(body.get("val"), "null")
-                self.assertEqual(body.get("msg"), "Hello! You GETted successfully!")
-                self.assertEqual(body.get("status"), "SUCCESS")
+            self.assertEqual(result.status_code, 200)
+            try:
+                body = json.loads(result.text)
+            except json.decoder.JSONDecodeError as err:
+                Logger.Log(f"Could not parse json from {result.text}", logging.ERROR)
+                body = {}
+            self.assertEqual(body.get("type"), "GET")
+            self.assertEqual(body.get("val"), "null")
+            self.assertEqual(body.get("msg"), "Hello! You GETted successfully!")
+            self.assertEqual(body.get("status"), "SUCCESS")
 
     def test_post(self):
         _url = f"{self.base_url}/hello"
@@ -55,9 +52,17 @@ class t_Hello_remote(TestCase):
         except Exception as err:
             self.fail(str(err))
         else:
-            if result is not None:
-                Logger.Log(f"Result: status '{result.status_code}', and data <{result.text}>", logging.DEBUG)
             self.assertNotEqual(result, None)
+            self.assertEqual(result.status_code, 200)
+            try:
+                body = json.loads(result.text)
+            except json.decoder.JSONDecodeError as err:
+                Logger.Log(f"Could not parse json from {result.text}", logging.ERROR)
+                body = {}
+            self.assertEqual(body.get("type"), "POST")
+            self.assertEqual(body.get("val"), "null")
+            self.assertEqual(body.get("msg"), "Hello! You POSTted successfully!")
+            self.assertEqual(body.get("status"), "SUCCESS")
 
     def test_put(self):
         _url = f"{self.base_url}/hello"
@@ -67,6 +72,14 @@ class t_Hello_remote(TestCase):
         except Exception as err:
             self.fail(str(err))
         else:
-            if result:
-                Logger.Log(f"Result: status '{result.status_code}', and data <{result.text}>", logging.DEBUG)
             self.assertNotEqual(result, None)
+            self.assertEqual(result.status_code, 200)
+            try:
+                body = json.loads(result.text)
+            except json.decoder.JSONDecodeError as err:
+                Logger.Log(f"Could not parse json from {result.text}", logging.ERROR)
+                body = {}
+            self.assertEqual(body.get("type"), "PUT")
+            self.assertEqual(body.get("val"), "null")
+            self.assertEqual(body.get("msg"), "Hello! You PUTted successfully!")
+            self.assertEqual(body.get("status"), "SUCCESS")
