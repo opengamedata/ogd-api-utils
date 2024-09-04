@@ -17,24 +17,31 @@ from ogd.core.utils.SemanticVersion import SemanticVersion
 # import local files
 
 class ServerConfigSchema(Schema):
-    def __init__(self, name:str, all_elements:Dict[str, Any], logger:logging.Logger):
-        self._dbg_level : int
-        self._version   : SemanticVersion
+    def __init__(self, name:str, debug_level:int, version:SemanticVersion, other_elements:Dict[str, Any]):
+        self._dbg_level : int             = debug_level
+        self._version   : SemanticVersion = version
+        super().__init__(name=name, other_elements=other_elements)
+
+    @staticmethod
+    def FromDict(name:str, all_elements:Dict[str, Any], logger:logging.Logger):
+        _dbg_level : int
+        _version   : SemanticVersion
 
         if "API_VERSION" in all_elements.keys():
-            self._version = ServerConfigSchema._parseVersion(all_elements["API_VERSION"], logger=logger)
+            _version = ServerConfigSchema._parseVersion(all_elements["API_VERSION"], logger=logger)
         else:
-            self._version = SemanticVersion.FromString("UNKNOWN VERSION")
-            logger.warning(f"{name} config does not have an 'API_VERSION' element; defaulting to version={self._version}", logging.WARN)
+            _version = SemanticVersion.FromString("UNKNOWN VERSION")
+            logger.warning(f"{name} config does not have an 'API_VERSION' element; defaulting to version={_version}", logging.WARN)
         if "DEBUG_LEVEL" in all_elements.keys():
-            self._dbg_level = ServerConfigSchema._parseDebugLevel(all_elements["DEBUG_LEVEL"], logger=logger)
+            _dbg_level = ServerConfigSchema._parseDebugLevel(all_elements["DEBUG_LEVEL"], logger=logger)
         else:
-            self._dbg_level = logging.INFO
-            logger.warning(f"{name} config does not have a 'DEBUG_LEVEL' element; defaulting to dbg_level={self._dbg_level}", logging.WARN)
+            _dbg_level = logging.INFO
+            logger.warning(f"{name} config does not have a 'DEBUG_LEVEL' element; defaulting to dbg_level={_dbg_level}", logging.WARN)
 
         _used = {"DEBUG_LEVEL", "API_VERSION"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
-        super().__init__(name=name, other_elements=_leftovers)
+        return ServerConfigSchema(name=name, debug_level=_dbg_level, version=_version, other_elements=_leftovers)
+
 
     @property
     def DebugLevel(self) -> int:
