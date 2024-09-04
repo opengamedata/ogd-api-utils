@@ -34,6 +34,8 @@ jobs:
       with:
           verbose_output: "True"
           with_hello_api: "True"
+    - name: Local self-install
+      run: python -m pip install -e .
 
   # 2. Build & configure remote environments
 
