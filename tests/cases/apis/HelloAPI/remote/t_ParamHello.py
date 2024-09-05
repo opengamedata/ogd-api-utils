@@ -61,7 +61,7 @@ class t_ParamHello_remote(TestCase):
             self.assertEqual(body.get("status"), "SUCCESS")
 
     def test_put(self):
-        _url = f"{self.base_url}/hello"
+        _url = f"{self.base_url}/p_hello/{self.param}"
         Logger.Log(f"PUT test at {_url}", logging.DEBUG)
         try:
             result = TestRequest(url=_url, request="PUT", params={}, logger=Logger.std_logger)
