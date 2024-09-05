@@ -1,4 +1,4 @@
-# Workflow to test Files API on the CI server
+# Workflow to test the Hello API on the CI server
 name: Remote Testbed - HelloAPI
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 on:
