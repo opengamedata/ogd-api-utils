@@ -1,5 +1,5 @@
 # Workflow to test building the APIUtils project
-name: OGD APIUtils - Build pyproject
+name: APIUtils Build pyproject
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 on:
   workflow_dispatch:
