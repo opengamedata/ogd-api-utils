@@ -15,12 +15,15 @@ class t_ServerConfigSchema(TestCase):
     def RunAll():
         pass
 
+    @unittest.skip("Not yet implemented")
     def test_DebugLevel(self):
         pass
 
+    @unittest.skip("Not yet implemented")
     def test_Version(self):
         pass
 
+    @unittest.skip("Not yet implemented")
     def test_AsMarkdown(self):
         pass
 
