@@ -1,5 +1,5 @@
 # Workflow to build and deploy a new release of OGD API utilities to PyPi.
-name: OGD Server Reindexer - Release Script
+name: Server Reindexer Release Script
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'release' && github.ref || 'Manual Run') }}
 on:
   # Not sure if we want to deploy this on releases as well yet, or not.
