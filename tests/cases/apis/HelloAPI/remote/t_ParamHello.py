@@ -57,7 +57,7 @@ class t_ParamHello_remote(TestCase):
                 body = {}
             self.assertEqual(body.get("type"), "POST")
             self.assertEqual(body.get("val"), "null")
-            self.assertEqual(body.get("msg"), "Hello! You POSTed successfully!")
+            self.assertEqual(body.get("msg"), f"Hello {self.param}! You POSTed successfully!")
             self.assertEqual(body.get("status"), "SUCCESS")
 
     def test_put(self):
@@ -77,5 +77,5 @@ class t_ParamHello_remote(TestCase):
                 body = {}
             self.assertEqual(body.get("type"), "PUT")
             self.assertEqual(body.get("val"), "null")
-            self.assertEqual(body.get("msg"), "Hello! You PUTted successfully!")
+            self.assertEqual(body.get("msg"), f"Hello {self.param}! You PUTted successfully!")
             self.assertEqual(body.get("status"), "SUCCESS")
