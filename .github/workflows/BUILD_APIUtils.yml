@@ -39,11 +39,14 @@ jobs:
     - name: Build Package
       run: python -m build
     - name: Cache Build for Publishing
-      if: inputs.with_caching == 'true'
+      if: inputs.with_caching == true
       id: cache-build
       uses: actions/cache/save@v3
       with:
         key: opengamedata-api-utils-build-${{ github.run_id }}-${{ github.run_attempt }}
         path: ./dist/
+    - name: Non-Cached Build
+      if: inputs.with_caching != true
+      run: echo "No build cached"
     - name: Print event type
       run: echo ${{ github.event.action }}
