@@ -1,4 +1,4 @@
-# Workflow to clean out the directory where a deleted "FileAPI" branch's files were deployed on the CI server
+# Workflow to clean out the directory where a deleted "APIUtils" branch's files were deployed on the CI server
 name: Cleanup Dead Branch - APIUtils
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'delete' && github.event.ref || 'Manual Run') }}
 
