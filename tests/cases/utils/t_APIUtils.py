@@ -46,8 +46,8 @@ class t_ParseList(TestCase):
         parsed = parse_list(list_str=list_str, logger=Logger.std_logger)
         self.assertEqual(parsed, None)
 
-@unittest.skip("No tests written yet")
 class t_GenInterface(TestCase):
+    @unittest.skip("No tests written yet")
     def test_gen_anything(self):
         pass
 
