@@ -9,7 +9,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(os.getcwd()) / "src"))
 # Set up logging
 import logging
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema

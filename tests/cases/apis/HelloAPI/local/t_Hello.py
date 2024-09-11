@@ -6,7 +6,7 @@ from unittest import TestCase
 from flask import Flask
 # import ogd-core libraries.
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 # import locals
 from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema

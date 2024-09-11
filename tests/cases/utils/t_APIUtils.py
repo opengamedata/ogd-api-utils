@@ -4,7 +4,7 @@ import unittest
 from unittest import TestCase
 # import ogd libraries.
 from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
-from ogd.core.utils.Logger import Logger
+from ogd.common.utils.Logger import Logger
 # import locals
 try:
     from src.ogd.apis.utils.APIUtils import parse_list, gen_interface
