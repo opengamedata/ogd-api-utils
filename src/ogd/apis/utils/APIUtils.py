@@ -12,9 +12,6 @@ from json.decoder import JSONDecodeError
 from logging import Logger
 from typing import Any, List, Optional
 
-# import 3rd-party libraries
-from flask import current_app
-
 # import OGD libraries
 from ogd.common.interfaces.EventInterface import EventInterface
 from ogd.common.interfaces.MySQLInterface import MySQLInterface
