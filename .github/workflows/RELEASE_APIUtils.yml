@@ -47,7 +47,7 @@ jobs:
     steps:
     - name: Restore Cached Build
       id: cached-build
-      uses: actions/cache/restore@v3
+      uses: actions/cache/restore@v4
       with:
         key: opengamedata-api-utils-build-${{ github.run_id }}-${{ github.run_attempt }}
         path: ./dist/
@@ -74,7 +74,7 @@ jobs:
     steps:
     - name: Restore Cached Build
       id: cached-build
-      uses: actions/cache/restore@v3
+      uses: actions/cache/restore@v4
       with:
         key: opengamedata-api-utils-build-${{ github.run_id }}-${{ github.run_attempt }}
         path: ./dist/
