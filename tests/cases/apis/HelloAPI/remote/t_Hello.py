@@ -4,7 +4,7 @@ import logging
 from unittest import TestCase
 # import 3rd-party libraries
 # import ogd-core libraries.
-from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
+from ogd.common.schemas.configs.TestConfigSchema import TestConfigSchema
 from ogd.common.utils.Logger import Logger
 # import locals
 from src.ogd.apis.utils.TestRequest import TestRequest

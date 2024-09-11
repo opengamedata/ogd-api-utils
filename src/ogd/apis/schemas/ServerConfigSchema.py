@@ -11,7 +11,7 @@ from typing import Any, Dict
 # import 3rd-party libraries
 
 # import OGD libraries
-from ogd.core.schemas.Schema import Schema
+from ogd.common.schemas.Schema import Schema
 from ogd.common.utils.SemanticVersion import SemanticVersion
 
 # import local files

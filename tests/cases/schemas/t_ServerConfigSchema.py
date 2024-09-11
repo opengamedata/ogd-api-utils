@@ -2,7 +2,7 @@
 import unittest
 from unittest import TestCase
 # import ogd libraries.
-from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
+from ogd.common.schemas.configs.TestConfigSchema import TestConfigSchema
 # import locals
 from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
 from tests.config.t_config import settings

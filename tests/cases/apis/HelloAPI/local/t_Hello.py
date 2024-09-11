@@ -5,7 +5,7 @@ from unittest import TestCase
 # import 3rd-party libraries
 from flask import Flask
 # import ogd-core libraries.
-from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
+from ogd.common.schemas.configs.TestConfigSchema import TestConfigSchema
 from ogd.common.utils.Logger import Logger
 Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 # import locals

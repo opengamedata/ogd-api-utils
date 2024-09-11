@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 from unittest import TestCase
 # import ogd libraries
-from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
+from ogd.common.schemas.configs.TestConfigSchema import TestConfigSchema
 # import locals
 from src.ogd.apis.utils.APIResponse import APIResponse
 from tests.config.t_config import settings

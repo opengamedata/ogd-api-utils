@@ -3,7 +3,7 @@ import logging
 import unittest
 from unittest import TestCase
 # import ogd libraries.
-from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
+from ogd.common.schemas.configs.TestConfigSchema import TestConfigSchema
 from ogd.common.utils.Logger import Logger
 # import locals
 try:

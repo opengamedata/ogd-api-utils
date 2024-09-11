@@ -16,11 +16,11 @@ from typing import Any, List, Optional
 from flask import current_app
 
 # import OGD libraries
-from ogd.core.interfaces.EventInterface import EventInterface
-from ogd.core.interfaces.MySQLInterface import MySQLInterface
-from ogd.core.interfaces.BigQueryInterface import BigQueryInterface
+from ogd.common.interfaces.EventInterface import EventInterface
+from ogd.common.interfaces.MySQLInterface import MySQLInterface
+from ogd.common.interfaces.BigQueryInterface import BigQueryInterface
+from ogd.common.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
-from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 
 # import local files
 
