@@ -29,6 +29,8 @@ jobs:
       cancel-in-progress: true
     runs-on: ubuntu-22.04
     steps:
+
+    # 1. Local checkout & config
     - uses: actions/checkout@v4
     - name: Get Dependencies
       uses: opengamedata/actions-setup-ogd-py-dependencies@v1.0
@@ -36,8 +38,12 @@ jobs:
         python_version: ${{ vars.OGD_PYTHON_VERSION }}
     - name: Get Build Dependencies
       uses: opengamedata/setup-ogd-py-build@v2.0
+
+    # 2. Build 
     - name: Build Package
       run: python -m build
+
+    # 3. Cache for use by others
     - name: Cache Build for Publishing
       if: inputs.with_caching == true
       id: cache-build
@@ -48,5 +54,7 @@ jobs:
     - name: Non-Cached Build
       if: inputs.with_caching != true
       run: echo "No build cached"
+
+    # 4. Cleanup & complete
     - name: Print event type
       run: echo ${{ github.event.action }}
