@@ -12,7 +12,7 @@ from typing import Any, Dict
 
 # import OGD libraries
 from ogd.core.schemas.Schema import Schema
-from ogd.core.utils.SemanticVersion import SemanticVersion
+from ogd.common.utils.SemanticVersion import SemanticVersion
 
 # import local files
 
