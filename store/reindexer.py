@@ -70,7 +70,7 @@ def index_meta(root:Path, name:str, indexed_files:Dict):
     if next_id in indexed_files[next_game].keys() and compare_dates(next_mod, indexed_files[next_game][next_id]['date_modified']) <= 0:
         return indexed_files
     else:
-        indexed_files[next_game][next_id] = meta_to_index(meta=next_meta, data_dir=root)
+        indexed_files[next_game][next_id] = meta_to_index(meta=next_meta, data_dir=Path('data/') / root)
     return indexed_files
 
 def index_zip(root:Path, name:str, indexed_files):
@@ -88,6 +88,7 @@ def index_zip(root:Path, name:str, indexed_files):
     # if we already indexed something with this dataset id, then only update if this one is newer.
     # else, just stick this new meta in the index.
     file_path = root / name
+    data_path = Path("data/") / file_path
     if not dataset_id in indexed_files[game_id].keys():
         # after getting info from filename on the game id, start/end dates, etc. we can peek at the file and count the rows, *if* it's a session file.
         session_ct = None
@@ -97,14 +98,14 @@ def index_zip(root:Path, name:str, indexed_files):
                 session_ct = len(data.index)
         logging.log(msg=f"Indexing {file_path}", level=logging.INFO)
         indexed_files[game_id][dataset_id] = {
-            "population_file"     : str(file_path) if kind == 'population-features' else None,
+            "population_file"     : str(data_path) if kind == 'population-features' else None,
             "population_template" : f'/tree/{game_id.lower()}' if kind == 'population-features' else None,
-            "players_file"        : str(file_path) if kind == 'player-features' else None,
+            "players_file"        : str(data_path) if kind == 'player-features' else None,
             "players_template"    : f'/tree/{game_id.lower()}' if kind == 'players-features' else None,
-            "sessions_file"       : str(file_path) if kind == 'session-features' else None,
+            "sessions_file"       : str(data_path) if kind == 'session-features' else None,
             "sessions_template"   : f'/tree/{game_id.lower()}' if kind == 'sessions-features' else None,
-            "raw_file"            : str(file_path) if kind == 'raw' else None,
-            "events_file"         : str(file_path) if kind == 'events' else None,
+            "raw_file"            : str(data_path) if kind == 'raw' else None,
+            "events_file"         : str(data_path) if kind == 'events' else None,
             "events_template"     : f'/tree/{game_id.lower()}' if kind == 'events' else None,
             "ogd_revision"        : None,
             "start_date"          : start_date,
