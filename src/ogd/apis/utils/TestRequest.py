@@ -1,7 +1,8 @@
+import logging
 import requests
 from typing import Any, Dict, Optional
 
-def TestRequest(url:str, request:str, params:Dict[str, Any], verbose:bool) -> Optional[requests.Response]:
+def TestRequest(url:str, request:str, params:Dict[str, Any], logger:Optional[logging.Logger]) -> requests.Response:
     """Utility function to make it easier to send requests to a remote server during unit testing.
 
     This function does some basic sanity checking of the target URL,
@@ -21,31 +22,30 @@ def TestRequest(url:str, request:str, params:Dict[str, Any], verbose:bool) -> Op
     :return: The `Response` object from the request, or None if an error occurred.
     :rtype: Optional[requests.Response]
     """
-    result : Optional[requests.Response] = None
+    ret_val : requests.Response
+
     if not (url.startswith("https://") or url.startswith("http://")):
         url = f"https://{url}" # give url a default scheme
     try:
         match (request.upper()):
             case "GET":
-                result = requests.get(url, params=params)
+                ret_val = requests.get(url, params=params)
             case "POST":
-                result = requests.post(url, params=params)
+                ret_val = requests.post(url, params=params)
             case "PUT":
-                result = requests.put(url, params=params)
+                ret_val = requests.put(url, params=params)
             case _:
-                print(f"Bad request type {request}, defaulting to GET")
-                result = requests.get(url)
+                if logger:
+                    logger.warning(f"Bad request type {request}, defaulting to GET")
+                ret_val = requests.get(url)
     except Exception as err:
-        if verbose:
-            print(f"Error on {request} request to {url} : {err}")
+        if logger:
+            logger.debug(f"Error on {request} request to {url} : {err}")
         raise err
     else:
-        if verbose:
-            print(f"Sent request to {result.url}")
-            if result is not None:
-                print(f"Result of {request} request:\n{result.text}")
-            else:
-                print(f"No response to {request} request.")
-            print()
-    finally:
-        return result
+        if logger:
+            logger.debug(f"Request sent to:        {url}")
+            logger.debug(f"Response received from: {ret_val.url}")
+            logger.debug(f"   Status: {ret_val.status_code}")
+            logger.debug(f"   Data:   {ret_val.text}")
+        return ret_val

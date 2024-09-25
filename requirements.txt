@@ -1,9 +1,6 @@
-build==1.2.*
 flask==2.3.3
 flask-restful==0.3.10
-google-cloud-bigquery==3.19.0
-mysql-connector-python==8.0.25
-sshtunnel==0.4.0
-twine==4.0.*
+requests==2.32.*
 # ogd packages
-opengamedata-core==0.0.13
+opengamedata-common==1.1.*
+opengamedata-core==0.0.14

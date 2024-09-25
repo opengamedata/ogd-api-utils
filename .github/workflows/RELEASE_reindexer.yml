@@ -1,5 +1,5 @@
-# Workflow to build and deploy a new release of OGD API utilities to PyPi.
-name: OGD Server Reindexer - Release Script
+# Workflow to deploy a new release of the reindexer script to the webserver.
+name: Release Script - Server Reindexer
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'release' && github.ref || 'Manual Run') }}
 on:
   # Not sure if we want to deploy this on releases as well yet, or not.
@@ -26,10 +26,12 @@ jobs:
   # 2. Build 
 
   # 3. Remote config & deploy
-    - name: Get OpenConnect installed
-      run: sudo apt-get -q update && sudo apt-get -q install openconnect
-    - name: Connect VPN
-      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    - name: Connect to VPN
+      uses: opengamedata/actions-openconnect-vpn@v1.1
+      with:
+        username: ${{ secrets.VPN_USER }}
+        password: ${{ secrets.VPN_PASS }}
+        endpoint: "soe.vpn.wisc.edu"
 
     - name: Setup Access Key
       run: |
@@ -40,7 +42,7 @@ jobs:
       run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.VPN_USER }}@${{ env.DEPLOY_HOST }} "mkdir -p ${{ env.DEPLOY_DIR }}"
 
     - name: Upload to web server via rsync
-      uses: burnett01/rsync-deployments@5.2
+      uses: Burnett01/rsync-deployments@7.0.1
       with:
         # switches:
         # -v : verbose output
@@ -60,6 +62,7 @@ jobs:
     - name: Announce deploy
       run: echo "Deployed to ${{ env.DEPLOY_URL }}"
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
+        name: "release-log"
         path: ./*.log

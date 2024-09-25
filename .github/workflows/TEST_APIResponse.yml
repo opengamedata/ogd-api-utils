@@ -1,12 +1,12 @@
-# Workflow to test Files API on the CI server
-name: OGD APIUtils - APIResponse Testbed
+# Workflow to test the `APIResponse` class
+name: Testbed - APIResponse
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 on:
   workflow_dispatch:
   workflow_call:
   push:
     paths:
-    - '.github/workflows/APIUtils_test_APIResponse.yml'
+    - '.github/workflows/TEST_APIResponse.yml'
     - '.github/actions/test_config/**'
     - 'tests/cases/utils/t_APIResponse.py'
     - 'tests/config/**'
@@ -24,7 +24,7 @@ jobs:
     steps:
   # 1. Local checkout 
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Get Dependencies
       uses: opengamedata/setup-ogd-py-dependencies@v1.0
       with:
@@ -32,16 +32,18 @@ jobs:
     - name: Set up Config File
       uses: ./.github/actions/test_config
       with:
-          verbose_output: "True"
+          verbose_output:    "True"
+          with_api_response: "True"
 
   # 2. Build & configure remote environments
 
   # 3. Perform export
     - name: Execute testbed
-      run: python -m unittest ./tests/cases/utils/t_APIResponse.py 
+      run: python -m unittest discover -s tests/cases/utils -p "t_APIResponse.py" -t ./
 
   # 4. Cleanup & complete
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
+        name: "test-log"
         path: ./*.log

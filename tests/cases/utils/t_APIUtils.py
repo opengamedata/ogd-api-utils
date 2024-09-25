@@ -3,23 +3,22 @@ import logging
 import unittest
 from unittest import TestCase
 # import ogd libraries.
-from ogd.core.schemas.configs.TestConfigSchema import TestConfigSchema
-from ogd.core.utils.Logger import Logger
+from ogd.common.schemas.configs.TestConfigSchema import TestConfigSchema
+from ogd.common.utils.Logger import Logger
 # import locals
-from src.ogd.apis.utils.APIUtils import parse_list, gen_interface
-from tests.config.t_config import settings
-
-_config = TestConfigSchema.FromDict(name="APIUtilsTestConfig", all_elements=settings, logger=None)
-
-class t_APIUtils:
-    @staticmethod
-    def RunAll():
-        pass
+try:
+    from src.ogd.apis.utils.APIUtils import parse_list, gen_interface
+except ModuleNotFoundError as err:
+    Logger.Log(f"Import error: {err}")
+finally:
+    from tests.config.t_config import settings
 
 class t_ParseList(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
+        _config = TestConfigSchema.FromDict(name="APIUtilsTestConfig", all_elements=settings, logger=None)
+        _level = logging.DEBUG if _config.Verbose else logging.INFO
+        Logger.InitializeLogger(level=_level, use_logfile=False)
 
     def test_parse_list_empty(self):
         list_str = "[]"
@@ -41,8 +40,8 @@ class t_ParseList(TestCase):
         parsed = parse_list(list_str=list_str, logger=Logger.std_logger)
         self.assertEqual(parsed, None)
 
-@unittest.skip("No tests written yet")
 class t_GenInterface(TestCase):
+    @unittest.skip("No tests written yet")
     def test_gen_anything(self):
         pass
 

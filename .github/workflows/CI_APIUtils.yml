@@ -1,41 +1,39 @@
-# Workflow to build and deploy a new release of OGDUtils to PyPi.
-name: OGD APIUtils - CI Script
+# Workflow to build and test the APIUtils project
+name: CI Script - APIUtils
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 on:
   workflow_dispatch:
   push:
     paths:
-    - '.github/workflows/APIUtils_CI.yml'
+    - '.github/workflows/CI_APIUtils.yml'
+    - '.github/workflows/BUILD_APIUtils.yml'
     - '.github/actions/**'
-    - 'src/**'
     - 'requirements.txt'
+    - 'src/**'
+    - 'tests/utils/**'
+
+env:
+  DEPLOY_HOST: ${{ vars.OGD_STAGING_HOST }}
+  DEPLOY_DIR:                              ${{ vars.API_BASE_PATH }}/${{ github.event.repository.name }}/${{ github.ref_name }}
+  DEPLOY_URL:  ${{ vars.OGD_STAGING_HOST }}/${{ vars.API_BASE_URL }}/${{ github.event.repository.name }}/${{ github.ref_name }}/app.wsgi
 
 jobs:
 
   build:
     name: Build Python Package
-    runs-on: ubuntu-22.04
-    concurrency:
-      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
-      cancel-in-progress: true
-    steps:
-    - uses: actions/checkout@v3
-    - name: Get Dependencies
-      uses: opengamedata/setup-ogd-py-dependencies@v1.0
-      with:
-        python_version: ${{ vars.OGD_PYTHON_VERSION }}
-    - name: Build Package
-      run: python -m build
+    uses: ./.github/workflows/BUILD_APIUtils.yml
+    with:
+      with_caching: false
+
+  testbed_hello_local:
+    name: HelloAPI Testbed
+    needs: build
+    uses: ./.github/workflows/TEST_HelloAPI_local.yml
 
   testbed_server_config_schema:
     name: ServerConfigSchema Testbed
     needs: build
     uses: ./.github/workflows/TEST_ServerConfigSchema.yml
-
-  testbed_hello:
-    name: HelloAPI Testbed
-    needs: build
-    uses: ./.github/workflows/TEST_HelloAPI.yml
 
   testbed_api_response:
     name: APIResponse Testbed
@@ -46,3 +44,75 @@ jobs:
     name: APIUtils Testbed
     needs: build
     uses: ./.github/workflows/TEST_APIUtils.yml
+  
+  deploy_helloapi:
+    name: Create a test deploy of HelloAPI for remote tests.
+    needs: [testbed_hello_local, testbed_server_config_schema, testbed_api_response, testbed_api_utils]
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-deploy
+      cancel-in-progress: true
+    steps:
+
+    # 1. Local checkout & config
+    - uses: actions/checkout@v4
+    - name: Set Deploy Dir in app.wsgi
+      run: sed -i 's@DEPLOY_DIR@${{ env.DEPLOY_DIR }}@g' ./tests/utils/app.wsgi
+      shell: bash
+
+    # 2. Build 
+
+    # 3. Remote config & deploy
+    - name: Connect to VPN
+      uses: opengamedata/actions-openconnect-vpn@v1.1
+      with:
+        username: ${{ secrets.VPN_USER }}
+        password: ${{ secrets.VPN_PASS }}
+        endpoint: "soe.vpn.wisc.edu"
+
+    - name: Setup Access Key
+      run: |
+        mkdir -p ~/.ssh
+        echo '${{ secrets.DEPLOY_KEY }}' >> ./key.txt
+        chmod 600 ./key.txt
+    - name: Ensure directory exists
+      run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "mkdir -p ${{ env.DEPLOY_DIR }}/ogd/apis/"
+
+    - name: Upload HelloAPI to web server via rsync
+      uses: Burnett01/rsync-deployments@7.0.1
+      with:
+        # switches:
+        # -v : verbose output
+        # -r : recurse into subdirectories
+        # -c : use checksum to determine what files to update/skip
+        # -t : preserve modification times
+        # --delete : delete extraneous files from destination directories
+        # --exclude-from : skip any files in rsync-exclude
+        # --chmod : For each directory (D) and file (F), give user (u) and group (g) rwx permissions.
+        #           Give others (o) only read permissions, plus execute for directories.
+        switches: -vrct --delete --exclude-from 'rsync-exclude' --chmod=Du=rwx,Dg=rwx,Do=rx,Fu=rwx,Fg=rwx,Fo=r
+        path: ./src/ogd/apis/*
+        remote_path: ${{ env.DEPLOY_DIR }}/ogd/apis
+        remote_host: ${{ env.DEPLOY_HOST }}
+        remote_user: ${{ secrets.DEPLOY_USER }}
+        remote_key:  ${{ secrets.DEPLOY_KEY  }}
+    - name: Upload testing app.wsgi via rsync
+      uses: Burnett01/rsync-deployments@7.0.1
+      with:
+        switches: -vrct --delete --exclude-from 'rsync-exclude' --chmod=Du=rwx,Dg=rwx,Do=rx,Fu=rwx,Fg=rwx,Fo=r
+        path: ./tests/utils/app.wsgi
+        remote_path: ${{ env.DEPLOY_DIR }}
+        remote_host: ${{ env.DEPLOY_HOST }}
+        remote_user: ${{ secrets.DEPLOY_USER }}
+        remote_key:  ${{ secrets.DEPLOY_KEY  }}
+
+    # 4. Cleanup & complete
+    - name: Restart httpd via ssh
+      run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "sudo systemctl restart apache2"
+    - name: Announce deploy
+      run: echo "Deployed to ${{ env.DEPLOY_URL }}"
+
+  testbed_hello_remote:
+    name: APIUtils Testbed
+    needs: deploy_helloapi
+    uses: ./.github/workflows/TEST_HelloAPI_remote.yml
