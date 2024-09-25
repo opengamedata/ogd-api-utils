@@ -70,7 +70,7 @@ jobs:
 
   prerelease:
     name: Publish Prerelease to PyPI
-    needs: build
+    needs: [build, testbed_server_config_schema, testbed_hello, testbed_api_response, testbed_api_utils]
     if: github.event.action == 'prereleased'
     runs-on: ubuntu-22.04
     environment:
