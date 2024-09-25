@@ -33,7 +33,7 @@ if _config.EnabledTests.get('UTILS'):
     print("Done\n***")
 if _config.EnabledTests.get('HELLO'):
     print("***\nAdding test_Hello:")
-    suite.addTest(defaultTestLoader.discover('./tests/cases/t_HelloAPI', pattern="t_*.py", top_level_dir="./"))
+    suite.addTest(defaultTestLoader.discover('./tests/cases/apis/HelloAPI', pattern="t_*.py", top_level_dir="./"))
     print("Done\n***")
 
 print(f"Tests are:")
