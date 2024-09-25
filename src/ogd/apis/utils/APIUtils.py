@@ -56,20 +56,21 @@ def gen_interface(game_id, core_config:ConfigSchema, logger:Optional[Logger]=Non
 
     if _game_source.Source is not None:
         # set up interface and request
-        if _game_source.Source.Type.upper() == "MYSQL":
-            ret_val = MySQLInterface(game_id, config=_game_source, fail_fast=False)
-            if logger:
-                logger.info(f"Using MySQLInterface for {game_id}")
-        elif _game_source.Source.Type.upper() == "BIGQUERY":
-            if logger:
-                logger.info(f"Generating BigQueryInterface for {game_id}, from directory {os.getcwd()}...")
-            ret_val = BigQueryInterface(game_id=game_id, config=_game_source, fail_fast=False)
-            if logger:
-                logger.info("Done")
-        else:
-            ret_val = MySQLInterface(game_id, config=_game_source, fail_fast=False)
-            if logger:
-                logger.warning(f"Could not find a valid interface for {game_id}, defaulting to MySQL!")
+        match _game_source.Source.Type.upper():
+            case "MYSQL":
+                ret_val = MySQLInterface(game_id, config=_game_source, fail_fast=False)
+                if logger:
+                    logger.info(f"Using MySQLInterface for {game_id}")
+            case "BIGQUERY":
+                if logger:
+                    logger.info(f"Generating BigQueryInterface for {game_id}, from directory {os.getcwd()}...")
+                ret_val = BigQueryInterface(game_id=game_id, config=_game_source, fail_fast=False)
+                if logger:
+                    logger.info("Done")
+            case _:
+                ret_val = MySQLInterface(game_id, config=_game_source, fail_fast=False)
+                if logger:
+                    logger.warning(f"Could not find a valid interface for {game_id}, defaulting to MySQL!")
     return ret_val
 
 # def gen_coding_interface(game_id) -> Optional[CodingInterface]:
