@@ -89,12 +89,13 @@ class APIResponse:
     @staticmethod
     def FromRequestResult(result:RequestResult.RequestResult, req_type:RESTType):
         _status : ResponseStatus
-        if result.Status == RequestResult.ResultStatus.SUCCESS:
-            _status = ResponseStatus.SUCCESS 
-        elif result.Status == RequestResult.ResultStatus.FAILURE:
-            _status = ResponseStatus.ERR_REQ
-        else:
-            _status = ResponseStatus.ERR_SRV
+        match result.Status:
+            case RequestResult.ResultStatus.SUCCESS:
+                _status = ResponseStatus.SUCCESS 
+            case RequestResult.ResultStatus.FAILURE:
+                _status = ResponseStatus.ERR_REQ
+            case _:
+                _status = ResponseStatus.ERR_SRV
         ret_val = APIResponse(req_type=req_type, val=None, msg=result.Message, status=_status)
         return ret_val
     
