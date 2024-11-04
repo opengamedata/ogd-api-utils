@@ -45,6 +45,9 @@ runs:
     - name: Set ServerConfigSchema test to run or not
       run: sed -i 's@"CONFIG"\s*:\s*True@"CONFIG":${{ inputs.with_server_config_schema }}@g' ${{ inputs.config_path }}/t_config.py
       shell: bash
+    - name: Set Remote URL
+      run: sed -i 's@"address_placeholder"@"${{ inputs.remote_url }}"@g'                     ${{ inputs.config_path }}/t_config.py
+      shell: bash
     - name: Set APIResponse test to run or not
       run: sed -i 's@"RESPONSE"\s*:\s*True@"RESPONSE":${{ inputs.with_api_response }}@g'     ${{ inputs.config_path }}/t_config.py
       shell: bash
@@ -55,5 +58,5 @@ runs:
       run: sed -i 's@"HELLO"\s*:\s*True@"HELLO":${{ inputs.with_hello_api }}@g'              ${{ inputs.config_path }}/t_config.py
       shell: bash
     - name: Set HelloAPI test to run or not
-      run: sed -i 's@"address_placeholder"@"${{ inputs.remote_url }}"@g'               ${{ inputs.config_path }}/t_config.py
+      run: sed -i 's@"address_placeholder"@"${{ inputs.remote_url }}"@g'                     ${{ inputs.config_path }}/t_config.py
       shell: bash
