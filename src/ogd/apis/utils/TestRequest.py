@@ -13,14 +13,16 @@ def TestRequest(url:str, request:str, params:Dict[str, Any]={}, body:Optional[st
     :type url: str
     :param request: Whether to perform a "GET", "POST", or "PUT" request
     :type request: str
-    :param params: A mapping of request parameter namees to values.
-    :type params: Dict[str, Any]
-    :param verbose: Whether to use verbose debugging outputs or not.
-    :type verbose: bool
+    :param params: A mapping of request parameter names to values. Defaults to {}
+    :type params: Dict[str, Any], optional
+    :param body: The body of the request to send. Defaults to None
+    :type body: Optional[str], optional
+    :param logger: A logger to use for debug/error outputs. Defaults to None
+    :type logger: Optional[logging.Logger], optional
     :raises err: Currently, any exceptions that occur during the request will be raised up.
         If verbose logging is on, a simple debug message indicating the request type and URL is printed first.
     :return: The `Response` object from the request, or None if an error occurred.
-    :rtype: Optional[requests.Response]
+    :rtype: requests.Response
     """
     ret_val : requests.Response
 
