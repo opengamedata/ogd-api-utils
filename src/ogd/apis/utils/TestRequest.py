@@ -2,7 +2,7 @@ import logging
 import requests
 from typing import Any, Dict, Optional
 
-def TestRequest(url:str, request:str, params:Dict[str, Any]={}, body:Optional[str]=None, logger:Optional[logging.Logger]=None) -> requests.Response:
+def TestRequest(url:str, request:str, params:Dict[str, Any]={}, body:Optional[Dict[str, Any]]=None, timeout:int=1, logger:Optional[logging.Logger]=None) -> requests.Response:
     """Utility function to make it easier to send requests to a remote server during unit testing.
 
     This function does some basic sanity checking of the target URL,
@@ -16,9 +16,9 @@ def TestRequest(url:str, request:str, params:Dict[str, Any]={}, body:Optional[st
     :param params: A mapping of request parameter names to values. Defaults to {}
     :type params: Dict[str, Any], optional
     :param body: The body of the request to send. Defaults to None
-    :type body: Optional[str], optional
+    :type body: Dict[str, Any], optional
     :param logger: A logger to use for debug/error outputs. Defaults to None
-    :type logger: Optional[logging.Logger], optional
+    :type logger: logging.Logger, optional
     :raises err: Currently, any exceptions that occur during the request will be raised up.
         If verbose logging is on, a simple debug message indicating the request type and URL is printed first.
     :return: The `Response` object from the request, or None if an error occurred.
@@ -31,15 +31,15 @@ def TestRequest(url:str, request:str, params:Dict[str, Any]={}, body:Optional[st
     try:
         match (request.upper()):
             case "GET":
-                ret_val = requests.get(url, params=params, data=body)
+                ret_val = requests.get(url, params=params, timeout=timeout)
             case "POST":
-                ret_val = requests.post(url, params=params, data=body)
+                ret_val = requests.post(url, params=params, data=body, timeout=timeout)
             case "PUT":
-                ret_val = requests.put(url, params=params, data=body)
+                ret_val = requests.put(url, params=params, data=body, timeout=timeout)
             case _:
                 if logger:
                     logger.warning(f"Bad request type {request}, defaulting to GET")
-                ret_val = requests.get(url, params=params, data=body)
+                ret_val = requests.get(url, params=params, timeout=timeout)
     except Exception as err:
         if logger:
             logger.debug(f"Error on {request} request to {url} : {err}")
