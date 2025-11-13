@@ -15,7 +15,7 @@ class t_ParamHello_remote(TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        testing_config = TestConfig.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
+        testing_config = TestConfig.FromDict(name="HelloAPITestConfig", all_elements=settings)
         cls.base_url = testing_config.NonStandardElements.get("REMOTE_ADDRESS", t_ParamHello_remote.DEFAULT_ADDRESS)
         cls.param = "Tester"
 

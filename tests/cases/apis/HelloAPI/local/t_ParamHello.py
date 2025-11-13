@@ -17,7 +17,7 @@ class t_ParamHello_local(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         # 1. Get testing config
-        _testing_cfg = TestConfig.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
+        _testing_cfg = TestConfig.FromDict(name="HelloAPITestConfig", all_elements=settings)
         _level     = logging.DEBUG if _testing_cfg.Verbose else logging.INFO
         _str_level =       "DEBUG" if _testing_cfg.Verbose else "INFO"
         Logger.std_logger.setLevel(_level)

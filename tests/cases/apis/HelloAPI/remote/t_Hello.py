@@ -15,7 +15,7 @@ class t_Hello_remote(TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.testing_config = TestConfig.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
+        cls.testing_config = TestConfig.FromDict(name="HelloAPITestConfig", all_elements=settings)
         cls.base_url = cls.testing_config.NonStandardElements.get("REMOTE_ADDRESS", t_Hello_remote.DEFAULT_ADDRESS)
 
         _level = logging.DEBUG if cls.testing_config.Verbose else logging.INFO

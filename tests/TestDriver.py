@@ -15,7 +15,7 @@ Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 from ogd.common.configs.TestConfig import TestConfig
 from config.t_config import settings
 
-_config = TestConfig.FromDict(name="APIUtilsTestConfig", all_elements=settings, logger=None)
+_config = TestConfig.FromDict(name="APIUtilsTestConfig", all_elements=settings)
 
 # loader = TestLoader()
 suite = TestSuite()

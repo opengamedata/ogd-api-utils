@@ -9,7 +9,7 @@ from ogd.common.configs.TestConfig import TestConfig
 from src.ogd.apis.utils.APIResponse import APIResponse
 from tests.config.t_config import settings
 
-_config = TestConfig.FromDict(name="APIResponseTestConfig", all_elements=settings, logger=None)
+_config = TestConfig.FromDict(name="APIResponseTestConfig", all_elements=settings)
 
 @unittest.skip("No tests implemented yet")
 class t_APIResponse(TestCase):
