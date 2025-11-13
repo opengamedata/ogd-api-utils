@@ -10,9 +10,7 @@ from ogd.common.utils.Logger import Logger
 from src.ogd.apis.configs.ServerConfig import ServerConfig
 from tests.config.t_config import settings
 
-_config = TestConfig.FromDict(name="ServerConfigSchemaTestConfig", unparsed_elements=settings)
-
-class t_ServerConfigSchema(TestCase):
+class t_ServerConfig(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         # 1. Get testing config
