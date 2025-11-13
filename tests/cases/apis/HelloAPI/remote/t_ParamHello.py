@@ -33,13 +33,13 @@ class t_ParamHello_remote(TestCase):
             self.assertEqual(result.status_code, 200)
             try:
                 body = json.loads(result.text)
-            except json.decoder.JSONDecodeError as err:
-                Logger.Log(f"Could not parse json from {result.text}", logging.ERROR)
+            except json.decoder.JSONDecodeError:
+                Logger.Log(f"Could not parse json result '{result.text}' from {_url}", logging.ERROR)
                 body = {}
-            self.assertEqual(body.get("type"), "GET")
-            self.assertEqual(body.get("val"), "null")
-            self.assertEqual(body.get("msg"), f"Hello {self.param}! You GETted successfully!")
-            self.assertEqual(body.get("status"), "SUCCESS")
+            self.assertEqual(body.get("type"), "GET", f"Bad type from {_url}")
+            self.assertEqual(body.get("val"), "null", f"Bad val from {_url}")
+            self.assertEqual(body.get("msg"), f"Hello {self.param}! You GETted successfully!", f"Bad msg from {_url}")
+            self.assertEqual(body.get("status"), "SUCCESS", f"Bad status from {_url}")
 
     def test_post(self):
         _url = f"{self.base_url}/p_hello/{self.param}"
@@ -52,13 +52,13 @@ class t_ParamHello_remote(TestCase):
             self.assertEqual(result.status_code, 200)
             try:
                 body = json.loads(result.text)
-            except json.decoder.JSONDecodeError as err:
-                Logger.Log(f"Could not parse json from {result.text}", logging.ERROR)
+            except json.decoder.JSONDecodeError:
+                Logger.Log(f"Could not parse json result '{result.text}' from {_url}", logging.ERROR)
                 body = {}
-            self.assertEqual(body.get("type"), "POST")
-            self.assertEqual(body.get("val"), "null")
-            self.assertEqual(body.get("msg"), f"Hello {self.param}! You POSTed successfully!")
-            self.assertEqual(body.get("status"), "SUCCESS")
+            self.assertEqual(body.get("type"), "POST", f"Bad type from {_url}")
+            self.assertEqual(body.get("val"), "null", f"Bad val from {_url}")
+            self.assertEqual(body.get("msg"), f"Hello {self.param}! You POSTed successfully!", f"Bad msg from {_url}")
+            self.assertEqual(body.get("status"), "SUCCESS", f"Bad status from {_url}")
 
     def test_put(self):
         _url = f"{self.base_url}/p_hello/{self.param}"
@@ -72,10 +72,10 @@ class t_ParamHello_remote(TestCase):
             self.assertEqual(result.status_code, 200)
             try:
                 body = json.loads(result.text)
-            except json.decoder.JSONDecodeError as err:
-                Logger.Log(f"Could not parse json from {result.text}", logging.ERROR)
+            except json.decoder.JSONDecodeError:
+                Logger.Log(f"Could not parse json result '{result.text}' from {_url}", logging.ERROR)
                 body = {}
-            self.assertEqual(body.get("type"), "PUT")
-            self.assertEqual(body.get("val"), "null")
-            self.assertEqual(body.get("msg"), f"Hello {self.param}! You PUTted successfully!")
-            self.assertEqual(body.get("status"), "SUCCESS")
+            self.assertEqual(body.get("type"), "PUT", f"Bad type from {_url}")
+            self.assertEqual(body.get("val"), "null", f"Bad val from {_url}")
+            self.assertEqual(body.get("msg"), f"Hello {self.param}! You PUTted successfully!", f"Bad msg from {_url}")
+            self.assertEqual(body.get("status"), "SUCCESS", f"Bad status from {_url}")
