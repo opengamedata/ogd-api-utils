@@ -16,7 +16,7 @@ finally:
 class t_ParseList(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        _config = TestConfig.FromDict(name="APIUtilsTestConfig", all_elements=settings)
+        _config = TestConfig.FromDict(name="APIUtilsTestConfig", unparsed_elements=settings)
         _level = logging.DEBUG if _config.Verbose else logging.INFO
         Logger.InitializeLogger(level=_level, use_logfile=False)
 
