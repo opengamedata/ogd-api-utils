@@ -29,8 +29,8 @@ class t_ParamHello_remote(TestCase):
         except Exception as err:
             self.fail(str(err))
         else:
-            self.assertNotEqual(result, None)
-            self.assertEqual(result.status_code, 200)
+            self.assertNotEqual(result, None, f"No response from {_url}")
+            self.assertEqual(result.status_code, 200, f"Bad status from {_url}")
             try:
                 body = json.loads(result.text)
             except json.decoder.JSONDecodeError:
@@ -48,8 +48,8 @@ class t_ParamHello_remote(TestCase):
         except Exception as err:
             self.fail(str(err))
         else:
-            self.assertNotEqual(result, None)
-            self.assertEqual(result.status_code, 200)
+            self.assertNotEqual(result, None, f"No response from {_url}")
+            self.assertEqual(result.status_code, 200, f"Bad status from {_url}")
             try:
                 body = json.loads(result.text)
             except json.decoder.JSONDecodeError:
@@ -68,8 +68,8 @@ class t_ParamHello_remote(TestCase):
         except Exception as err:
             self.fail(str(err))
         else:
-            self.assertNotEqual(result, None)
-            self.assertEqual(result.status_code, 200)
+            self.assertNotEqual(result, None, f"No response from {_url}")
+            self.assertEqual(result.status_code, 200, f"Bad status from {_url}")
             try:
                 body = json.loads(result.text)
             except json.decoder.JSONDecodeError:
