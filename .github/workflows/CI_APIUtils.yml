@@ -73,7 +73,7 @@ jobs:
     - name: Deploy HelloAPI to Server
       uses: opengamedata/actions-deploy-project@v1.1
       with:
-        local_path: ./src/ogd/apis/*
+        local_path: ./src/ogd/apis/
         remote_path: ${{ env.DEPLOY_DIR }}/apis
         remote_host: ${{ env.DEPLOY_HOST }}
         remote_user: ${{ secrets.DEPLOY_USER }}
