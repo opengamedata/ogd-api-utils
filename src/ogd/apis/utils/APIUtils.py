@@ -13,10 +13,10 @@ from logging import Logger
 from typing import Any, List, Optional
 
 # import OGD libraries
-from ogd.common.interfaces.EventInterface import EventInterface
-from ogd.common.interfaces.MySQLInterface import MySQLInterface
-from ogd.common.interfaces.BigQueryInterface import BigQueryInterface
-from ogd.common.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.common.storage.interfaces.Interface import Interface
+from ogd.common.storage.interfaces.MySQLInterface import MySQLInterface
+from ogd.common.storage.interfaces.BigQueryInterface import BigQueryInterface
+from ogd.common.configs.DataTableConfig import DataTableConfig
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 
 # import local files
@@ -42,36 +42,36 @@ def parse_list(list_str:str, logger:Optional[Logger]=None) -> Optional[List[Any]
             ret_val = None
     return ret_val
 
-def gen_interface(game_id, core_config:ConfigSchema, logger:Optional[Logger]=None) -> Optional[EventInterface]:
-    """Utility to set up an Interface object for use by the API, given a game_id.
+# def gen_interface(game_id, core_config:ConfigSchema, logger:Optional[Logger]=None) -> Optional[Interface]:
+#     """Utility to set up an Interface object for use by the API, given a game_id.
 
-    :param game_id: _description_
-    :type game_id: _type_
-    :return: _description_
-    :rtype: _type_
-    """
-    ret_val = None
+#     :param game_id: _description_
+#     :type game_id: _type_
+#     :return: _description_
+#     :rtype: _type_
+#     """
+#     ret_val = None
     
-    _game_source : GameSourceSchema = core_config.GameSourceMap.get(game_id, GameSourceSchema.EmptySchema())
+#     _game_source : DataTableConfig = core_config.GameSourceMap.get(game_id, DataTableConfig.Default())
 
-    if _game_source.Source is not None:
-        # set up interface and request
-        match _game_source.Source.Type.upper():
-            case "MYSQL":
-                ret_val = MySQLInterface(game_id, config=_game_source, fail_fast=False)
-                if logger:
-                    logger.info(f"Using MySQLInterface for {game_id}")
-            case "BIGQUERY":
-                if logger:
-                    logger.info(f"Generating BigQueryInterface for {game_id}, from directory {os.getcwd()}...")
-                ret_val = BigQueryInterface(game_id=game_id, config=_game_source, fail_fast=False)
-                if logger:
-                    logger.info("Done")
-            case _:
-                ret_val = MySQLInterface(game_id, config=_game_source, fail_fast=False)
-                if logger:
-                    logger.warning(f"Could not find a valid interface for {game_id}, defaulting to MySQL!")
-    return ret_val
+#     if _game_source.Source is not None:
+#         # set up interface and request
+#         match _game_source.Source.Type.upper():
+#             case "MYSQL":
+#                 ret_val = MySQLInterface(game_id, config=_game_source, fail_fast=False)
+#                 if logger:
+#                     logger.info(f"Using MySQLInterface for {game_id}")
+#             case "BIGQUERY":
+#                 if logger:
+#                     logger.info(f"Generating BigQueryInterface for {game_id}, from directory {os.getcwd()}...")
+#                 ret_val = BigQueryInterface(game_id=game_id, config=_game_source, fail_fast=False)
+#                 if logger:
+#                     logger.info("Done")
+#             case _:
+#                 ret_val = MySQLInterface(game_id, config=_game_source, fail_fast=False)
+#                 if logger:
+#                     logger.warning(f"Could not find a valid interface for {game_id}, defaulting to MySQL!")
+#     return ret_val
 
 # def gen_coding_interface(game_id) -> Optional[CodingInterface]:
 #     """Utility to set up an Interface object for use by the API, given a game_id.
