@@ -31,7 +31,7 @@ class t_ParamHello_local(TestCase):
             "API_VERSION" : "0.0.0-Testing",
             "DEBUG_LEVEL" : _str_level
         }
-        _server_cfg = ServerConfig.FromDict(name="HelloAPITestServer", all_elements=_server_cfg_elems, logger=cls.application.logger)
+        _server_cfg = ServerConfig.FromDict(name="HelloAPITestServer", unparsed_elements=_server_cfg_elems)
         HelloAPI.register(app=cls.application, server_config=_server_cfg)
 
         cls.server = cls.application.test_client()

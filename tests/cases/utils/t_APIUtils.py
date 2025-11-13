@@ -7,7 +7,7 @@ from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.utils.Logger import Logger
 # import locals
 try:
-    from src.ogd.apis.utils.APIUtils import parse_list, gen_interface
+    from src.ogd.apis.utils.APIUtils import parse_list
 except ModuleNotFoundError as err:
     Logger.Log(f"Import error: {err}")
 finally:
