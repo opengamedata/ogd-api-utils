@@ -6,7 +6,7 @@ Contains a Config class for managing config data for server configurations.
 
 # import standard libraries
 import logging
-from typing import Dict, Final, Optional
+from typing import Dict, Final, Optional, Self
 
 # import 3rd-party libraries
 
@@ -14,6 +14,7 @@ from typing import Dict, Final, Optional
 from ogd.common.configs.Config import Config
 from ogd.common.models.SemanticVersion import SemanticVersion
 from ogd.common.utils.typing import Map
+from ogd.common.utils.Logger import Logger
 
 # import local files
 
@@ -32,16 +33,8 @@ class ServerConfig(Config):
         self._dbg_level : int
         self._version   : SemanticVersion
 
-        if "API_VERSION" in unparsed_elements.keys():
-            _version = ServerConfig._parseVersion(all_elements["API_VERSION"], logger=logger)
-        else:
-            _version = SemanticVersion.FromString("UNKNOWN VERSION")
-            logger.warning(f"{name} config does not have an 'API_VERSION' element; defaulting to version={_version}", logging.WARN)
-        if "DEBUG_LEVEL" in all_elements.keys():
-            _dbg_level = ServerConfig._parseDebugLevel(all_elements["DEBUG_LEVEL"], logger=logger)
-        else:
-            _dbg_level = logging.INFO
-            logger.warning(f"{name} config does not have a 'DEBUG_LEVEL' element; defaulting to dbg_level={_dbg_level}", logging.WARN)
+        self._version   = version     if version     is not None else self._parseVersion(unparsed_elements=unparsed_elements, schema_name=name)
+        self._dbg_level = debug_level if debug_level is not None else self._parseDebugLevel(unparsed_elements=unparsed_elements, schema_name=name)
 
         super().__init__(name=name, other_elements=other_elements)
 
@@ -73,52 +66,66 @@ class ServerConfig(Config):
         )
 
     @classmethod
-    def _fomDict(cls, name:str, unparsed_elements:Map,
+    def _fromDict(cls, name:str, unparsed_elements:Map,
                   key_overrides:Optional[Dict[str, str]]=None,
                   default_override:Optional[Self]=None):
-        _dbg_level : int
-        _version   : SemanticVersion
-
-        _used = {"DEBUG_LEVEL", "API_VERSION"}
-        _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
-        return ServerConfig(name=name, debug_level=_dbg_level, version=_version, other_elements=_leftovers)
+        return ServerConfig(name=name, debug_level=None, version=None, other_elements=unparsed_elements)
 
     @staticmethod
-    def _parseDebugLevel(unparsed_elements:Map, schema_name:Optional[str]=None, logger:logging.Logger=flask) -> int:
+    def _parseDebugLevel(unparsed_elements:Map, schema_name:Optional[str]=None) -> int:
         ret_val : int
+
         raw_level : str = ServerConfig.ParseElement(
             unparsed_elements=unparsed_elements,
             valid_keys=["DEBUG_LEVEL"],
-            to_type=str,
+            to_type=[int, str],
             default_value=ServerConfig._DEFAULT_DEBUG_LEVEL,
             remove_target=True,
             schema_name=schema_name
         )
-        match raw_level.upper():
-            case "ERROR":
-                ret_val = logging.ERROR
-            case "WARNING" | "WARN":
-                ret_val = logging.WARN
-            case "INFO":
-                ret_val = logging.INFO
-            case "DEBUG":
-                ret_val = logging.DEBUG
-            case _:
-                ret_val = logging.INFO
-                logger.warning(f"Config debug level had unexpected value {raw_level}, defaulting to logging.INFO.", logging.WARN)
+        if isinstance(raw_level, int):
+            if raw_level in {logging.ERROR, logging.WARN, logging.INFO, logging.DEBUG}:
+                ret_val = raw_level
+            else:
+                ret_val = ServerConfig._DEFAULT_DEBUG_LEVEL
+                Logger.Log(f"Debug level had a value of {raw_level}, but this does not correspond to a valid logging level, defaulting to {ret_val}.", logging.WARNING)
+        elif isinstance(raw_level, str):
+            match raw_level.upper():
+                case "ERROR":
+                    ret_val = logging.ERROR
+                case "WARNING" | "WARN":
+                    ret_val = logging.WARN
+                case "INFO":
+                    ret_val = logging.INFO
+                case "DEBUG":
+                    ret_val = logging.DEBUG
+                case _:
+                    ret_val = ServerConfig._DEFAULT_DEBUG_LEVEL
+                    Logger.Log(f"Config debug level had unexpected value {raw_level}, defaulting to {ret_val}.", logging.WARNING)
         else:
-            ret_val = logging.INFO
-            logger.warning(f"Config debug level was unexpected type {type(raw_level)}, defaulting to logging.INFO.", logging.WARN)
+            ret_val = ServerConfig._DEFAULT_DEBUG_LEVEL
+            Logger.Log(f"Config debug level was unexpected type {type(raw_level)}, defaulting to {ret_val}.", logging.WARNING)
+
         return ret_val
 
     @staticmethod
     def _parseVersion(unparsed_elements:Map, schema_name:Optional[str]=None) -> SemanticVersion:
         ret_val : SemanticVersion
-        if isinstance(version, int):
-            ret_val = SemanticVersion(major=version)
-        elif isinstance(version, str):
-            ret_val = SemanticVersion.FromString(semver=version)
+
+        raw_version = ServerConfig.ParseElement(
+            unparsed_elements=unparsed_elements,
+            valid_keys=["API_VERSION"],
+            to_type=[int, str],
+            default_value=ServerConfig._DEFAULT_VERSION,
+            remove_target=True,
+            schema_name=schema_name
+        )
+        if isinstance(raw_version, int):
+            ret_val = SemanticVersion(major=raw_version)
+        elif isinstance(raw_version, str):
+            ret_val = SemanticVersion.FromString(semver=raw_version)
         else:
-            ret_val = SemanticVersion.FromString(str(version))
-            logger.warning(f"Config version was unexpected type {type(version)}, defaulting to SemanticVersion(str(version))={ret_val}.", logging.WARN)
+            ret_val = SemanticVersion.FromString(str(raw_version))
+            Logger.Log(f"Config version was unexpected type {type(raw_version)}, defaulting to SemanticVersion(str(version))={ret_val}.", logging.WARN)
+
         return ret_val
