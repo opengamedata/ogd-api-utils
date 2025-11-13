@@ -17,7 +17,7 @@ from ogd.common.storage.interfaces.Interface import Interface
 from ogd.common.storage.interfaces.MySQLInterface import MySQLInterface
 from ogd.common.storage.interfaces.BigQueryInterface import BigQueryInterface
 from ogd.common.configs.DataTableConfig import DataTableConfig
-from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
+# from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 
 # import local files
 
