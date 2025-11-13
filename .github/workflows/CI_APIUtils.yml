@@ -31,9 +31,9 @@ jobs:
     uses: ./.github/workflows/TEST_HelloAPI_local.yml
 
   testbed_server_config_schema:
-    name: ServerConfigSchema Testbed
+    name: ServerConfig Testbed
     needs: build
-    uses: ./.github/workflows/TEST_ServerConfigSchema.yml
+    uses: ./.github/workflows/TEST_ServerConfig.yml
 
   testbed_api_response:
     name: APIResponse Testbed
