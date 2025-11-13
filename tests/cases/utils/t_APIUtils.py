@@ -3,7 +3,7 @@ import logging
 import unittest
 from unittest import TestCase
 # import ogd libraries.
-from ogd.common.schemas.configs.TestConfigSchema import TestConfigSchema
+from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.utils.Logger import Logger
 # import locals
 try:
@@ -16,7 +16,7 @@ finally:
 class t_ParseList(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        _config = TestConfigSchema.FromDict(name="APIUtilsTestConfig", all_elements=settings, logger=None)
+        _config = TestConfig.FromDict(name="APIUtilsTestConfig", all_elements=settings, logger=None)
         _level = logging.DEBUG if _config.Verbose else logging.INFO
         Logger.InitializeLogger(level=_level, use_logfile=False)
 

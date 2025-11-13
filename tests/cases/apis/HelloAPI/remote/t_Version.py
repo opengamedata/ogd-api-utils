@@ -7,7 +7,7 @@ from unittest import TestCase
 # import 3rd-party libraries
 from flask import Flask
 # import ogd-core libraries.
-from ogd.common.schemas.configs.TestConfigSchema import TestConfigSchema
+from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.utils.Logger import Logger
 # Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 # import locals
@@ -20,7 +20,7 @@ class t_Version_remote(TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        testing_config = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
+        testing_config = TestConfig.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
         cls.base_url = testing_config.NonStandardElements.get("REMOTE_ADDRESS", t_Version_remote.DEFAULT_ADDRESS)
 
         _level = logging.DEBUG if testing_config.Verbose else logging.INFO

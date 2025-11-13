@@ -4,7 +4,7 @@ import logging
 from unittest import TestCase
 # import 3rd-party libraries
 # import ogd-core libraries.
-from ogd.common.schemas.configs.TestConfigSchema import TestConfigSchema
+from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.utils.Logger import Logger
 # import locals
 from src.ogd.apis.utils.TestRequest import TestRequest
@@ -15,7 +15,7 @@ class t_Hello_remote(TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.testing_config = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
+        cls.testing_config = TestConfig.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
         cls.base_url = cls.testing_config.NonStandardElements.get("REMOTE_ADDRESS", t_Hello_remote.DEFAULT_ADDRESS)
 
         _level = logging.DEBUG if cls.testing_config.Verbose else logging.INFO
