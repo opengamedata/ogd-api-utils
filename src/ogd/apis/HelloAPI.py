@@ -14,11 +14,11 @@ from flask_restful import Resource, Api
 
 # import locals
 from ogd.apis.utils.APIResponse import APIResponse, RESTType, ResponseStatus
-from ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
+from ogd.apis.schemas.ServerConfigSchema import ServerConfig
 
 class HelloAPI:
     @staticmethod
-    def register(app:Flask, server_config:ServerConfigSchema):
+    def register(app:Flask, server_config:ServerConfig):
         api = Api(app)
         api.add_resource(HelloAPI.Hello, '/hello')
         api.add_resource(HelloAPI.ParamHello, '/p_hello/<name>')
