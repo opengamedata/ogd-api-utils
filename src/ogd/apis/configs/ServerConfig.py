@@ -60,7 +60,7 @@ class ServerConfig(Config):
     def Default(cls):
         return ServerConfig(
             name="DefaultServerConfig",
-            debug_level=logging.DEBUG,
+            debug_level=ServerConfig._DEFAULT_DEBUG_LEVEL,
             version=SemanticVersion.FromString("0.0.0-Testing"),
             other_elements={}
         )
