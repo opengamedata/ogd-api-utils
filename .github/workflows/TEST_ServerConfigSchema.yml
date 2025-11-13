@@ -6,19 +6,19 @@ on:
   workflow_call:
   push:
     paths:
-    - '.github/workflows/TEST_ServerConfigSchema.yml'
+    - '.github/workflows/TEST_ServerConfig.yml'
     - '.github/actions/test_config/**'
-    - 'tests/cases/schemas/t_ServerConfigSchema.py'
+    - 'tests/cases/configs/t_ServerConfig.py'
     - 'tests/config/**'
     - 'requirements.txt'
 
 jobs:
 
   run_testbed_server_config_schema:
-    name: Run ServerConfigSchema Testbed
+    name: Run ServerConfig Testbed
     runs-on: ubuntu-22.04
     concurrency:
-      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-ServerConfigSchema
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-ServerConfig
       cancel-in-progress: true
 
     steps:
@@ -39,7 +39,7 @@ jobs:
 
   # 3. Perform export
     - name: Execute testbed
-      run: python -m unittest discover -s tests/cases/schemas -p "t_*.py" -t ./
+      run: python -m unittest discover -s tests/cases/configs -p "t_*.py" -t ./
 
   # 4. Cleanup & complete
     - name: Upload logs as artifacts
