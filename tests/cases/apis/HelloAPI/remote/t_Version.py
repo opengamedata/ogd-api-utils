@@ -11,7 +11,7 @@ from ogd.common.schemas.configs.TestConfigSchema import TestConfigSchema
 from ogd.common.utils.Logger import Logger
 # Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 # import locals
-from src.ogd.apis.schemas.ServerConfigSchema import ServerConfig
+from src.ogd.apis.configs.ServerConfig import ServerConfig
 from src.ogd.apis.HelloAPI import HelloAPI
 from tests.config.t_config import settings
 

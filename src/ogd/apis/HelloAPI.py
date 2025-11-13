@@ -14,7 +14,7 @@ from flask_restful import Resource, Api
 
 # import locals
 from ogd.apis.utils.APIResponse import APIResponse, RESTType, ResponseStatus
-from ogd.apis.schemas.ServerConfigSchema import ServerConfig
+from ogd.apis.configs.ServerConfig import ServerConfig
 
 class HelloAPI:
     @staticmethod

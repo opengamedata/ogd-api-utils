@@ -4,7 +4,7 @@ from unittest import TestCase
 # import ogd libraries.
 from ogd.common.schemas.configs.TestConfigSchema import TestConfigSchema
 # import locals
-from src.ogd.apis.schemas.ServerConfigSchema import ServerConfig
+from src.ogd.apis.configs.ServerConfig import ServerConfig
 from tests.config.t_config import settings
 
 _config = TestConfigSchema.FromDict(name="ServerConfigSchemaTestConfig", all_elements=settings, logger=None)
