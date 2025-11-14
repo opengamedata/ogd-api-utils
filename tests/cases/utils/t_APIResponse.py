@@ -4,12 +4,12 @@ import unittest
 from pathlib import Path
 from unittest import TestCase
 # import ogd libraries
-from ogd.common.schemas.configs.TestConfigSchema import TestConfigSchema
+from ogd.common.configs.TestConfig import TestConfig
 # import locals
 from src.ogd.apis.utils.APIResponse import APIResponse
 from tests.config.t_config import settings
 
-_config = TestConfigSchema.FromDict(name="APIResponseTestConfig", all_elements=settings, logger=None)
+_config = TestConfig.FromDict(name="APIResponseTestConfig", unparsed_elements=settings)
 
 @unittest.skip("No tests implemented yet")
 class t_APIResponse(TestCase):

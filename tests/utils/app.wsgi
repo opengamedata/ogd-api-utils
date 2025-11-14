@@ -17,7 +17,7 @@ if not deploy_dir in sys.path:
     sys.path.insert(0, deploy_dir)
     sys.path.insert(0, str(Path(deploy_dir) / "ogd"))
 try:
-    from apis.schemas.ServerConfigSchema import ServerConfigSchema
+    from apis.configs.ServerConfig import ServerConfig
     from apis.HelloAPI import HelloAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Hello API, an ImportError occurred:", err=err)
@@ -28,7 +28,7 @@ else:
         "API_VERSION" : "0.0.0-Testing",
         "DEBUG_LEVEL" : "DEBUG"
     }
-    _server_cfg = ServerConfigSchema.FromDict(name="HelloAPITestServer", all_elements=_server_cfg_elems, logger=application.logger)
+    _server_cfg = ServerConfig.FromDict(name="HelloAPITestServer", unparsed_elements=_server_cfg_elems)
     HelloAPI.register(application, _server_cfg)
 
 # if __name__ == '__main__':

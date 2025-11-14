@@ -5,11 +5,11 @@ from unittest import TestCase
 # import 3rd-party libraries
 from flask import Flask
 # import ogd-core libraries.
-from ogd.common.schemas.configs.TestConfigSchema import TestConfigSchema
+from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.utils.Logger import Logger
 Logger.InitializeLogger(level=logging.INFO, use_logfile=False)
 # import locals
-from src.ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
+from src.ogd.apis.configs.ServerConfig import ServerConfig
 from src.ogd.apis.HelloAPI import HelloAPI
 from tests.config.t_config import settings
 
@@ -17,7 +17,7 @@ class t_Hello_local(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         # 1. Get testing config
-        _testing_cfg = TestConfigSchema.FromDict(name="HelloAPITestConfig", all_elements=settings, logger=None)
+        _testing_cfg = TestConfig.FromDict(name="HelloAPITestConfig", unparsed_elements=settings)
         _level     = logging.DEBUG if _testing_cfg.Verbose else logging.INFO
         _str_level =       "DEBUG" if _testing_cfg.Verbose else "INFO"
         Logger.std_logger.setLevel(_level)
@@ -31,7 +31,7 @@ class t_Hello_local(TestCase):
             "API_VERSION" : "0.0.0-Testing",
             "DEBUG_LEVEL" : _str_level
         }
-        _server_cfg = ServerConfigSchema.FromDict(name="HelloAPITestServer", all_elements=_server_cfg_elems, logger=cls.application.logger)
+        _server_cfg = ServerConfig.FromDict(name="HelloAPITestServer", unparsed_elements=_server_cfg_elems)
         HelloAPI.register(app=cls.application, server_config=_server_cfg)
 
         cls.server = cls.application.test_client()
