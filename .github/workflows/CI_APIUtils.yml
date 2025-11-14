@@ -30,7 +30,7 @@ jobs:
     needs: build
     uses: ./.github/workflows/TEST_HelloAPI_local.yml
 
-  testbed_server_config_schema:
+  testbed_server_config:
     name: ServerConfig Testbed
     needs: build
     uses: ./.github/workflows/TEST_ServerConfig.yml
@@ -47,7 +47,7 @@ jobs:
   
   deploy_helloapi:
     name: Create a test deploy of HelloAPI for remote tests.
-    needs: [testbed_hello_local, testbed_server_config_schema, testbed_api_response, testbed_api_utils]
+    needs: [testbed_hello_local, testbed_server_config, testbed_api_response, testbed_api_utils]
     runs-on: ubuntu-22.04
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-deploy

@@ -20,8 +20,8 @@ _config = TestConfig.FromDict(name="APIUtilsTestConfig", unparsed_elements=setti
 # loader = TestLoader()
 suite = TestSuite()
 if _config.EnabledTests.get('CONFIG'):
-    print("***\nAdding t_ServerConfigSchema:")
-    suite.addTest(defaultTestLoader.discover('./tests/cases/schemas/', pattern="t_ServerConfigSchema.py", top_level_dir="./"))
+    print("***\nAdding t_ServerConfig:")
+    suite.addTest(defaultTestLoader.discover('./tests/cases/schemas/', pattern="t_ServerConfig.py", top_level_dir="./"))
     print("Done\n***")
 if _config.EnabledTests.get('RESPONSE'):
     print("***\nAdding t_APIResponse:")
