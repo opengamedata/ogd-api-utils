@@ -1,5 +1,5 @@
-# Workflow to test the ServerConfigSchema class
-name: Testbed - ServerConfigSchema
+# Workflow to test the ServerConfig class
+name: Testbed - ServerConfig
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 on:
   workflow_dispatch:
@@ -14,7 +14,7 @@ on:
 
 jobs:
 
-  run_testbed_server_config_schema:
+  run_testbed_server_config:
     name: Run ServerConfig Testbed
     runs-on: ubuntu-22.04
     concurrency:
@@ -32,8 +32,8 @@ jobs:
     - name: Set up Config File
       uses: ./.github/actions/test_config
       with:
-          verbose_output:            "True"
-          with_server_config_schema: "True"
+          verbose_output:     "True"
+          with_server_config: "True"
 
   # 2. Build & configure remote environments
 

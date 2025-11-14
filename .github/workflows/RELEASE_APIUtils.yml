@@ -14,10 +14,10 @@ jobs:
     with:
       with_caching: true
 
-  testbed_server_config_schema:
-    name: ServerConfigSchema Testbed
+  testbed_server_config:
+    name: ServerConfig Testbed
     needs: build
-    uses: ./.github/workflows/TEST_ServerConfigSchema.yml
+    uses: ./.github/workflows/TEST_ServerConfig.yml
 
   testbed_hello:
     name: HelloAPI Testbed
@@ -36,7 +36,7 @@ jobs:
 
   release:
     name: Publish Release to PyPI
-    needs: [build, testbed_server_config_schema, testbed_hello, testbed_api_response, testbed_api_utils]
+    needs: [build, testbed_server_config, testbed_hello, testbed_api_response, testbed_api_utils]
     if: github.event.action == 'released'
     runs-on: ubuntu-22.04
     environment:
@@ -70,7 +70,7 @@ jobs:
 
   prerelease:
     name: Publish Prerelease to PyPI
-    needs: [build, testbed_server_config_schema, testbed_hello, testbed_api_response, testbed_api_utils]
+    needs: [build, testbed_server_config, testbed_hello, testbed_api_response, testbed_api_utils]
     if: github.event.action == 'prereleased'
     runs-on: ubuntu-22.04
     environment:
