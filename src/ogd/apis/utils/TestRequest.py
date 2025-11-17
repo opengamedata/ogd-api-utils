@@ -44,7 +44,7 @@ def TestRequest(url:str, request:str, params:Optional[Dict[str, Any]]=None, body
                 ret_val = requests.get(url, params=params, timeout=timeout)
     except Exception as err:
         if logger:
-            logger.debug(f"Error on {request} request to {url} : {err}")
+            logger.error(f"Error on {request} request to {url} : {err}")
         raise err
     else:
         if logger:
