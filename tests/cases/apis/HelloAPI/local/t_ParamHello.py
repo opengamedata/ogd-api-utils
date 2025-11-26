@@ -48,7 +48,7 @@ class t_ParamHello_local(TestCase):
         self.assertNotEqual(result, None)
         self.assertEqual(result.status, "200 OK")
         self.assertEqual(body.get("type"), "GET")
-        self.assertEqual(body.get("val"), "null")
+        self.assertEqual(body.get("val"), None)
         self.assertEqual(body.get("msg"), f"Hello {param}! You GETted successfully!")
         self.assertEqual(body.get("status"), "SUCCESS")
 
@@ -64,7 +64,7 @@ class t_ParamHello_local(TestCase):
         self.assertNotEqual(result, None)
         self.assertEqual(result.status, "200 OK")
         self.assertEqual(body.get("type"), "POST")
-        self.assertEqual(body.get("val"), "null")
+        self.assertEqual(body.get("val"), None)
         self.assertEqual(body.get("msg"), f"Hello {param}! You POSTed successfully!")
         self.assertEqual(body.get("status"), "SUCCESS")
 
@@ -80,6 +80,6 @@ class t_ParamHello_local(TestCase):
         self.assertNotEqual(result, None)
         self.assertEqual(result.status, "200 OK")
         self.assertEqual(body.get("type"), "PUT")
-        self.assertEqual(body.get("val"), "null")
+        self.assertEqual(body.get("val"), None)
         self.assertEqual(body.get("msg"), f"Hello {param}! You PUTted successfully!")
         self.assertEqual(body.get("status"), "SUCCESS")
