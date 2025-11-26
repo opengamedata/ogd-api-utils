@@ -162,7 +162,7 @@ class APIResponse:
     def AsDict(self):
         return {
             "type"   : str(self._type),
-            "val"    : json.dumps(self._val),
+            "val"    : self._val,
             "msg"    : self._msg,
             "status" : str(self._status)
         }
