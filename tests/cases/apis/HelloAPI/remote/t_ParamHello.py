@@ -37,7 +37,7 @@ class t_ParamHello_remote(TestCase):
                 Logger.Log(f"Could not parse json result '{result.text}' from {_url}", logging.ERROR)
                 body = {}
             self.assertEqual(body.get("type"), "GET", f"Bad type from {_url}")
-            self.assertEqual(body.get("val"), "null", f"Bad val from {_url}")
+            self.assertEqual(body.get("val"), None, f"Bad val from {_url}")
             self.assertEqual(body.get("msg"), f"Hello {self.param}! You GETted successfully!", f"Bad msg from {_url}")
             self.assertEqual(body.get("status"), "SUCCESS", f"Bad status from {_url}")
 
@@ -56,7 +56,7 @@ class t_ParamHello_remote(TestCase):
                 Logger.Log(f"Could not parse json result '{result.text}' from {_url}", logging.ERROR)
                 body = {}
             self.assertEqual(body.get("type"), "POST", f"Bad type from {_url}")
-            self.assertEqual(body.get("val"), "null", f"Bad val from {_url}")
+            self.assertEqual(body.get("val"), None, f"Bad val from {_url}")
             self.assertEqual(body.get("msg"), f"Hello {self.param}! You POSTed successfully!", f"Bad msg from {_url}")
             self.assertEqual(body.get("status"), "SUCCESS", f"Bad status from {_url}")
 
@@ -76,6 +76,6 @@ class t_ParamHello_remote(TestCase):
                 Logger.Log(f"Could not parse json result '{result.text}' from {_url}", logging.ERROR)
                 body = {}
             self.assertEqual(body.get("type"), "PUT", f"Bad type from {_url}")
-            self.assertEqual(body.get("val"), "null", f"Bad val from {_url}")
+            self.assertEqual(body.get("val"), None, f"Bad val from {_url}")
             self.assertEqual(body.get("msg"), f"Hello {self.param}! You PUTted successfully!", f"Bad msg from {_url}")
             self.assertEqual(body.get("status"), "SUCCESS", f"Bad status from {_url}")
