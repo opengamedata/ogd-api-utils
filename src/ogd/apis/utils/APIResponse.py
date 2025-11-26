@@ -164,7 +164,6 @@ class APIResponse:
             "type"   : str(self._type),
             "val"    : self._val,
             "msg"    : self._msg,
-            "status" : str(self._status)
         }
 
     @property
