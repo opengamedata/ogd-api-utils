@@ -184,7 +184,7 @@ class APIResponse:
         return Response(response=self.AsJSON, status=self.Status.value, mimetype='application/json')
 
     def RequestErrored(self, msg:str, status:Optional[ResponseStatus]=None):
-        self._status = status if status is not None and status in ResponseStatus.ClientErrors() else ResponseStatus.ERR_SRV
+        self._status = status if status is not None and status in ResponseStatus.ClientErrors() else ResponseStatus.ERR_REQ
         self._msg = f"ERROR: {msg}"
 
     def ServerErrored(self, msg:str, status:Optional[ResponseStatus]=None):
