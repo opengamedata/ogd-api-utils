@@ -38,7 +38,6 @@ class t_Hello_remote(TestCase):
             self.assertEqual(body.get("type"), "GET", f"Bad type from {_url}")
             self.assertEqual(body.get("val"), None, f"Bad val from {_url}")
             self.assertEqual(body.get("msg"), "Hello! You GETted successfully!", f"Bad msg from {_url}")
-            # self.assertEqual(body.get("status"), "SUCCESS", f"Bad status from {_url}")
 
     def test_post(self):
         _url = f"{self.base_url}/hello"
@@ -57,7 +56,6 @@ class t_Hello_remote(TestCase):
             self.assertEqual(body.get("type"), "POST", f"Bad type from {_url}")
             self.assertEqual(body.get("val"), None, f"Bad val from {_url}")
             self.assertEqual(body.get("msg"), "Hello! You POSTed successfully!", f"Bad msg from {_url}")
-            # self.assertEqual(body.get("status"), "SUCCESS", f"Bad status from {_url}")
 
     def test_put(self):
         _url = f"{self.base_url}/hello"
@@ -77,4 +75,3 @@ class t_Hello_remote(TestCase):
             self.assertEqual(body.get("type"), "PUT", f"Bad type from {_url}")
             self.assertEqual(body.get("val"), None, f"Bad val from {_url}")
             self.assertEqual(body.get("msg"), "Hello! You PUTted successfully!", f"Bad msg from {_url}")
-            # self.assertEqual(body.get("status"), "SUCCESS", f"Bad status from {_url}")

@@ -49,7 +49,6 @@ class t_Hello_local(TestCase):
         self.assertEqual(body.get("type"), "GET")
         self.assertEqual(body.get("val"), None)
         self.assertEqual(body.get("msg"), "Hello! You GETted successfully!")
-        # self.assertEqual(body.get("status"), "SUCCESS")
 
     def test_post(self):
         _url = f"/hello"
@@ -64,7 +63,6 @@ class t_Hello_local(TestCase):
         self.assertEqual(body.get("type"), "POST")
         self.assertEqual(body.get("val"), None)
         self.assertEqual(body.get("msg"), "Hello! You POSTed successfully!")
-        # self.assertEqual(body.get("status"), "SUCCESS")
 
     def test_put(self):
         _url = f"/hello"
@@ -79,4 +77,3 @@ class t_Hello_local(TestCase):
         self.assertEqual(body.get("type"), "PUT")
         self.assertEqual(body.get("val"), None)
         self.assertEqual(body.get("msg"), "Hello! You PUTted successfully!")
-        # self.assertEqual(body.get("status"), "SUCCESS")

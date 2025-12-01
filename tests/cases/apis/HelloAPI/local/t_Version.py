@@ -49,4 +49,3 @@ class t_Version_local(TestCase):
         self.assertEqual(body.get("type"), "GET")
         self.assertEqual(body.get("val"), {"version": "0.0.0-Testing"})
         self.assertEqual(body.get("msg"), "Successfully retrieved API version.")
-        # self.assertEqual(body.get("status"), "SUCCESS")
