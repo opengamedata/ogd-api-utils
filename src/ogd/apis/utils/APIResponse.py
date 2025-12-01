@@ -8,7 +8,7 @@ as well as utility enums used by the APIResponse class.
 # import standard libraries
 import json
 from enum import IntEnum
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Set
 
 # import 3rd-party libraries
 from flask import Response
@@ -47,7 +47,16 @@ class ResponseStatus(IntEnum):
     NONE    =   1
     SUCCESS = 200
     ERR_REQ = 400
+    ERR_NOTFOUND = 404
     ERR_SRV = 500
+
+    @staticmethod
+    def ServerErrors() -> Set["ResponseStatus"]:
+        return {ResponseStatus.ERR_SRV}
+
+    @staticmethod
+    def ClientErrors() -> Set["ResponseStatus"]:
+        return {ResponseStatus.ERR_REQ, ResponseStatus.ERR_NOTFOUND}
 
     def __str__(self):
         """Stringify function for ResponseStatus objects.
@@ -164,7 +173,6 @@ class APIResponse:
             "type"   : str(self._type),
             "val"    : self._val,
             "msg"    : self._msg,
-            "status" : str(self._status)
         }
 
     @property
@@ -175,12 +183,12 @@ class APIResponse:
     def AsFlaskResponse(self) -> Response:
         return Response(response=self.AsJSON, status=self.Status.value, mimetype='application/json')
 
-    def RequestErrored(self, msg:str):
-        self._status = ResponseStatus.ERR_REQ
+    def RequestErrored(self, msg:str, status:Optional[ResponseStatus]=None):
+        self._status = status if status is not None and status in ResponseStatus.ClientErrors() else ResponseStatus.ERR_REQ
         self._msg = f"ERROR: {msg}"
 
-    def ServerErrored(self, msg:str):
-        self._status = ResponseStatus.ERR_SRV
+    def ServerErrored(self, msg:str, status:Optional[ResponseStatus]=None):
+        self._status = status if status is not None and status in ResponseStatus.ServerErrors() else ResponseStatus.ERR_SRV
         self._msg = f"SERVER ERROR: {msg}"
 
     def RequestSucceeded(self, msg:str, val:Any):
