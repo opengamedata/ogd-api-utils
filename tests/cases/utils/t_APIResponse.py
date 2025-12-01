@@ -18,7 +18,9 @@ class t_APIResponse(TestCase):
         _config = TestConfig.FromDict(name="APIResponseTestConfig", unparsed_elements=settings)
         _level = logging.DEBUG if _config.Verbose else logging.INFO
         Logger.InitializeLogger(level=_level, use_logfile=False)
-        cls.response = APIResponse(req_type=RESTType.GET, val={"foo":"bar"}, msg="Complete", status=ResponseStatus.SUCCESS)
+        
+    def setUp(self):
+        self.response = APIResponse(req_type=RESTType.GET, val={"foo":"bar"}, msg="Complete", status=ResponseStatus.SUCCESS)
 
     @unittest.skip("Not yet implemented")
     def test_FromRequestResult(self):
