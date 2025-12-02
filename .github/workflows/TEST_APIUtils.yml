@@ -11,6 +11,12 @@ on:
     - 'tests/cases/utils/t_APIUtils.py'
     - 'tests/config/**'
     - 'requirements.txt'
+    - '!.github/workflows/CI_APIUtils.yml'
+    - '!.github/workflows/BUILD_APIUtils.yml'
+    - '!.github/actions/**'
+    - '!requirements.txt'
+    - '!src/**'
+    - '!tests/utils/**'
 
 jobs:
 

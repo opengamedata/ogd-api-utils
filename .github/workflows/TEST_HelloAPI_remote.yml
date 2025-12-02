@@ -11,6 +11,12 @@ on:
     - 'tests/cases/apis/HelloAPI/remote/**'
     - 'tests/config/**'
     - 'requirements.txt'
+    - '!.github/workflows/CI_APIUtils.yml'
+    - '!.github/workflows/BUILD_APIUtils.yml'
+    - '!.github/actions/**'
+    - '!requirements.txt'
+    - '!src/**'
+    - '!tests/utils/**'
 
 env:
   DEPLOY_URL: ${{ vars.OGD_STAGING_HOST }}/${{ vars.API_BASE_URL }}/${{ github.event.repository.name }}/${{ github.ref_name }}/app.wsgi
