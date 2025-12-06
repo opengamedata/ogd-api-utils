@@ -85,7 +85,7 @@ class APIResponse:
         self._status : ResponseStatus     = status
 
     def __str__(self):
-        return f"{self.Type.name} request: {self.Status}\n{self.Message}\nValues: {self.Value}"
+        return f"{str(self.Type)} request: {self.Status}\n{self.Message}\nValues: {self.Value}"
 
     @staticmethod
     def Default(req_type:RESTType):
