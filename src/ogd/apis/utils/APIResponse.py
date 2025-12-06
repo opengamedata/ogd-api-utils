@@ -14,6 +14,7 @@ from typing import Any, Dict, Optional, Set
 from flask import Response
 
 # import OGD libraries
+from ogd.common.utils.typing import Map
 import ogd.core.requests.RequestResult as RequestResult
 
 # Import local files
@@ -77,9 +78,9 @@ class ResponseStatus(IntEnum):
                 return "INVALID STATUS TYPE"
 
 class APIResponse:
-    def __init__(self, req_type:RESTType, val:Any, msg:str, status:ResponseStatus):
+    def __init__(self, req_type:RESTType, val:Optional[Map], msg:str, status:ResponseStatus):
         self._type   : RESTType       = req_type
-        self._val    : Dict[str, Any] = val
+        self._val    : Optional[Map]  = val
         self._msg    : str            = msg
         self._status : ResponseStatus = status
 
@@ -132,12 +133,11 @@ class APIResponse:
             _type   = RESTType[_type_str]
             _val    = _val_str if isinstance(_val_str, dict) else json.loads(_val_str)
             _status = ResponseStatus[_status_str.upper()] if _status_str else (status or ResponseStatus.NONE)
-        except KeyError as err:
+        except KeyError:
             pass
         else:
             ret_val = APIResponse(req_type=_type, val=_val, msg=_msg, status=_status)
-        finally:
-            return ret_val
+        return ret_val
 
     @property
     def Type(self) -> RESTType:
@@ -149,7 +149,7 @@ class APIResponse:
         return self._type
 
     @property
-    def Value(self) -> Dict[str, Any]:
+    def Value(self) -> Optional[Map]:
         """Property for the value of the request result.
 
         :return: Some value, of any type, returned from the request.
@@ -157,7 +157,7 @@ class APIResponse:
         """
         return self._val
     @Value.setter
-    def Value(self, new_val:Dict[str, Any]):
+    def Value(self, new_val:Optional[Map]):
         self._val = new_val
 
 
@@ -206,7 +206,7 @@ class APIResponse:
         self._status = status if status is not None and status in ResponseStatus.ServerErrors() else ResponseStatus.ERR_SRV
         self.Message = f"SERVER ERROR: {msg}"
 
-    def RequestSucceeded(self, msg:str, val:Any):
+    def RequestSucceeded(self, msg:str, val:Optional[Map]):
         self._status = ResponseStatus.SUCCESS
         self.Message = f"SUCCESS: {msg}"
-        self.Value = val
+        self.Value   = val
