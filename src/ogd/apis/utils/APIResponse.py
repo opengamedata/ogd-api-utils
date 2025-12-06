@@ -171,6 +171,9 @@ class APIResponse:
         :rtype: str
         """
         return self._msg
+    @Message.setter
+    def Message(self, new_msg:str):
+        self._msg = new_msg
 
     @property
     def Status(self) -> ResponseStatus:
@@ -199,13 +202,13 @@ class APIResponse:
 
     def RequestErrored(self, msg:str, status:Optional[ResponseStatus]=None):
         self._status = status if status is not None and status in ResponseStatus.ClientErrors() else ResponseStatus.ERR_REQ
-        self._msg = f"ERROR: {msg}"
+        self.Message = f"ERROR: {msg}"
 
     def ServerErrored(self, msg:str, status:Optional[ResponseStatus]=None):
         self._status = status if status is not None and status in ResponseStatus.ServerErrors() else ResponseStatus.ERR_SRV
-        self._msg = f"SERVER ERROR: {msg}"
+        self.Message = f"SERVER ERROR: {msg}"
 
     def RequestSucceeded(self, msg:str, val:Any):
         self._status = ResponseStatus.SUCCESS
-        self._msg = f"SUCCESS: {msg}"
-        self._val = val
+        self.Message = f"SUCCESS: {msg}"
+        self.Value = val
