@@ -117,7 +117,7 @@ class APIResponse:
                 _status = ResponseStatus.ERR_REQ
             case _:
                 _status = ResponseStatus.ERR_SRV
-        ret_val = APIResponse(req_type=req_type, val=None, msg=result.Message, status=_status)
+        ret_val = APIResponse(req_type=req_type, val={"session_count":result.SessionCount, "duration":str(result.Duration)}, msg=result.Message, status=_status)
         return ret_val
     
     @staticmethod
