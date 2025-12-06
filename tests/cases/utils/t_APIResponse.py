@@ -37,6 +37,16 @@ class t_APIResponse(TestCase):
         else:
             self.fail("_response was None, failure in parsing FromDict!")
 
+    def test_FromFromDict_recall_nostatus(self):
+        _response = APIResponse.FromDict(self.response.AsDict)
+        if _response:
+            self.assertEqual(_response.Type, RESTType.GET)
+            self.assertEqual(_response.Value, {"foo":"bar"})
+            self.assertEqual(_response.Message, "Complete")
+            self.assertEqual(_response.Status, ResponseStatus.NONE)
+        else:
+            self.fail("_response was None, failure in parsing FromDict!")
+
     def test_Type(self):
         self.assertEqual(self.response.Type, RESTType.GET)
 
