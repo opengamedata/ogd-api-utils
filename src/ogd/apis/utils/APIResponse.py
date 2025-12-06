@@ -125,14 +125,14 @@ class APIResponse:
     def FromDict(all_elements:Dict[str, Any], status:Optional[ResponseStatus]=None) -> Optional["APIResponse"]:
         ret_val : Optional["APIResponse"] = None
 
-        _type_str   = all_elements.get("type", "NOT FOUND").upper()
-        _val_str    = all_elements.get("val", {})
+        _type_raw   = all_elements.get("type", "NOT FOUND")
+        _val_raw    = all_elements.get("val")
         _msg        = all_elements.get("msg", "NOT FOUND")
-        _status_str = all_elements.get("status", None)
+        _status_raw = all_elements.get("status")
         try:
-            _type   = RESTType[_type_str]
-            _val    = _val_str if isinstance(_val_str, dict) else json.loads(_val_str)
-            _status = ResponseStatus[_status_str.upper()] if _status_str else (status or ResponseStatus.NONE)
+            _type   = RESTType[str(_type_raw).upper()] if _type_raw else None
+            _val    = _val_raw if isinstance(_val_raw, dict) else json.loads(str(_val_raw)) if _val_raw is not None else None
+            _status = ResponseStatus[str(_status_raw).upper()] if _status_raw else (status or ResponseStatus.NONE)
         except KeyError:
             pass
         else:
