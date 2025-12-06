@@ -96,7 +96,19 @@ class APIResponse:
         )
 
     @staticmethod
-    def FromRequestResult(result:RequestResult.RequestResult, req_type:RESTType):
+    def FromRequestResult(result:RequestResult.RequestResult, req_type:RESTType) -> "APIResponse":
+        """Generate an `APIResponse` from an OGD `RequestResult`.
+
+        The `RequestResult` indicates the result of a data export request.
+        Thus, this builder for an `APIResponse` is included as a convenient way to set up a response for the Data API.
+
+        :param result: The result object from an OGD export request
+        :type result: RequestResult.RequestResult
+        :param req_type: The REST request type that triggered the export request
+        :type req_type: RESTType
+        :return: An `APIResponse` corresponding to the result of the export request
+        :rtype: APIResponse
+        """
         _status : ResponseStatus
         match result.Status:
             case RequestResult.ResultStatus.SUCCESS:
@@ -109,17 +121,19 @@ class APIResponse:
         return ret_val
     
     @staticmethod
-    def FromDict(all_elements:Dict[str, Any]) -> Optional["APIResponse"]:
+    def FromDict(all_elements:Dict[str, Any], status:Optional[ResponseStatus]=None) -> Optional["APIResponse"]:
         ret_val : Optional["APIResponse"] = None
+
+        _default_status = status or "NONE"
 
         _type_str   = all_elements.get("type", "NOT FOUND").upper()
         _val_str    = all_elements.get("val", {})
         _msg        = all_elements.get("msg", "NOT FOUND")
-        _status_str = all_elements.get("status", "NOT FOUND").upper()
+        _status_str = all_elements.get("status", _default_status).upper()
         try:
             _type   = RESTType[_type_str]
-            _status = ResponseStatus[_status_str]
             _val    = _val_str if isinstance(_val_str, dict) else json.loads(_val_str)
+            _status = ResponseStatus[_status_str]
         except KeyError as err:
             pass
         else:
