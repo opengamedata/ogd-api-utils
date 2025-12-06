@@ -20,15 +20,22 @@ class t_APIResponse(TestCase):
         Logger.InitializeLogger(level=_level, use_logfile=False)
         
     def setUp(self):
-        self.response = APIResponse(req_type=RESTType.GET, val={"foo":"bar"}, msg="Complete", status=ResponseStatus.SUCCESS)
+        self.response : APIResponse = APIResponse(req_type=RESTType.GET, val={"foo":"bar"}, msg="Complete", status=ResponseStatus.SUCCESS)
 
     @unittest.skip("Not yet implemented")
     def test_FromRequestResult(self):
         pass
 
-    @unittest.skip("Not yet implemented")
-    def test_FromFromDict(self):
-        pass
+    # TODO : we could just do a different setUp(...) function in a sub-class of t_APIResponse, I think, instead of repeating every line of every property test.
+    def test_FromFromDict_recall(self):
+        _response = APIResponse.FromDict(self.response.AsDict, status=ResponseStatus.SUCCESS)
+        if _response:
+            self.assertEqual(_response.Type, RESTType.GET)
+            self.assertEqual(_response.Value, {"foo":"bar"})
+            self.assertEqual(_response.Message, "Complete")
+            self.assertEqual(_response.Status, ResponseStatus.SUCCESS)
+        else:
+            self.fail("_response was None, failure in parsing FromDict!")
 
     def test_Type(self):
         self.assertEqual(self.response.Type, RESTType.GET)
