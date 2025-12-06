@@ -78,11 +78,11 @@ class ResponseStatus(IntEnum):
                 return "INVALID STATUS TYPE"
 
 class APIResponse:
-    def __init__(self, req_type:RESTType, val:Optional[Map], msg:str, status:ResponseStatus):
-        self._type   : RESTType       = req_type
-        self._val    : Optional[Map]  = val
-        self._msg    : str            = msg
-        self._status : ResponseStatus = status
+    def __init__(self, req_type:Optional[RESTType], val:Optional[Map], msg:str, status:ResponseStatus):
+        self._type   : Optional[RESTType] = req_type
+        self._val    : Optional[Map]      = val
+        self._msg    : str                = msg
+        self._status : ResponseStatus     = status
 
     def __str__(self):
         return f"{self.Type.name} request: {self.Status}\n{self.Message}\nValues: {self.Value}"
@@ -140,7 +140,7 @@ class APIResponse:
         return ret_val
 
     @property
-    def Type(self) -> RESTType:
+    def Type(self) -> Optional[RESTType]:
         """Property for the type of REST request
 
         :return: A RESTType representing the type of REST request
