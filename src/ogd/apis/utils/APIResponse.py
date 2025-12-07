@@ -14,6 +14,7 @@ from typing import Any, Dict, Optional, Set
 from flask import Response
 
 # import OGD libraries
+from ogd.common.utils.typing import Map
 import ogd.core.requests.RequestResult as RequestResult
 
 # Import local files
@@ -77,14 +78,14 @@ class ResponseStatus(IntEnum):
                 return "INVALID STATUS TYPE"
 
 class APIResponse:
-    def __init__(self, req_type:RESTType, val:Any, msg:str, status:ResponseStatus):
-        self._type   : RESTType       = req_type
-        self._val    : Dict[str, Any] = val
-        self._msg    : str            = msg
-        self._status : ResponseStatus = status
+    def __init__(self, req_type:Optional[RESTType], val:Optional[Map], msg:str, status:ResponseStatus):
+        self._type   : Optional[RESTType] = req_type
+        self._val    : Optional[Map]      = val
+        self._msg    : str                = msg
+        self._status : ResponseStatus     = status
 
     def __str__(self):
-        return f"{self.Type.name} request: {self.Status}\n{self.Message}\nValues: {self.Value}"
+        return f"{str(self.Type)} request: {self.Status}\n{self.Message}\nValues: {self.Value}"
 
     @staticmethod
     def Default(req_type:RESTType):
@@ -117,30 +118,29 @@ class APIResponse:
                 _status = ResponseStatus.ERR_REQ
             case _:
                 _status = ResponseStatus.ERR_SRV
-        ret_val = APIResponse(req_type=req_type, val=None, msg=result.Message, status=_status)
+        ret_val = APIResponse(req_type=req_type, val={"session_count":result.SessionCount, "duration":str(result.Duration)}, msg=result.Message, status=_status)
         return ret_val
     
     @staticmethod
     def FromDict(all_elements:Dict[str, Any], status:Optional[ResponseStatus]=None) -> Optional["APIResponse"]:
         ret_val : Optional["APIResponse"] = None
 
-        _type_str   = all_elements.get("type", "NOT FOUND").upper()
-        _val_str    = all_elements.get("val", {})
+        _type_raw   = all_elements.get("type", "NOT FOUND")
+        _val_raw    = all_elements.get("val")
         _msg        = all_elements.get("msg", "NOT FOUND")
-        _status_str = all_elements.get("status", None)
+        _status_raw = all_elements.get("status")
         try:
-            _type   = RESTType[_type_str]
-            _val    = _val_str if isinstance(_val_str, dict) else json.loads(_val_str)
-            _status = ResponseStatus[_status_str.upper()] if _status_str else (status or ResponseStatus.NONE)
-        except KeyError as err:
+            _type   = RESTType[str(_type_raw).upper()] if _type_raw else None
+            _val    = _val_raw if isinstance(_val_raw, dict) else json.loads(str(_val_raw)) if _val_raw is not None else None
+            _status = ResponseStatus[str(_status_raw).upper()] if _status_raw else (status or ResponseStatus.NONE)
+        except KeyError:
             pass
         else:
             ret_val = APIResponse(req_type=_type, val=_val, msg=_msg, status=_status)
-        finally:
-            return ret_val
+        return ret_val
 
     @property
-    def Type(self) -> RESTType:
+    def Type(self) -> Optional[RESTType]:
         """Property for the type of REST request
 
         :return: A RESTType representing the type of REST request
@@ -149,7 +149,7 @@ class APIResponse:
         return self._type
 
     @property
-    def Value(self) -> Dict[str, Any]:
+    def Value(self) -> Optional[Map]:
         """Property for the value of the request result.
 
         :return: Some value, of any type, returned from the request.
@@ -157,7 +157,7 @@ class APIResponse:
         """
         return self._val
     @Value.setter
-    def Value(self, new_val:Dict[str, Any]):
+    def Value(self, new_val:Optional[Map]):
         self._val = new_val
 
 
@@ -206,7 +206,7 @@ class APIResponse:
         self._status = status if status is not None and status in ResponseStatus.ServerErrors() else ResponseStatus.ERR_SRV
         self.Message = f"SERVER ERROR: {msg}"
 
-    def RequestSucceeded(self, msg:str, val:Any):
+    def RequestSucceeded(self, msg:str, val:Optional[Map]):
         self._status = ResponseStatus.SUCCESS
         self.Message = f"SUCCESS: {msg}"
-        self.Value = val
+        self.Value   = val
