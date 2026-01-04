@@ -8,7 +8,8 @@ from unittest import TestCase
 from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.utils.Logger import Logger
 # import locals
-from src.ogd.apis.utils.APIResponse import APIResponse, RESTType, ResponseStatus
+from src.ogd.apis.models.enums.ResponseStatus import ResponseStatus
+from src.ogd.apis.models.APIResponse import APIResponse, RESTType
 from tests.config.t_config import settings
 
 
