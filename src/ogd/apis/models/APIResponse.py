@@ -17,6 +17,7 @@ from ogd.common.utils.typing import Map
 import ogd.core.requests.RequestResult as RequestResult
 
 # Import local files
+from ogd.apis.models.enums.RESTType import RESTType
 from ogd.apis.models.enums.ResponseStatus import ResponseStatus
 
 class APIResponse:
