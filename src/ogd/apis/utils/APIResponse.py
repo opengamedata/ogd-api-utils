@@ -43,21 +43,92 @@ class RESTType(IntEnum):
                 return "INVALID REST TYPE"
 
 class ResponseStatus(IntEnum):
-    """Simple enumerated type to track the status of an API request result.
+    """Enumerated type to track the status of an API request result.
     """
-    NONE    =   1
-    SUCCESS = 200
-    ERR_REQ = 400
-    ERR_NOTFOUND = 404
-    ERR_SRV = 500
+    NONE          =   1
+    CONTINUE      = 100
+    OK            = 200
+    MULTI_CHOICES = 300
+    BAD_REQUEST   = 400
+    INTERNAL_ERR  = 500
 
-    @staticmethod
-    def ServerErrors() -> Set["ResponseStatus"]:
-        return {ResponseStatus.ERR_SRV}
+    # 100s
+    SWITCHING_PROTOCOLS = 101
+    PROCESSING          = 102
+    EARLY_HINTS         = 103
+
+    # 200s
+    CREATED           = 201
+    ACCEPTED          = 202
+    NON_AUTHORITATIVE = 203
+    NO_CONTENT        = 204
+    RESET             = 205
+    PARTIAL           = 206
+    MULTI_STATUS      = 207
+    ALREADY_REPORTED  = 208
+    IM_USED           = 226
+
+    # 300s
+    MOVED           = 301
+    FOUND           = 302
+    SEE_OTHER       = 303
+    NOT_MODIFIED    = 304
+    TEMPORARY_REDIR = 307
+    PERMANENT_REDIR = 308
+
+    # 400s
+    UNAUTORIZED         = 401
+    PAYMENT_REQUIRED    = 402
+    FORBIDDEN           = 403
+    NOT_FOUND           = 404
+    METHOD_NOT_ALLOWED  = 405
+    NOT_ACCEPTABLE      = 406
+    PROXY_AUTH_REQUIRED = 407
+    REQUEST_TIMEOUT     = 408
+    CONFLICT            = 409
+    GONE                = 410
+    LENGTH_REQUIRED     = 411
+    PRECONDITION_FAILED = 412
+    CONENT_TOO_LARGE    = 413
+    URI_TOO_LONG        = 414
+    UNSUPPORTED_MEDIA   = 415
+    RANGE_INVALID       = 416
+    EXPECTATION_FAIL    = 417
+    IM_A_TEAPOT         = 418
+    MISDIRECTED         = 421
+    TOO_EARLY           = 425
+    UPGRADE_REQUIRED    = 426
+    PRECONDITION_REQUIRED = 428
+    TOO_MANY_REQUESTS   = 429
+    HEADERS_TOO_LARGE   = 431
+    ILLEGAL             = 451
+
+    # 400s WebDAV
+    UNPROCESSABLE     = 422
+    LOCKED            = 423
+    FAILED_DEPENDENCY = 424
+
+    # 500s
+    NOT_IMPLEMENTED          = 501
+    BAD_GATEWAY              = 502
+    UNAVAILABLE              = 503
+    GATEWAY_TIMEOUT          = 504
+    UNSUPPORTED_HTTP_VERSION = 505
+    VARIANT_NEGOTIATES       = 506
+    NOT_EXTENDED             = 510
+    NETWORK_AUTH_REQUIRED    = 511
+        
+    # 500s WebDAV
+    INSUFFICIENT_STORAGE = 507
+    LOOP_DETECTED        = 508
 
     @staticmethod
     def ClientErrors() -> Set["ResponseStatus"]:
-        return {ResponseStatus.ERR_REQ, ResponseStatus.ERR_NOTFOUND}
+        return {status for status in set(ResponseStatus) if status in range(400, 499)}
+
+    @staticmethod
+    def ServerErrors() -> Set["ResponseStatus"]:
+        return {status for status in set(ResponseStatus) if status in range(500, 599)}
 
     def __str__(self):
         """Stringify function for ResponseStatus objects.
@@ -65,17 +136,7 @@ class ResponseStatus(IntEnum):
         :return: Simple string version of the name of a ResponseStatus
         :rtype: _type_
         """
-        match self.value:
-            case ResponseStatus.NONE:
-                return "NONE"
-            case ResponseStatus.SUCCESS:
-                return "SUCCESS"
-            case ResponseStatus.ERR_SRV:
-                return "SERVER ERROR"
-            case ResponseStatus.ERR_REQ:
-                return "REQUEST ERROR"
-            case _:
-                return "INVALID STATUS TYPE"
+        return self.name
 
 class APIResponse:
     def __init__(self, req_type:Optional[RESTType], val:Optional[Map], msg:str, status:ResponseStatus):
@@ -113,11 +174,11 @@ class APIResponse:
         _status : ResponseStatus
         match result.Status:
             case RequestResult.ResultStatus.SUCCESS:
-                _status = ResponseStatus.SUCCESS 
+                _status = ResponseStatus.OK 
             case RequestResult.ResultStatus.FAILURE:
-                _status = ResponseStatus.ERR_REQ
+                _status = ResponseStatus.BAD_REQUEST
             case _:
-                _status = ResponseStatus.ERR_SRV
+                _status = ResponseStatus.INTERNAL_ERR
         ret_val = APIResponse(req_type=req_type, val={"session_count":result.SessionCount, "duration":str(result.Duration)}, msg=result.Message, status=_status)
         return ret_val
     
@@ -199,14 +260,14 @@ class APIResponse:
         return Response(response=self.AsJSON, status=self.Status.value, mimetype='application/json')
 
     def RequestErrored(self, msg:str, status:Optional[ResponseStatus]=None):
-        self._status = status if status is not None and status in ResponseStatus.ClientErrors() else ResponseStatus.ERR_REQ
+        self._status = status if status is not None and status in ResponseStatus.ClientErrors() else ResponseStatus.BAD_REQUEST
         self.Message = f"ERROR: {msg}"
 
     def ServerErrored(self, msg:str, status:Optional[ResponseStatus]=None):
-        self._status = status if status is not None and status in ResponseStatus.ServerErrors() else ResponseStatus.ERR_SRV
+        self._status = status if status is not None and status in ResponseStatus.ServerErrors() else ResponseStatus.INTERNAL_ERR
         self.Message = f"SERVER ERROR: {msg}"
 
     def RequestSucceeded(self, msg:str, val:Optional[Map]):
-        self._status = ResponseStatus.SUCCESS
+        self._status = ResponseStatus.OK
         self.Message = f"SUCCESS: {msg}"
         self.Value   = val

@@ -32,7 +32,7 @@ class HelloAPI:
                 req_type = RESTType.GET,
                 val      = None,
                 msg      = "Hello! You GETted successfully!",
-                status   = ResponseStatus.SUCCESS)
+                status   = ResponseStatus.OK)
             return ret_val.AsDict
 
         def post(self):
@@ -40,7 +40,7 @@ class HelloAPI:
                 req_type = RESTType.POST,
                 val      = None,
                 msg      = "Hello! You POSTed successfully!",
-                status   = ResponseStatus.SUCCESS)
+                status   = ResponseStatus.OK)
             return ret_val.AsDict
 
         def put(self):
@@ -48,7 +48,7 @@ class HelloAPI:
                 req_type = RESTType.PUT,
                 val      = None,
                 msg      = "Hello! You PUTted successfully!",
-                status   = ResponseStatus.SUCCESS)
+                status   = ResponseStatus.OK)
             return ret_val.AsDict
 
     class ParamHello(Resource):
@@ -57,7 +57,7 @@ class HelloAPI:
                 req_type = RESTType.GET,
                 val      = None,
                 msg      = f"Hello {name}! You GETted successfully!",
-                status   = ResponseStatus.SUCCESS)
+                status   = ResponseStatus.OK)
             return ret_val.AsDict
 
         def post(self, name):
@@ -65,7 +65,7 @@ class HelloAPI:
                 req_type = RESTType.POST,
                 val      = None,
                 msg      = f"Hello {name}! You POSTed successfully!",
-                status   = ResponseStatus.SUCCESS)
+                status   = ResponseStatus.OK)
             return ret_val.AsDict
 
         def put(self, name):
@@ -73,7 +73,7 @@ class HelloAPI:
                 req_type = RESTType.PUT,
                 val      = None,
                 msg      = f"Hello {name}! You PUTted successfully!",
-                status   = ResponseStatus.SUCCESS)
+                status   = ResponseStatus.OK)
             return ret_val.AsDict
     
     class Version(Resource):
@@ -82,5 +82,5 @@ class HelloAPI:
                 req_type = RESTType.GET,
                 val      = { "version" : str(HelloAPI.server_config.Version) },
                 msg      = f"Successfully retrieved API version.",
-                status   = ResponseStatus.SUCCESS)
+                status   = ResponseStatus.OK)
             return ret_val.AsDict
