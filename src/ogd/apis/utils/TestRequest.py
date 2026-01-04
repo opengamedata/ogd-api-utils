@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional
 
 from ogd.apis.models.enums.ResponseStatus import ResponseStatus
 
-def TestRequest(url:str, request:str, params:Optional[Dict[str, Any]]=None, body:Optional[Dict[str, Any]]=None, timeout:int=1, logger:Optional[logging.Logger]=None) -> requests.Response:
+def APIRequest(url:str, request:str, params:Optional[Dict[str, Any]]=None, body:Optional[Dict[str, Any]]=None, timeout:int=1, logger:Optional[logging.Logger]=None) -> requests.Response:
     """Utility function to make it easier to send requests to a remote server during unit testing.
 
     This function does some basic sanity checking of the target URL,
