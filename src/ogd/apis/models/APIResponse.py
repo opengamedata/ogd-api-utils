@@ -7,8 +7,7 @@ as well as utility enums used by the APIResponse class.
 
 # import standard libraries
 import json
-from enum import IntEnum
-from typing import Any, Dict, Optional, Set
+from typing import Any, Dict, Optional
 
 # import 3rd-party libraries
 from flask import Response
@@ -19,29 +18,6 @@ import ogd.core.requests.RequestResult as RequestResult
 
 # Import local files
 from ogd.apis.models.enums.ResponseStatus import ResponseStatus
-
-class RESTType(IntEnum):
-    """Simple enumerated type to track type of a REST request.
-    """
-    GET  = 1
-    POST = 2
-    PUT  = 3
-
-    def __str__(self):
-        """Stringify function for RESTTypes.
-
-        :return: Simple string version of the name of a RESTType
-        :rtype: _type_
-        """
-        match self.value:
-            case RESTType.GET:
-                return "GET"
-            case RESTType.POST:
-                return "POST"
-            case RESTType.PUT:
-                return "PUT"
-            case _:
-                return "INVALID REST TYPE"
 
 class APIResponse:
     def __init__(self, req_type:Optional[RESTType], val:Optional[Map], msg:str, status:ResponseStatus):

@@ -9,7 +9,8 @@ from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.utils.Logger import Logger
 # import locals
 from src.ogd.apis.models.enums.ResponseStatus import ResponseStatus
-from src.ogd.apis.models.APIResponse import APIResponse, RESTType
+from src.ogd.apis.models.enums.RESTType import RESTType
+from src.ogd.apis.models.APIResponse import APIResponse
 from tests.config.t_config import settings
 
 
