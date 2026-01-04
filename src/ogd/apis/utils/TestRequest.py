@@ -2,6 +2,8 @@ import logging
 import requests
 from typing import Any, Dict, Optional
 
+from ogd.apis.models.enums.ResponseStatus import ResponseStatus
+
 def TestRequest(url:str, request:str, params:Optional[Dict[str, Any]]=None, body:Optional[Dict[str, Any]]=None, timeout:int=1, logger:Optional[logging.Logger]=None) -> requests.Response:
     """Utility function to make it easier to send requests to a remote server during unit testing.
 
@@ -48,8 +50,9 @@ def TestRequest(url:str, request:str, params:Optional[Dict[str, Any]]=None, body
         raise err
     else:
         if logger:
-            logger.debug(f"Request sent to:        {url}")
-            logger.debug(f"Response received from: {ret_val.url}")
-            logger.debug(f"   Status: {ret_val.status_code}")
-            logger.debug(f"   Data:   {ret_val.text}")
+            out = logger.debug if ret_val.status_code == ResponseStatus.OK else logger.warning
+            out(f"Request sent to:        {url}")
+            out(f"Response received from: {ret_val.url}")
+            out(f"   Status: {ret_val.status_code}")
+            out(f"   Data:   {ret_val.text}")
         return ret_val
