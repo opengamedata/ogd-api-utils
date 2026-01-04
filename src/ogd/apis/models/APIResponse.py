@@ -7,8 +7,7 @@ as well as utility enums used by the APIResponse class.
 
 # import standard libraries
 import json
-from enum import IntEnum
-from typing import Any, Dict, Optional, Set
+from typing import Any, Dict, Optional
 
 # import 3rd-party libraries
 from flask import Response
@@ -18,64 +17,8 @@ from ogd.common.utils.typing import Map
 import ogd.core.requests.RequestResult as RequestResult
 
 # Import local files
-
-class RESTType(IntEnum):
-    """Simple enumerated type to track type of a REST request.
-    """
-    GET  = 1
-    POST = 2
-    PUT  = 3
-
-    def __str__(self):
-        """Stringify function for RESTTypes.
-
-        :return: Simple string version of the name of a RESTType
-        :rtype: _type_
-        """
-        match self.value:
-            case RESTType.GET:
-                return "GET"
-            case RESTType.POST:
-                return "POST"
-            case RESTType.PUT:
-                return "PUT"
-            case _:
-                return "INVALID REST TYPE"
-
-class ResponseStatus(IntEnum):
-    """Simple enumerated type to track the status of an API request result.
-    """
-    NONE    =   1
-    SUCCESS = 200
-    ERR_REQ = 400
-    ERR_NOTFOUND = 404
-    ERR_SRV = 500
-
-    @staticmethod
-    def ServerErrors() -> Set["ResponseStatus"]:
-        return {ResponseStatus.ERR_SRV}
-
-    @staticmethod
-    def ClientErrors() -> Set["ResponseStatus"]:
-        return {ResponseStatus.ERR_REQ, ResponseStatus.ERR_NOTFOUND}
-
-    def __str__(self):
-        """Stringify function for ResponseStatus objects.
-
-        :return: Simple string version of the name of a ResponseStatus
-        :rtype: _type_
-        """
-        match self.value:
-            case ResponseStatus.NONE:
-                return "NONE"
-            case ResponseStatus.SUCCESS:
-                return "SUCCESS"
-            case ResponseStatus.ERR_SRV:
-                return "SERVER ERROR"
-            case ResponseStatus.ERR_REQ:
-                return "REQUEST ERROR"
-            case _:
-                return "INVALID STATUS TYPE"
+from ogd.apis.models.enums.RESTType import RESTType
+from ogd.apis.models.enums.ResponseStatus import ResponseStatus
 
 class APIResponse:
     def __init__(self, req_type:Optional[RESTType], val:Optional[Map], msg:str, status:ResponseStatus):
@@ -113,11 +56,11 @@ class APIResponse:
         _status : ResponseStatus
         match result.Status:
             case RequestResult.ResultStatus.SUCCESS:
-                _status = ResponseStatus.SUCCESS 
+                _status = ResponseStatus.OK 
             case RequestResult.ResultStatus.FAILURE:
-                _status = ResponseStatus.ERR_REQ
+                _status = ResponseStatus.BAD_REQUEST
             case _:
-                _status = ResponseStatus.ERR_SRV
+                _status = ResponseStatus.INTERNAL_ERR
         ret_val = APIResponse(req_type=req_type, val={"session_count":result.SessionCount, "duration":str(result.Duration)}, msg=result.Message, status=_status)
         return ret_val
     
@@ -199,14 +142,14 @@ class APIResponse:
         return Response(response=self.AsJSON, status=self.Status.value, mimetype='application/json')
 
     def RequestErrored(self, msg:str, status:Optional[ResponseStatus]=None):
-        self._status = status if status is not None and status in ResponseStatus.ClientErrors() else ResponseStatus.ERR_REQ
+        self._status = status if status is not None and status in ResponseStatus.ClientErrors() else ResponseStatus.BAD_REQUEST
         self.Message = f"ERROR: {msg}"
 
     def ServerErrored(self, msg:str, status:Optional[ResponseStatus]=None):
-        self._status = status if status is not None and status in ResponseStatus.ServerErrors() else ResponseStatus.ERR_SRV
+        self._status = status if status is not None and status in ResponseStatus.ServerErrors() else ResponseStatus.INTERNAL_ERR
         self.Message = f"SERVER ERROR: {msg}"
 
     def RequestSucceeded(self, msg:str, val:Optional[Map]):
-        self._status = ResponseStatus.SUCCESS
+        self._status = ResponseStatus.OK
         self.Message = f"SUCCESS: {msg}"
         self.Value   = val

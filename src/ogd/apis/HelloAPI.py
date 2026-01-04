@@ -14,7 +14,9 @@ from flask_restful import Resource, Api
 
 # import locals
 from ogd.apis.configs.ServerConfig import ServerConfig
-from ogd.apis.utils.APIResponse import APIResponse, RESTType, ResponseStatus
+from ogd.apis.models.enums.ResponseStatus import ResponseStatus
+from ogd.apis.models.enums.RESTType import RESTType
+from ogd.apis.models.APIResponse import APIResponse
 
 class HelloAPI:
     @staticmethod
@@ -32,7 +34,7 @@ class HelloAPI:
                 req_type = RESTType.GET,
                 val      = None,
                 msg      = "Hello! You GETted successfully!",
-                status   = ResponseStatus.SUCCESS)
+                status   = ResponseStatus.OK)
             return ret_val.AsDict
 
         def post(self):
@@ -40,7 +42,7 @@ class HelloAPI:
                 req_type = RESTType.POST,
                 val      = None,
                 msg      = "Hello! You POSTed successfully!",
-                status   = ResponseStatus.SUCCESS)
+                status   = ResponseStatus.OK)
             return ret_val.AsDict
 
         def put(self):
@@ -48,7 +50,7 @@ class HelloAPI:
                 req_type = RESTType.PUT,
                 val      = None,
                 msg      = "Hello! You PUTted successfully!",
-                status   = ResponseStatus.SUCCESS)
+                status   = ResponseStatus.OK)
             return ret_val.AsDict
 
     class ParamHello(Resource):
@@ -57,7 +59,7 @@ class HelloAPI:
                 req_type = RESTType.GET,
                 val      = None,
                 msg      = f"Hello {name}! You GETted successfully!",
-                status   = ResponseStatus.SUCCESS)
+                status   = ResponseStatus.OK)
             return ret_val.AsDict
 
         def post(self, name):
@@ -65,7 +67,7 @@ class HelloAPI:
                 req_type = RESTType.POST,
                 val      = None,
                 msg      = f"Hello {name}! You POSTed successfully!",
-                status   = ResponseStatus.SUCCESS)
+                status   = ResponseStatus.OK)
             return ret_val.AsDict
 
         def put(self, name):
@@ -73,7 +75,7 @@ class HelloAPI:
                 req_type = RESTType.PUT,
                 val      = None,
                 msg      = f"Hello {name}! You PUTted successfully!",
-                status   = ResponseStatus.SUCCESS)
+                status   = ResponseStatus.OK)
             return ret_val.AsDict
     
     class Version(Resource):
@@ -82,5 +84,5 @@ class HelloAPI:
                 req_type = RESTType.GET,
                 val      = { "version" : str(HelloAPI.server_config.Version) },
                 msg      = f"Successfully retrieved API version.",
-                status   = ResponseStatus.SUCCESS)
+                status   = ResponseStatus.OK)
             return ret_val.AsDict

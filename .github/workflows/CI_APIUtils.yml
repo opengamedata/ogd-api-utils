@@ -26,7 +26,7 @@ jobs:
       with_caching: false
 
   testbed_hello_local:
-    name: HelloAPI Testbed
+    name: HelloAPI Local Testbed
     needs: build
     uses: ./.github/workflows/TEST_HelloAPI_local.yml
 
@@ -96,6 +96,6 @@ jobs:
       run: echo "Deployed to ${{ env.DEPLOY_URL }}"
 
   testbed_hello_remote:
-    name: APIUtils Testbed
+    name: HelloAPI Remote Testbed
     needs: deploy_helloapi
     uses: ./.github/workflows/TEST_HelloAPI_remote.yml
