@@ -6,7 +6,7 @@ from unittest import TestCase
 from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.utils.Logger import Logger
 # import locals
-from src.ogd.apis.models.APIRequest import APIRequest
+from ogd.apis.models.APIRequest import APIRequest
 from tests.config.t_config import settings
 
 class t_ParamHello_remote(TestCase):
