@@ -10,7 +10,7 @@ from ogd.apis.models.enums.ResponseStatus import ResponseStatus
 from ogd.apis.models.APIResponse import APIResponse
 
 class APIRequest:
-    def __init__(self, url:str | ParseResult, request_type:str | RESTType, params:Optional[Dict[str, Any]]=None, body:Optional[Dict[str, Any]]=None, timeout:int=1):
+    def __init__(self, url:str, request_type:str | RESTType, params:Optional[Dict[str, Any]]=None, body:Optional[Dict[str, Any]]=None, timeout:int=1):
         """Utility function to make it easier to send requests to a remote server during unit testing.
 
         This function does some basic sanity checking of the target URL,
@@ -34,16 +34,10 @@ class APIRequest:
         """
         params = params or {}
 
-        self._url : ParseResult
         self._request_type : RESTType
 
-        if isinstance(url, ParseResult):
-            self._url = url
-        else:
-            self._url = urlparse(url)
-            if self._url.scheme in {None, ''}:
-                # give url a default scheme, if it didn't have one.
-                self._url = ParseResult(scheme="https://", netloc=self._url.netloc, path=self._url.path, params=self._url.params, query=self._url.query, fragment=self._url.fragment)
+        if not url.startswith("http://") or url.startswith("https://"):
+            url = f"https://{url}"
         if isinstance(request_type, RESTType):
             self._request_type = request_type
         else:
@@ -53,6 +47,7 @@ class APIRequest:
                 current_app.logger.warning(f"Bad request type {request_type}, defaulting to GET")
                 self._request_type = RESTType.GET
 
+        self._url = url
         self._params = params
         self._body = body
         self._timeout = timeout
