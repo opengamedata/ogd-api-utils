@@ -60,25 +60,25 @@ class APIRequest:
         try:
             match (self._request_type):
                 case RESTType.GET:
-                    response = requests.get( urlunparse(self._url), params=self._params, timeout=self._timeout)
+                    response = requests.get( self._url, params=self._params, timeout=self._timeout)
                 case RESTType.POST:
-                    response = requests.post(urlunparse(self._url), params=self._params, data=self._body, timeout=self._timeout)
+                    response = requests.post(self._url, params=self._params, data=self._body, timeout=self._timeout)
                 case RESTType.PUT:
-                    response = requests.put( urlunparse(self._url), params=self._params, data=self._body, timeout=self._timeout)
+                    response = requests.put( self._url, params=self._params, data=self._body, timeout=self._timeout)
                 case _:
                     if logger:
                         logger.warning(f"Bad request type {self._request_type}, defaulting to GET")
-                    response = requests.get(urlunparse(self._url), params=self._params, timeout=self._timeout)
+                    response = requests.get(self._url, params=self._params, timeout=self._timeout)
         except Exception as err:
             if logger:
-                logger.error(f"Error on {self._request_type} request to {urlunparse(self._url)} : {err}")
+                logger.error(f"Error on {self._request_type} request to {self._url} : {err}")
             raise err
         else:
             ret_val = APIResponse.FromResponse(response)
             if logger:
                 out = logger.debug if ret_val.Status == ResponseStatus.OK else logger.warning
-                out(f"Request sent to:        {urlunparse(self._url)}")
-                out(f"Response received from: {urlunparse(self._url)}")
+                out(f"Request sent to:        {self._url}")
+                out(f"Response received from: {self._url}")
                 out(f"   Status: {ret_val.Status}")
                 out(f"   Msg:    {ret_val.Message}")
                 out(f"   Value:  {ret_val.Value}")
