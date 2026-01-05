@@ -24,7 +24,7 @@ class t_Hello_remote(TestCase):
     def test_get(self):
         _url = f"{self.base_url}/hello"
         try:
-            result = APIRequest(url=_url, request="GET", params={}, logger=Logger.std_logger)
+            result = APIRequest(url=_url, request_type="GET", params={}, logger=Logger.std_logger)
         except Exception as err:
             self.fail(str(err))
         else:
@@ -42,7 +42,7 @@ class t_Hello_remote(TestCase):
     def test_post(self):
         _url = f"{self.base_url}/hello"
         try:
-            result = APIRequest(url=_url, request="POST", params={}, logger=Logger.std_logger)
+            result = APIRequest(url=_url, request_type="POST", params={}, logger=Logger.std_logger)
         except Exception as err:
             self.fail(str(err))
         else:
@@ -61,7 +61,7 @@ class t_Hello_remote(TestCase):
         _url = f"{self.base_url}/hello"
         Logger.Log(f"PUT test at {_url}", logging.DEBUG)
         try:
-            result = APIRequest(url=_url, request="PUT", params={}, logger=Logger.std_logger)
+            result = APIRequest(url=_url, request_type="PUT", params={}, logger=Logger.std_logger)
         except Exception as err:
             self.fail(str(err))
         else:
