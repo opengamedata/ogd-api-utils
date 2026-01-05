@@ -1,12 +1,13 @@
 import logging
-import requests
 from typing import Any, Dict, Optional
 from urllib.parse import urlparse, urlunparse, ParseResult
 
+import requests
 from flask import current_app
 
 from ogd.apis.models.enums.RESTType import RESTType
 from ogd.apis.models.enums.ResponseStatus import ResponseStatus
+from ogd.apis.models.APIResponse import APIResponse
 
 class APIRequest:
     def __init__(self, url:str | ParseResult, request_type:str | RESTType, params:Optional[Dict[str, Any]]=None, body:Optional[Dict[str, Any]]=None, timeout:int=1):
@@ -57,30 +58,33 @@ class APIRequest:
         self._timeout = timeout
 
         
-    def Execute(self, logger:Optional[logging.Logger]=None) -> requests.Response:
-        ret_val : requests.Response
+    def Execute(self, logger:Optional[logging.Logger]=None) -> APIResponse:
+        ret_val : APIResponse
 
+        response : requests.Response
         try:
             match (self._request_type):
                 case RESTType.GET:
-                    ret_val = requests.get( urlunparse(self._url), params=self._params, timeout=self._timeout)
+                    response = requests.get( urlunparse(self._url), params=self._params, timeout=self._timeout)
                 case RESTType.POST:
-                    ret_val = requests.post(urlunparse(self._url), params=self._params, data=self._body, timeout=self._timeout)
+                    response = requests.post(urlunparse(self._url), params=self._params, data=self._body, timeout=self._timeout)
                 case RESTType.PUT:
-                    ret_val = requests.put( urlunparse(self._url), params=self._params, data=self._body, timeout=self._timeout)
+                    response = requests.put( urlunparse(self._url), params=self._params, data=self._body, timeout=self._timeout)
                 case _:
                     if logger:
                         logger.warning(f"Bad request type {self._request_type}, defaulting to GET")
-                    ret_val = requests.get(urlunparse(self._url), params=self._params, timeout=self._timeout)
+                    response = requests.get(urlunparse(self._url), params=self._params, timeout=self._timeout)
         except Exception as err:
             if logger:
                 logger.error(f"Error on {self._request_type} request to {urlunparse(self._url)} : {err}")
             raise err
         else:
+            ret_val = APIResponse.FromResponse(response)
             if logger:
-                out = logger.debug if ret_val.status_code == ResponseStatus.OK else logger.warning
+                out = logger.debug if ret_val.Status == ResponseStatus.OK else logger.warning
                 out(f"Request sent to:        {urlunparse(self._url)}")
-                out(f"Response received from: {ret_val.url}")
-                out(f"   Status: {ret_val.status_code}")
-                out(f"   Data:   {ret_val.text}")
-            return ret_val
+                out(f"Response received from: {urlunparse(self._url)}")
+                out(f"   Status: {ret_val.Status}")
+                out(f"   Msg:    {ret_val.Message}")
+                out(f"   Value:  {ret_val.Value}")
+        return ret_val

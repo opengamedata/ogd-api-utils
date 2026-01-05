@@ -10,6 +10,7 @@ import json
 from typing import Any, Dict, Optional
 
 # import 3rd-party libraries
+import requests
 from flask import Response
 
 # import OGD libraries
@@ -63,6 +64,11 @@ class APIResponse:
                 _status = ResponseStatus.INTERNAL_ERR
         ret_val = APIResponse(req_type=req_type, val={"session_count":result.SessionCount, "duration":str(result.Duration)}, msg=result.Message, status=_status)
         return ret_val
+
+    @staticmethod
+    def FromResponse(result:requests.Response) -> "APIResponse":
+        raw = result.json()
+        return APIResponse(req_type=raw.get("type"), val=raw.get("val"), msg=raw.get("msg"), status=ResponseStatus(result.status_code))
     
     @staticmethod
     def FromDict(all_elements:Dict[str, Any], status:Optional[ResponseStatus]=None) -> Optional["APIResponse"]:
