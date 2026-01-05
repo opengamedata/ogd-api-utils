@@ -53,8 +53,11 @@ class APIRequest:
         self._timeout = timeout
 
         
-    def Execute(self, logger:Optional[logging.Logger]=current_app.logger) -> APIResponse:
+    def Execute(self, logger:Optional[logging.Logger]=None) -> APIResponse:
         ret_val : APIResponse
+
+        if logger is None and current_app:
+            logger = current_app.logger
 
         response : requests.Response
         try:
