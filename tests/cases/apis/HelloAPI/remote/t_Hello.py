@@ -1,5 +1,4 @@
 # import libraries
-import json
 import logging
 from unittest import TestCase
 # import 3rd-party libraries
