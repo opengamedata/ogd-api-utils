@@ -22,8 +22,14 @@ from ogd.apis.models.enums.RESTType import RESTType
 from ogd.apis.models.enums.ResponseStatus import ResponseStatus
 
 class APIResponse:
-    def __init__(self, req_type:Optional[RESTType], val:Optional[Map], msg:str, status:ResponseStatus):
-        self._type   : Optional[RESTType] = req_type
+    def __init__(self, req_type:Optional[RESTType | str], val:Optional[Map], msg:str, status:ResponseStatus):
+        self._type   : Optional[RESTType]
+        if isinstance(req_type, RESTType):
+            self._type = req_type
+        elif isinstance(req_type, str):
+            self._type = RESTType[req_type]
+        else:
+            self._type = None
         self._val    : Optional[Map]      = val
         self._msg    : str                = msg
         self._status : ResponseStatus     = status
@@ -67,8 +73,15 @@ class APIResponse:
 
     @staticmethod
     def FromResponse(result:requests.Response) -> "APIResponse":
-        raw = result.json()
-        return APIResponse(req_type=raw.get("type"), val=raw.get("val"), msg=raw.get("msg"), status=ResponseStatus(result.status_code))
+        ret_val : APIResponse
+
+        try:
+            raw = result.json()
+            ret_val = APIResponse(req_type=raw.get("type"), val=raw.get("val"), msg=raw.get("msg"), status=ResponseStatus(result.status_code))
+        except requests.exceptions.JSONDecodeError:
+            ret_val = APIResponse(req_type=None, val=None, msg=result.text, status=ResponseStatus(result.status_code))
+
+        return ret_val
     
     @staticmethod
     def FromDict(all_elements:Dict[str, Any], status:Optional[ResponseStatus]=None) -> Optional["APIResponse"]:
