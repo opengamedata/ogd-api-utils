@@ -1,5 +1,4 @@
 # import libraries
-import json
 import logging
 from unittest import TestCase
 # import 3rd-party libraries
@@ -25,54 +24,39 @@ class t_ParamHello_remote(TestCase):
     def test_get(self):
         _url = f"{self.base_url}/p_hello/{self.param}"
         try:
-            result = APIRequest(url=_url, request_type="GET", params={}, logger=Logger.std_logger)
+            result = APIRequest(url=_url, request_type="GET", params={}).Execute(logger=Logger.std_logger)
         except Exception as err:
             self.fail(str(err))
         else:
             self.assertNotEqual(result, None, f"No response from {_url}")
-            self.assertEqual(result.status_code, 200, f"Bad status from {_url}")
-            try:
-                body = json.loads(result.text)
-            except json.decoder.JSONDecodeError:
-                Logger.Log(f"Could not parse json result '{result.text}' from {_url}", logging.ERROR)
-                body = {}
-            self.assertEqual(body.get("type"), "GET", f"Bad type from {_url}")
-            self.assertEqual(body.get("val"), None, f"Bad val from {_url}")
-            self.assertEqual(body.get("msg"), f"Hello {self.param}! You GETted successfully!", f"Bad msg from {_url}")
+            self.assertEqual(result.Status, 200, f"Bad status from {_url}")
+            self.assertEqual(str(result.Type), "GET", f"Bad type from {_url}")
+            self.assertEqual(result.Value, None, f"Bad val from {_url}")
+            self.assertEqual(result.Message, f"Hello {self.param}! You GETted successfully!", f"Bad msg from {_url}")
 
     def test_post(self):
         _url = f"{self.base_url}/p_hello/{self.param}"
         try:
-            result = APIRequest(url=_url, request_type="POST", params={}, logger=Logger.std_logger)
+            result = APIRequest(url=_url, request_type="POST", params={}).Execute(logger=Logger.std_logger)
         except Exception as err:
             self.fail(str(err))
         else:
             self.assertNotEqual(result, None, f"No response from {_url}")
-            self.assertEqual(result.status_code, 200, f"Bad status from {_url}")
-            try:
-                body = json.loads(result.text)
-            except json.decoder.JSONDecodeError:
-                Logger.Log(f"Could not parse json result '{result.text}' from {_url}", logging.ERROR)
-                body = {}
-            self.assertEqual(body.get("type"), "POST", f"Bad type from {_url}")
-            self.assertEqual(body.get("val"), None, f"Bad val from {_url}")
-            self.assertEqual(body.get("msg"), f"Hello {self.param}! You POSTed successfully!", f"Bad msg from {_url}")
+            self.assertEqual(result.Status, 200, f"Bad status from {_url}")
+            self.assertEqual(str(result.Type), "POST", f"Bad type from {_url}")
+            self.assertEqual(result.Value, None, f"Bad val from {_url}")
+            self.assertEqual(result.Message, f"Hello {self.param}! You POSTed successfully!", f"Bad msg from {_url}")
 
     def test_put(self):
         _url = f"{self.base_url}/p_hello/{self.param}"
         Logger.Log(f"PUT test at {_url}", logging.DEBUG)
         try:
-            result = APIRequest(url=_url, request_type="PUT", params={}, logger=Logger.std_logger)
+            result = APIRequest(url=_url, request_type="PUT", params={}).Execute(logger=Logger.std_logger)
         except Exception as err:
             self.fail(str(err))
         else:
             self.assertNotEqual(result, None, f"No response from {_url}")
-            self.assertEqual(result.status_code, 200, f"Bad status from {_url}")
-            try:
-                body = json.loads(result.text)
-            except json.decoder.JSONDecodeError:
-                Logger.Log(f"Could not parse json result '{result.text}' from {_url}", logging.ERROR)
-                body = {}
-            self.assertEqual(body.get("type"), "PUT", f"Bad type from {_url}")
-            self.assertEqual(body.get("val"), None, f"Bad val from {_url}")
-            self.assertEqual(body.get("msg"), f"Hello {self.param}! You PUTted successfully!", f"Bad msg from {_url}")
+            self.assertEqual(result.Status, 200, f"Bad status from {_url}")
+            self.assertEqual(str(result.Type), "PUT", f"Bad type from {_url}")
+            self.assertEqual(result.Value, None, f"Bad val from {_url}")
+            self.assertEqual(result.Message, f"Hello {self.param}! You PUTted successfully!", f"Bad msg from {_url}")
