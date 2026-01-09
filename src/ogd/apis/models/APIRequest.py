@@ -36,7 +36,7 @@ class APIRequest:
 
         self._request_type : RESTType
 
-        if not url.startswith("http://") or url.startswith("https://"):
+        if not (url.startswith("http://") or url.startswith("https://")):
             url = f"https://{url}"
         if isinstance(request_type, RESTType):
             self._request_type = request_type
