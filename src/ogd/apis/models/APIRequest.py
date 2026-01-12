@@ -53,7 +53,7 @@ class APIRequest:
         self._timeout = timeout
 
         
-    def Execute(self, logger:Optional[logging.Logger]=None) -> APIResponse:
+    def Execute(self, logger:Optional[logging.Logger]=None, retry:int=0) -> APIResponse:
         ret_val : APIResponse
 
         if logger is None and current_app:
@@ -72,10 +72,19 @@ class APIRequest:
                     if logger:
                         logger.warning(f"Bad request type {self._request_type}, defaulting to GET")
                     response = requests.get(self._url, params=self._params, timeout=self._timeout)
+        except requests.exceptions.ReadTimeout:
+            if retry < 5:
+                if logger:
+                    logger.error(f"Timeout error executing {self}, trying again...")
+                return self.Execute(logger=logger, retry=retry+1)
+            else:
+                if logger:
+                    logger.error(f"Timeout error executing {self}.")
+                return APIResponse(req_type=self._request_type, val=None, msg="Could not retrieve results, server timed out!", status=ResponseStatus.GATEWAY_TIMEOUT)
         except Exception as err:
             if logger:
                 logger.error(f"Error on {self._request_type} request to {self._url} : {err}")
-            raise err
+            return APIResponse(req_type=self._request_type, val=None, msg="Could not retrieve results, encountered an unexpected error while executing request!", status=ResponseStatus.INTERNAL_ERR)
         else:
             ret_val = APIResponse.FromResponse(response)
             if logger:
