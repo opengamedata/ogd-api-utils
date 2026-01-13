@@ -89,7 +89,7 @@ class APIRequest:
             ret_val = APIResponse.FromResponse(response)
             if logger:
                 out = logger.debug if ret_val.Status == ResponseStatus.OK else logger.warning
-                out(f"Request sent to:        {self._url}")
+                out(f"Request sent to:        {self._url}, with params {self._params}")
                 out(f"Response received from: {self._url}")
                 out(f"   Status: {ret_val.Status}")
                 out(f"   Msg:    {ret_val.Message}")
