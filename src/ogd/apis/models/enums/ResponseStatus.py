@@ -50,7 +50,7 @@ class ResponseStatus(IntEnum):
     GONE                = 410
     LENGTH_REQUIRED     = 411
     PRECONDITION_FAILED = 412
-    CONENT_TOO_LARGE    = 413
+    CONTENT_TOO_LARGE   = 413
     URI_TOO_LONG        = 414
     UNSUPPORTED_MEDIA   = 415
     RANGE_INVALID       = 416
@@ -78,21 +78,38 @@ class ResponseStatus(IntEnum):
     VARIANT_NEGOTIATES       = 506
     NOT_EXTENDED             = 510
     NETWORK_AUTH_REQUIRED    = 511
-        
+
     # 500s WebDAV
     INSUFFICIENT_STORAGE = 507
     LOOP_DETECTED        = 508
 
     @staticmethod
     def ClientErrors() -> Set["ResponseStatus"]:
+        """Gets the set of valid 400-level "client" error responses.
+
+        :return: The set of valid 400-level "client" error responses.
+        :rtype: Set[ResponseStatus]
+        """
         return {status for status in set(ResponseStatus) if status in range(400, 499)}
 
     @staticmethod
     def ServerErrors() -> Set["ResponseStatus"]:
+        """Gets the set of valid 500-level "server" error responses.
+
+        :return: The set of valid 500-level "server" error responses.
+        :rtype: Set[ResponseStatus]
+        """
         return {status for status in set(ResponseStatus) if status in range(500, 599)}
 
     @staticmethod
     def FromOGDResult(result_status:RequestResult.ResultStatus) -> "ResponseStatus":
+        """Get a ResponseStatus equivalent to given ResultStatus from OGD-core
+
+        :param result_status: An OGD-core ResultStatus
+        :type result_status: ogd.core.requests.RequestResult.ResultStatus
+        :return: A ResponseStatus equivalent to result_status
+        :rtype: ResponseStatus
+        """
         ret_val : ResponseStatus
 
         match result_status:
