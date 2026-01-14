@@ -60,14 +60,7 @@ class APIResponse:
         :return: An `APIResponse` corresponding to the result of the export request
         :rtype: APIResponse
         """
-        _status : ResponseStatus
-        match result.Status:
-            case RequestResult.ResultStatus.SUCCESS:
-                _status = ResponseStatus.OK 
-            case RequestResult.ResultStatus.FAILURE:
-                _status = ResponseStatus.BAD_REQUEST
-            case _:
-                _status = ResponseStatus.INTERNAL_ERR
+        _status = ResponseStatus.FromOGDResult(result.Status)
         ret_val = APIResponse(req_type=req_type, val={"session_count":result.SessionCount, "duration":str(result.Duration)}, msg=result.Message, status=_status)
         return ret_val
 
