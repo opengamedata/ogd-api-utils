@@ -52,6 +52,8 @@ class APIRequest:
         self._body = body
         self._timeout = timeout
 
+    def __str__(self) -> str:
+        return f"Request: {self._request_type} {self._url}"
         
     def Execute(self, logger:Optional[logging.Logger]=None, retry:int=0) -> APIResponse:
         ret_val : APIResponse
