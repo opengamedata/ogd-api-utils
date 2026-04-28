@@ -7,6 +7,7 @@ as well as utility enums used by the APIResponse class.
 
 # import standard libraries
 import json
+import logging
 from typing import Any, Dict, Optional
 
 # import 3rd-party libraries
@@ -15,6 +16,7 @@ from flask import Response
 
 # import OGD libraries
 from ogd.common.utils.typing import Map
+from ogd.common.utils.Logger import Logger
 import ogd.core.requests.RequestResult as RequestResult
 
 # Import local files
@@ -35,7 +37,13 @@ class APIResponse:
         if isinstance(val, dict):
             self._val = val
         else:
-            self._val = json.loads(str(val))
+            try:
+                self._val = json.loads(str(val))
+            except json.decoder.JSONDecodeError as err:
+                abbreviated_val = f"{str(val)[:20]}..." if len(str(val)) > 20 else str(val)
+                msg = f"API response 'value' field contained value '{abbreviated_val}' with invalid type {type(val)}, which could not be converted to a dictionary. Attempting to do so resulted in error:\n{err}\nThe value field will be left blank."
+                Logger.Log(msg, logging.ERROR)
+                self._val = None
         return f"{str(self.Type)} request: {self.Status}\n{self.Message}\nValues: {self.Value}"
 
     @staticmethod
