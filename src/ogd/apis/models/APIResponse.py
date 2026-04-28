@@ -44,6 +44,10 @@ class APIResponse:
                 msg = f"API response 'value' field contained value '{abbreviated_val}' with invalid type {type(val)}, which could not be converted to a dictionary. Attempting to do so resulted in error:\n{err}\nThe value field will be left blank."
                 Logger.Log(msg, logging.ERROR)
                 self._val = None
+        self._msg    : str                = msg
+        self._status : ResponseStatus     = status
+
+    def __str__(self):
         return f"{str(self.Type)} request: {self.Status}\n{self.Message}\nValues: {self.Value}"
 
     @staticmethod
