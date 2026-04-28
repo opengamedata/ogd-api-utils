@@ -24,17 +24,18 @@ from ogd.apis.models.enums.ResponseStatus import ResponseStatus
 class APIResponse:
     def __init__(self, req_type:Optional[RESTType | str], val:Optional[Map], msg:str, status:ResponseStatus):
         self._type   : Optional[RESTType]
+        self._val    : Optional[Map]
+
         if isinstance(req_type, RESTType):
             self._type = req_type
         elif isinstance(req_type, str):
             self._type = RESTType[req_type]
         else:
             self._type = None
-        self._val    : Optional[Map]      = val
-        self._msg    : str                = msg
-        self._status : ResponseStatus     = status
-
-    def __str__(self):
+        if isinstance(val, dict):
+            self._val = val
+        else:
+            self._val = json.loads(str(val))
         return f"{str(self.Type)} request: {self.Status}\n{self.Message}\nValues: {self.Value}"
 
     @staticmethod
