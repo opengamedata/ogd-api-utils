@@ -41,8 +41,8 @@ class APIResponse:
                 self._val = json.loads(str(val))
             except json.decoder.JSONDecodeError as err:
                 abbreviated_val = f"{str(val)[:20]}..." if len(str(val)) > 20 else str(val)
-                msg = f"API response 'value' field contained value '{abbreviated_val}' with invalid type {type(val)}, which could not be converted to a dictionary. Attempting to do so resulted in error:\n{err}\nThe value field will be left blank."
-                Logger.Log(msg, logging.ERROR)
+                _msg = f"API response 'value' field contained value '{abbreviated_val}' with invalid type {type(val)}, which could not be converted to a dictionary. Attempting to do so resulted in error:\n{err}\nThe value field will be left blank."
+                Logger.Log(_msg, logging.ERROR)
                 self._val = None
         self._msg    : str                = msg
         self._status : ResponseStatus     = status
