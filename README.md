@@ -31,3 +31,20 @@ Steps to run:
 
 If Flask doesn't run, it's possible you'd need to first export FLASK_APP as an environment variable, set to "wsgi" (so in Bash, export FLASK_APP=wsgi).
 However, the script is named wsgi.py specifically because Flask is supposed to auto-detect it. So if this issue ever did come up, please ping Luke so he can look into it.
+
+## Testing in VS Code
+
+Be sure to add the following to `.vscode/settings.json` in your local checkout:
+
+```json
+   "python.testing.unittestEnabled": true,
+   "python.testing.unittestArgs": [
+      "-v",
+      "-s",
+      "./tests/cases",
+      "-t",
+      "./",
+      "-p",
+      "t_*.py"
+   ],
+```
