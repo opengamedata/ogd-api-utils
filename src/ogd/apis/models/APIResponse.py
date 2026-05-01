@@ -34,7 +34,7 @@ class APIResponse:
             self._type = RESTType[req_type]
         else:
             self._type = None
-        if isinstance(val, dict):
+        if isinstance(val, dict) or val is None:
             self._val = val
         else:
             try:
