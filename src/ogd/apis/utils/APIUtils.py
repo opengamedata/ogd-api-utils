@@ -7,19 +7,10 @@ In particular, has functions to assist in parsing certain kinds of data, and for
 
 # import standard libraries
 import json
-import os
 from json.decoder import JSONDecodeError
 from logging import Logger
 from typing import Any, List, Optional
 from urllib import parse
-
-# import OGD libraries
-from ogd.common.storage.interfaces.Interface import Interface
-from ogd.common.storage.interfaces.MySQLInterface import MySQLInterface
-from ogd.common.storage.interfaces.BigQueryInterface import BigQueryInterface
-from ogd.common.configs.DataTableConfig import DataTableConfig
-
-# import local files
 
 def parse_list(list_str:str, logger:Optional[Logger]=None) -> Optional[List[Any]]:
     """Simple utility to parse a string containing a bracketed list into a Python list.
