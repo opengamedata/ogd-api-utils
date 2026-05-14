@@ -1,8 +1,6 @@
 from enum import IntEnum
 from typing import Set
 
-import ogd.core.requests.RequestResult as RequestResult
-
 class ResponseStatus(IntEnum):
     """Enumerated type to track the status of an API request result.
     """
@@ -100,27 +98,6 @@ class ResponseStatus(IntEnum):
         :rtype: Set[ResponseStatus]
         """
         return {status for status in set(ResponseStatus) if status in range(500, 599)}
-
-    @staticmethod
-    def FromOGDResult(result_status:RequestResult.ResultStatus) -> "ResponseStatus":
-        """Get a ResponseStatus equivalent to given ResultStatus from OGD-core
-
-        :param result_status: An OGD-core ResultStatus
-        :type result_status: ogd.core.requests.RequestResult.ResultStatus
-        :return: A ResponseStatus equivalent to result_status
-        :rtype: ResponseStatus
-        """
-        ret_val : ResponseStatus
-
-        match result_status:
-            case RequestResult.ResultStatus.SUCCESS:
-                ret_val = ResponseStatus.OK 
-            case RequestResult.ResultStatus.FAILURE:
-                ret_val = ResponseStatus.BAD_REQUEST
-            case _:
-                ret_val = ResponseStatus.INTERNAL_ERR
-
-        return ret_val
 
     def __str__(self):
         """Stringify function for ResponseStatus objects.

@@ -17,7 +17,6 @@ from flask import Response
 # import OGD libraries
 from ogd.common.utils.typing import Map
 from ogd.common.utils.Logger import Logger
-import ogd.core.requests.RequestResult as RequestResult
 
 # Import local files
 from ogd.apis.models.enums.RESTType import RESTType
@@ -58,24 +57,6 @@ class APIResponse:
             msg="",
             status=ResponseStatus.NONE
         )
-
-    @staticmethod
-    def FromRequestResult(result:RequestResult.RequestResult, req_type:RESTType) -> "APIResponse":
-        """Generate an `APIResponse` from an OGD `RequestResult`.
-
-        The `RequestResult` indicates the result of a data export request.
-        Thus, this builder for an `APIResponse` is included as a convenient way to set up a response for the Data API.
-
-        :param result: The result object from an OGD export request
-        :type result: RequestResult.RequestResult
-        :param req_type: The REST request type that triggered the export request
-        :type req_type: RESTType
-        :return: An `APIResponse` corresponding to the result of the export request
-        :rtype: APIResponse
-        """
-        _status = ResponseStatus.FromOGDResult(result.Status)
-        ret_val = APIResponse(req_type=req_type, val={"session_count":result.SessionCount, "duration":str(result.Duration)}, msg=result.Message, status=_status)
-        return ret_val
 
     @staticmethod
     def FromResponse(result:requests.Response) -> "APIResponse":
