@@ -130,6 +130,9 @@ class APIResponse:
         :rtype: ResponseStatus
         """
         return self._status
+    @property
+    def OK(self) -> bool:
+        return self.Status in ResponseStatus.SuccessStatuses()
 
     @property
     def AsDict(self):
