@@ -132,6 +132,13 @@ class APIResponse:
         return self._status
     @property
     def OK(self) -> bool:
+        """Property indicating whether the APIResponse was successful or not.
+
+        Technically, this includes both a true "OK" response and any other 200-range response.
+
+        :return: True if the APIResponse status is in the 200 range, otherwise False.
+        :rtype: bool
+        """
         return self.Status in ResponseStatus.SuccessStatuses()
 
     @property
