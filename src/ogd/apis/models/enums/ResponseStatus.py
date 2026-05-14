@@ -82,13 +82,22 @@ class ResponseStatus(IntEnum):
     LOOP_DETECTED        = 508
 
     @staticmethod
+    def SuccessStatuses() -> Set["ResponseStatus"]:
+        """Gets the set of valid 400-level "client" error responses.
+
+        :return: The set of valid 400-level "client" error responses.
+        :rtype: Set[ResponseStatus]
+        """
+        return {status for status in set(ResponseStatus) if status in range(200, 300)}
+
+    @staticmethod
     def ClientErrors() -> Set["ResponseStatus"]:
         """Gets the set of valid 400-level "client" error responses.
 
         :return: The set of valid 400-level "client" error responses.
         :rtype: Set[ResponseStatus]
         """
-        return {status for status in set(ResponseStatus) if status in range(400, 499)}
+        return {status for status in set(ResponseStatus) if status in range(400, 500)}
 
     @staticmethod
     def ServerErrors() -> Set["ResponseStatus"]:
@@ -97,7 +106,7 @@ class ResponseStatus(IntEnum):
         :return: The set of valid 500-level "server" error responses.
         :rtype: Set[ResponseStatus]
         """
-        return {status for status in set(ResponseStatus) if status in range(500, 599)}
+        return {status for status in set(ResponseStatus) if status in range(500, 600)}
 
     def __str__(self):
         """Stringify function for ResponseStatus objects.
