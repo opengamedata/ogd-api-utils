@@ -60,7 +60,7 @@ class ServerConfig(Config):
     def AsDict(self) -> JSONMap:
         return {
             "API_VERSION": str(self.Version),
-            "DEBUG_lEVEL": self.DebugLevel
+            "DEBUG_LEVEL": self.DebugLevel
         }
 
     @classmethod
@@ -84,7 +84,7 @@ class ServerConfig(Config):
 
         raw_level : str = ServerConfig.ParseElement(
             unparsed_elements=unparsed_elements,
-            valid_keys=["DEBUG_lEVEL"],
+            valid_keys=["DEBUG_LEVEL"],
             to_type=[int, str],
             default_value=ServerConfig._DEFAULT_DEBUG_LEVEL,
             remove_target=True,
