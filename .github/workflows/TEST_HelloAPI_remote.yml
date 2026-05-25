@@ -19,7 +19,7 @@ on:
     - '!tests/utils/**'
 
 env:
-  DEPLOY_URL: ${{ vars.OGD_STAGING_HOST }}/${{ vars.API_BASE_URL }}/${{ github.event.repository.name }}/${{ github.ref_name }}/app.wsgi
+  DEPLOY_URL: ${{ vars.OGD_STAGING_HOST }}/${{ vars.API_BASE_URL }}/utils/${{ github.ref_name }}/app.wsgi
 
 jobs:
 
