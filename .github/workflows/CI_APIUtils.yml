@@ -25,11 +25,6 @@ jobs:
     with:
       with_caching: false
 
-  testbed_hello_local:
-    name: HelloAPI Local Testbed
-    needs: build
-    uses: ./.github/workflows/TEST_HelloAPI_local.yml
-
   testbed_server_config:
     name: ServerConfig Testbed
     needs: build
@@ -44,62 +39,19 @@ jobs:
     name: APIUtils Testbed
     needs: build
     uses: ./.github/workflows/TEST_APIUtils.yml
+
+  testbed_hello_local:
+    name: HelloAPI Local Testbed
+    needs: build
+    uses: ./.github/workflows/TEST_HelloAPI_local.yml
   
   deploy_helloapi:
     name: Create a test deploy of HelloAPI for remote tests.
     needs: [testbed_hello_local, testbed_server_config, testbed_api_response, testbed_api_utils]
-    runs-on: ubuntu-22.04
-    concurrency:
-      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-deploy
-      cancel-in-progress: true
-    steps:
-
-    - name: Announce deploy
-      run: echo "Deploying to ${{ env.DEPLOY_URL }}"
-
-    # 1. Local checkout & config
-    - uses: actions/checkout@v4
-    - name: Set Deploy Dir in app.wsgi
-      run: sed -i 's@DEPLOY_DIR@${{ env.DEPLOY_DIR }}@g' ./tests/utils/app.wsgi
-      shell: bash
-
-    # 2. Build 
-
-    # 3. Remote config & deploy
-    - name: Connect to VPN
-      uses: opengamedata/actions-openconnect-vpn@v1.1
-      with:
-        username: ${{ secrets.VPN_USER }}
-        password: ${{ secrets.VPN_PASS }}
-        endpoint: "soe.vpn.wisc.edu"
-
-    - name: Deploy HelloAPI to Server
-      uses: opengamedata/actions-deploy-project@v1.1
-      with:
-        local_path: ./src/ogd/apis/
-        remote_path: ${{ env.DEPLOY_DIR }}/ogd/apis
-        remote_host: ${{ env.DEPLOY_HOST }}
-        remote_user: ${{ secrets.DEPLOY_USER }}
-        remote_key:  ${{ secrets.DEPLOY_KEY }}
-
-    - name: Upload testing app.wsgi via rsync
-      uses: Burnett01/rsync-deployments@7.0.1
-      with:
-        switches: -vrct --delete --exclude-from 'rsync-exclude' --chmod=Du=rwx,Dg=rwx,Do=rx,Fu=rwx,Fg=rwx,Fo=r
-        path: ./tests/utils/app.wsgi
-        remote_path: ${{ env.DEPLOY_DIR }}
-        remote_host: ${{ env.DEPLOY_HOST }}
-        remote_user: ${{ secrets.DEPLOY_USER }}
-        remote_key:  ${{ secrets.DEPLOY_KEY  }}
-
-    - name: Upload requirements.txt
-      run: scp -o StrictHostKeyChecking=no -T -i ./key.txt ./requirements.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }}:${{ env.DEPLOY_DIR }}
-    - name: Set up venv for the deploy
-      run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "cd ${{ env.DEPLOY_DIR }}; python -m venv --system-site-packages ./.venv; source .venv/bin/activate; python -m pip install -r requirements.txt"
-
-    # 4. Cleanup & complete
-    - name: Restart httpd via ssh
-      run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "sudo systemctl restart apache2"
+    uses: ./.github/workflows/DEPLOY_APIUtils.yml
+    with:
+      remove: false
+    secrets: inherit
 
   testbed_hello_remote:
     name: HelloAPI Remote Testbed

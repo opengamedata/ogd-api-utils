@@ -76,7 +76,7 @@ jobs:
 
   branch_delete:
     name: Dead Branch Cleanup
-    if: inputs.remove == true && github.event.ref_type == 'branch'
+    if: inputs.remove == true
     runs-on: ubuntu-22.04
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
