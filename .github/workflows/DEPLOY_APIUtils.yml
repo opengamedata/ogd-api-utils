@@ -1,0 +1,115 @@
+# Workflow to deploy the APIUtils project, or remove a deploy from the server.
+name: Deploy Script - APIUtils
+run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
+on:
+  workflow_call:
+    inputs:
+      remove:
+        type: boolean
+        description: "Whether to remove the deploy for the current branch."
+        required: true
+        default: false
+
+env:
+  DEPLOY_HOST: ${{ vars.OGD_STAGING_HOST }}
+  DEPLOY_DIR:                               ${{ vars.API_BASE_PATH }}/utils/${{ github.ref_name }}
+  DEPLOY_URL:  ${{ vars.OGD_STAGING_HOST }}/${{ vars.API_BASE_URL  }}/utils/${{ github.ref_name }}/app.wsgi
+
+jobs:
+  
+  deploy_helloapi:
+    name: Deploy APIUtils Testing App
+    if: inputs.remove == false
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-deploy
+      cancel-in-progress: true
+    steps:
+
+    - name: Announce deploy
+      run: echo "Deploying to ${{ env.DEPLOY_URL }}"
+
+    # 1. Local checkout & config
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Set Deploy Dir in app.wsgi
+      run: sed -i 's@DEPLOY_DIR@${{ env.DEPLOY_DIR }}@g' ./tests/utils/app.wsgi
+      shell: bash
+
+    # 2. Build 
+
+    # 3. Remote config & deploy
+    - name: Connect to VPN
+      uses: opengamedata/actions-openconnect-vpn@v1.1
+      with:
+        username: ${{ secrets.VPN_USER }}
+        password: ${{ secrets.VPN_PASS }}
+        endpoint: "soe.vpn.wisc.edu"
+
+    - name: Deploy HelloAPI to Server
+      uses: opengamedata/actions-deploy-project@v1.1
+      with:
+        local_path: ./src/ogd/apis/
+        remote_path: ${{ env.DEPLOY_DIR }}/ogd/apis
+        remote_host: ${{ env.DEPLOY_HOST }}
+        remote_user: ${{ secrets.DEPLOY_USER }}
+        remote_key:  ${{ secrets.DEPLOY_KEY }}
+
+    - name: Deploy app.wsgi to Server
+      uses: Burnett01/rsync-deployments@7.0.1
+      with:
+        switches: -vrct --delete --exclude-from 'rsync-exclude' --chmod=Du=rwx,Dg=rwx,Do=rx,Fu=rwx,Fg=rwx,Fo=r
+        path: ./tests/utils/app.wsgi
+        remote_path: ${{ env.DEPLOY_DIR }}
+        remote_host: ${{ env.DEPLOY_HOST }}
+        remote_user: ${{ secrets.DEPLOY_USER }}
+        remote_key:  ${{ secrets.DEPLOY_KEY  }}
+
+    - name: Upload requirements.txt
+      run: scp -o StrictHostKeyChecking=no -T -i ./key.txt ./requirements.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }}:${{ env.DEPLOY_DIR }}
+    - name: Set up venv for the deploy
+      run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "cd ${{ env.DEPLOY_DIR }}; python -m venv --system-site-packages ./.venv; source .venv/bin/activate; python -m pip install -r requirements.txt"
+
+    # 4. Cleanup & complete
+    - name: Restart httpd via ssh
+      run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "sudo systemctl restart apache2"
+
+  branch_delete:
+    name: Dead Branch Cleanup
+    if: inputs.remove == true
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
+      cancel-in-progress: false
+    
+    steps:
+
+    # 1. Local checkout & config
+    
+    # 2. Build 
+
+    # 3. Remote config & clean
+    - name: Connect to VPN
+      uses: opengamedata/actions-openconnect-vpn@v1.1
+      with:
+        username: ${{ secrets.VPN_USER }}
+        password: ${{ secrets.VPN_PASS }}
+        endpoint: "soe.vpn.wisc.edu"
+
+    - name: Setup Access Key
+      run: |
+        mkdir -p ~/.ssh
+        echo '${{secrets.CLEAN_KEY}}' >> ./key.txt
+        chmod 600 ./key.txt
+
+    # 4. Cleanup & complete
+    - name: Remove branch folder
+      run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.CLEAN_USER }}@${{ env.DEPLOY_HOST }} "rm -r ${{ env.DEPLOY_DIR }}"
+    - name: Announce cleanup
+      run: echo "Removed branch deploy at ${{ env.DEPLOY_URL }}"
+
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: "cleanup-log"
+        path: ./*.log
