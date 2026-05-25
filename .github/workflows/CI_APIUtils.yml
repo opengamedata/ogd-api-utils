@@ -46,7 +46,7 @@ jobs:
     uses: ./.github/workflows/TEST_HelloAPI_local.yml
   
   deploy_helloapi:
-    name: Create a test deploy of HelloAPI for remote tests.
+    name: HelloAPI Deploy (for remote tests).
     needs: [testbed_hello_local, testbed_server_config, testbed_api_response, testbed_api_utils]
     uses: ./.github/workflows/DEPLOY_APIUtils.yml
     with:

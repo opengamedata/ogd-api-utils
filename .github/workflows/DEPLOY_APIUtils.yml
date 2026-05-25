@@ -22,7 +22,7 @@ env:
 jobs:
   
   deploy_helloapi:
-    name: Deploy APIUtils Testing App
+    name: Deploy APIUtils Test App
     if: inputs.remove == false
     runs-on: ubuntu-22.04
     concurrency:
@@ -79,7 +79,7 @@ jobs:
       run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "sudo systemctl restart apache2"
 
   branch_delete:
-    name: Dead Branch Cleanup
+    name: Remove APIUtils Deploy
     if: inputs.remove == true
     runs-on: ubuntu-22.04
     concurrency:

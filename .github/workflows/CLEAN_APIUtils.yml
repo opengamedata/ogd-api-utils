@@ -8,7 +8,7 @@ on:
     
 jobs:
   branch_delete:
-    name: Remove Deploy of Deleted Branch
+    name: Dead Branch Cleanup
     if: github.event.ref_type == 'branch'
     uses: ./.github/workflows/DEPLOY_APIUtils.yml
     with:
