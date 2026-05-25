@@ -12,6 +12,7 @@ jobs:
     if: github.event.ref_type == 'branch'
     uses: ./.github/workflows/DEPLOY_APIUtils.yml
     with:
+      branch: ${{ github.ref_name }}
       remove: true
     secrets: inherit
     

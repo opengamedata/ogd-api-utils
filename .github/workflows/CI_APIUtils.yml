@@ -50,6 +50,7 @@ jobs:
     needs: [testbed_hello_local, testbed_server_config, testbed_api_response, testbed_api_utils]
     uses: ./.github/workflows/DEPLOY_APIUtils.yml
     with:
+      branch: ${{ github.ref_name }}
       remove: false
     secrets: inherit
 
