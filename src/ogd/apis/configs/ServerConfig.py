@@ -13,7 +13,7 @@ from typing import Dict, Final, Optional, Self
 # import OGD libraries
 from ogd.common.configs.Config import Config
 from ogd.common.models.SemanticVersion import SemanticVersion
-from ogd.common.utils.typing import Map
+from ogd.common.utils.typing import JSONMap, Map
 from ogd.common.utils.Logger import Logger
 
 # import local files
@@ -55,6 +55,13 @@ class ServerConfig(Config):
 
         ret_val = f"{self.Name}"
         return ret_val
+
+    @property
+    def AsDict(self) -> JSONMap:
+        return {
+            "API_VERSION": str(self.Version),
+            "DEBUG_LEVEL": self.DebugLevel
+        }
 
     @classmethod
     def Default(cls):
