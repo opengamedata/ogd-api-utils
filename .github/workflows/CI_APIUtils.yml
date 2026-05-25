@@ -54,6 +54,9 @@ jobs:
       cancel-in-progress: true
     steps:
 
+    - name: Announce deploy
+      run: echo "Deploying to ${{ env.DEPLOY_URL }}"
+
     # 1. Local checkout & config
     - uses: actions/checkout@v4
     - name: Set Deploy Dir in app.wsgi
@@ -97,8 +100,6 @@ jobs:
     # 4. Cleanup & complete
     - name: Restart httpd via ssh
       run: ssh -o StrictHostKeyChecking=no -T -i ./key.txt ${{ secrets.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "sudo systemctl restart apache2"
-    - name: Announce deploy
-      run: echo "Deployed to ${{ env.DEPLOY_URL }}"
 
   testbed_hello_remote:
     name: HelloAPI Remote Testbed
