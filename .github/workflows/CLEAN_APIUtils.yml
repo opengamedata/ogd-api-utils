@@ -8,11 +8,11 @@ on:
     
 jobs:
   branch_delete:
-    name: Dead Branch Cleanup
+    name: Dead Branch Cleanup - ${{ github.event.ref }}
     if: github.event.ref_type == 'branch'
     uses: ./.github/workflows/DEPLOY_APIUtils.yml
     with:
-      branch: ${{ github.ref_name }}
+      branch: ${{ github.event.ref }}
       remove: true
     secrets: inherit
     
