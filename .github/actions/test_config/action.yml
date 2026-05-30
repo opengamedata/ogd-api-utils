@@ -9,22 +9,6 @@ inputs:
     description: "Whether to output extra debugging lines from tests."
     required: false
     default: "False"
-  with_server_config:
-    description: "Whether to run the ServerConfig tests."
-    required: false
-    default: "False"
-  with_api_response:
-    description: "Whether to run the APIResponse tests."
-    required: false
-    default: "False"
-  with_api_utils:
-    description: "Whether to run the APIUtils tests."
-    required: false
-    default: "False"
-  with_hello_api:
-    description: "Whether to run the HelloAPI tests."
-    required: false
-    default: "False"
   remote_url:
     description: "The URL for calls to a remote instance of the Hello API"
     required: False

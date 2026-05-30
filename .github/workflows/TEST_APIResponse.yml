@@ -41,7 +41,6 @@ jobs:
       uses: ./.github/actions/test_config
       with:
           verbose_output:    "True"
-          with_api_response: "True"
 
   # 2. Build & configure remote environments
 
