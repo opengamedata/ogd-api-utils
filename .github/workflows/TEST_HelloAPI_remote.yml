@@ -10,7 +10,6 @@ on:
     - '.github/actions/test_config/**'
     - 'tests/cases/apis/HelloAPI/remote/**'
     - 'tests/config/**'
-    - 'requirements.txt'
     - '!.github/workflows/CI_APIUtils.yml'
     - '!.github/workflows/BUILD_APIUtils.yml'
     - '!.github/actions/**'
