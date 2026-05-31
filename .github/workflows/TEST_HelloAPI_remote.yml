@@ -10,7 +10,6 @@ on:
     - '.github/actions/test_config/**'
     - 'tests/cases/apis/HelloAPI/remote/**'
     - 'tests/config/**'
-    - 'requirements.txt'
     - '!.github/workflows/CI_APIUtils.yml'
     - '!.github/workflows/BUILD_APIUtils.yml'
     - '!.github/actions/**'
@@ -22,9 +21,30 @@ env:
   DEPLOY_URL: ${{ vars.OGD_STAGING_HOST }}/${{ vars.API_BASE_URL }}/utils/${{ github.ref_name }}/app.wsgi
 
 jobs:
+  check_deploy:
+    name: Check for Existing Deploy
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
+      cancel-in-progress: true
+    
+    steps:
+    - name: cURL Check Hello Endpoint
+      run: curl -Is --fail-with-body ${{ env.DEPLOY_URL }}/hello
+
+  deploy_if_needed:
+    name: HelloAPI Deploy (If Needed)
+    if: failure()
+    uses: ./.github/workflows/DEPLOY_APIUtils.yml
+    secrets: inherit
+    with:
+      branch: ${{ github.ref_name }}
+      remove: false
 
   run_testbed_hello_remote:
     name: Run HelloAPI Remote Testbed
+    needs: [check_deploy, deploy_if_needed]
+    if: always() && (needs.check_deploy.result == 'success' || needs.deploy_if_needed.result == 'success')
     runs-on: ubuntu-22.04
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-HelloAPI-remote

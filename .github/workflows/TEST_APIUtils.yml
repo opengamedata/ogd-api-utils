@@ -10,7 +10,6 @@ on:
     - '.github/actions/test_config/**'
     - 'tests/cases/utils/t_APIUtils.py'
     - 'tests/config/**'
-    - 'requirements.txt'
     - '!.github/workflows/CI_APIUtils.yml'
     - '!.github/workflows/BUILD_APIUtils.yml'
     - '!.github/actions/**'
@@ -39,7 +38,6 @@ jobs:
       uses: ./.github/actions/test_config
       with:
           verbose_output: "True"
-          with_api_utils: "True"
 
   # 2. Build & configure remote environments
 

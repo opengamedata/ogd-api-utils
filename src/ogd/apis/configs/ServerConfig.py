@@ -38,7 +38,6 @@ class ServerConfig(Config):
 
         super().__init__(name=name, other_elements=other_elements)
 
-
     @property
     def DebugLevel(self) -> int:
         return self._dbg_level

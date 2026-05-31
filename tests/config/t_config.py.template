@@ -1,10 +1,4 @@
 settings = {
     "VERBOSE" : False,
-    "ENABLED" : {
-        "RESPONSE":True,
-        "UTILS":True,
-        "CONFIG":True,
-        "HELLO":True
-    },
     "REMOTE_ADDRESS" : "address_placeholder"
 }

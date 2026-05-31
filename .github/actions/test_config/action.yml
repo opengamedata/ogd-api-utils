@@ -9,22 +9,6 @@ inputs:
     description: "Whether to output extra debugging lines from tests."
     required: false
     default: "False"
-  with_server_config:
-    description: "Whether to run the ServerConfig tests."
-    required: false
-    default: "False"
-  with_api_response:
-    description: "Whether to run the APIResponse tests."
-    required: false
-    default: "False"
-  with_api_utils:
-    description: "Whether to run the APIUtils tests."
-    required: false
-    default: "False"
-  with_hello_api:
-    description: "Whether to run the HelloAPI tests."
-    required: false
-    default: "False"
   remote_url:
     description: "The URL for calls to a remote instance of the Hello API"
     required: False
@@ -41,18 +25,6 @@ runs:
       shell: bash
     - name: Set Output Verbosity
       run: sed -i 's@"VERBOSE"\s*:\s*False@"VERBOSE":${{ inputs.verbose_output }}@g'         ${{ inputs.config_path }}/t_config.py
-      shell: bash
-    - name: Set ServerConfig test to run or not
-      run: sed -i 's@"CONFIG"\s*:\s*True@"CONFIG":${{ inputs.with_server_config }}@g' ${{ inputs.config_path }}/t_config.py
-      shell: bash
-    - name: Set APIResponse test to run or not
-      run: sed -i 's@"RESPONSE"\s*:\s*True@"RESPONSE":${{ inputs.with_api_response }}@g'     ${{ inputs.config_path }}/t_config.py
-      shell: bash
-    - name: Set APIUtils test to run or not
-      run: sed -i 's@"UTILS"\s*:\s*True@"UTILS":${{ inputs.with_api_utils }}@g'              ${{ inputs.config_path }}/t_config.py
-      shell: bash
-    - name: Set HelloAPI test to run or not
-      run: sed -i 's@"HELLO"\s*:\s*True@"HELLO":${{ inputs.with_hello_api }}@g'              ${{ inputs.config_path }}/t_config.py
       shell: bash
     - name: Set Remote URL
       run: sed -i 's@"address_placeholder"@"${{ inputs.remote_url }}"@g'                     ${{ inputs.config_path }}/t_config.py
