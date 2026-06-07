@@ -10,13 +10,13 @@ from ogd.apis.models.APIRequest import APIRequest
 from ogd.apis.models.APIResponse import APIResponse
 from tests.config import t_config
 
-class t_Hello_remote(TestCase):
+class RemoteCase(TestCase):
     DEFAULT_ADDRESS = "127.0.0.1:5000"
 
     @classmethod
     def setUpClass(cls) -> None:
         cls.testing_config = TestConfig.FromDict(name="HelloAPITestConfig", unparsed_elements=t_config.settings)
-        cls.base_url = cls.testing_config.NonStandardElements.get("REMOTE_ADDRESS", t_Hello_remote.DEFAULT_ADDRESS)
+        cls.base_url = cls.testing_config.NonStandardElements.get("REMOTE_ADDRESS", RemoteCase.DEFAULT_ADDRESS)
 
         _level = logging.DEBUG if cls.testing_config.Verbose else logging.INFO
         Logger.InitializeLogger(level=_level, use_logfile=False)
