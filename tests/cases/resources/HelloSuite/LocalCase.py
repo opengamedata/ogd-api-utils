@@ -51,7 +51,7 @@ class LocalCase(TestCase):
         self.assertEqual(body.get("msg"), "Hello! You GETted successfully!", f"Bad msg from {_url}")
 
     def test_post(self):
-        _url = f"/hello"
+        _url = "/hello"
         # 1. Run request
         result = self.server.post(_url)
         body = json.loads(result.get_data(as_text=True))
@@ -63,7 +63,7 @@ class LocalCase(TestCase):
         self.assertEqual(body.get("msg"), "Hello! You POSTed successfully!", f"Bad msg from {_url}")
 
     def test_put(self):
-        _url = f"/hello"
+        _url = "/hello"
         # 1. Run request
         result = self.server.put(_url)
         body = json.loads(result.get_data(as_text=True))

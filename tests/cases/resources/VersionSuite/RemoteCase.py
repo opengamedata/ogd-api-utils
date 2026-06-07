@@ -1,19 +1,12 @@
 # import libraries
-import json
 import logging
-import requests
-import unittest
 from unittest import TestCase
-# import 3rd-party libraries
-from flask import Flask
 # import ogd-core libraries.
 from ogd.apis.models.APIRequest import APIRequest
 from ogd.apis.models.APIResponse import APIResponse
 from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.utils.Logger import Logger
 # import locals
-from ogd.apis.configs.ServerConfig import ServerConfig
-from ogd.apis.HelloAPI import HelloAPI
 from tests.config.t_config import settings
 
 class RemoteCase(TestCase):

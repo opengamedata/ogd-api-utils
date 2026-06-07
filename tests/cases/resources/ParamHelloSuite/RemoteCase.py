@@ -1,12 +1,11 @@
 # import libraries
 import logging
 from unittest import TestCase
-# import 3rd-party libraries
 # import ogd-core libraries.
 from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.utils.Logger import Logger
-# import locals
 from ogd.apis.models.APIRequest import APIRequest
+# import locals
 from tests.config.t_config import settings
 
 class RemoteCase(TestCase):
