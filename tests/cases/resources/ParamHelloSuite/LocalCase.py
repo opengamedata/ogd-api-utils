@@ -13,7 +13,7 @@ from src.ogd.apis.configs.ServerConfig import ServerConfig
 from src.ogd.apis.HelloAPI import HelloAPI
 from tests.config.t_config import settings
 
-class t_ParamHello_local(TestCase):
+class LocalCase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         # 1. Get testing config
@@ -40,43 +40,37 @@ class t_ParamHello_local(TestCase):
         param = "Tester"
         _url = f"/p_hello/{param}"
         # 1. Run request
-        self.application.logger.debug(f"GET test at {_url}")
         result = self.server.get(_url)
-        self.application.logger.debug(f"Result: status '{result.status}', and data <{result.data}>")
         body = json.loads(result.get_data(as_text=True))
         # 2. Perform assertions
-        self.assertNotEqual(result, None)
-        self.assertEqual(result.status, "200 OK")
-        self.assertEqual(body.get("type"), "GET")
-        self.assertEqual(body.get("val"), None)
-        self.assertEqual(body.get("msg"), f"Hello {param}! You GETted successfully!")
+        self.assertIsNotNone(result, f"No response from {_url}")
+        self.assertEqual(result.status, "200 OK", f"Bad status from {_url}")
+        self.assertEqual(body.get("type"), "GET", f"Bad type from {_url}")
+        self.assertIsNone(body.get("val"), f"Bad val from {_url}")
+        self.assertEqual(body.get("msg"), f"Hello {param}! You GETted successfully!", f"Bad msg from {_url}")
 
     def test_post(self):
         param = "Tester"
         _url = f"/p_hello/{param}"
         # 1. Run request
-        self.application.logger.debug(f"POST test at {_url}")
         result = self.server.post(_url)
-        self.application.logger.debug(f"Result: status '{result.status}', and data <{result.data}>")
         body = json.loads(result.get_data(as_text=True))
         # 2. Perform assertions
-        self.assertNotEqual(result, None)
-        self.assertEqual(result.status, "200 OK")
-        self.assertEqual(body.get("type"), "POST")
-        self.assertEqual(body.get("val"), None)
-        self.assertEqual(body.get("msg"), f"Hello {param}! You POSTed successfully!")
+        self.assertIsNotNone(result, f"No response from {_url}")
+        self.assertEqual(result.status, "200 OK", f"Bad status from {_url}")
+        self.assertEqual(body.get("type"), "POST", f"Bad type from {_url}")
+        self.assertIsNone(body.get("val"), f"Bad val from {_url}")
+        self.assertEqual(body.get("msg"), f"Hello {param}! You POSTed successfully!", f"Bad msg from {_url}")
 
     def test_put(self):
         param = "Tester"
         _url = f"/p_hello/{param}"
         # 1. Run request
-        self.application.logger.debug(f"PUT test at {_url}")
         result = self.server.put(_url)
-        self.application.logger.debug(f"Result: status '{result.status}', and data <{result.data}>")
         body = json.loads(result.get_data(as_text=True))
         # 2. Perform assertions
-        self.assertNotEqual(result, None)
-        self.assertEqual(result.status, "200 OK")
-        self.assertEqual(body.get("type"), "PUT")
-        self.assertEqual(body.get("val"), None)
-        self.assertEqual(body.get("msg"), f"Hello {param}! You PUTted successfully!")
+        self.assertIsNotNone(result, f"No response from {_url}")
+        self.assertEqual(result.status, "200 OK", f"Bad status from {_url}")
+        self.assertEqual(body.get("type"), "PUT", f"Bad type from {_url}")
+        self.assertIsNone(body.get("val"), f"Bad val from {_url}")
+        self.assertEqual(body.get("msg"), f"Hello {param}! You PUTted successfully!", f"Bad msg from {_url}")

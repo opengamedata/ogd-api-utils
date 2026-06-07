@@ -9,13 +9,13 @@ from ogd.common.utils.Logger import Logger
 from ogd.apis.models.APIRequest import APIRequest
 from tests.config.t_config import settings
 
-class t_ParamHello_remote(TestCase):
+class RemoteCase(TestCase):
     DEFAULT_ADDRESS = "127.0.0.1:5000"
 
     @classmethod
     def setUpClass(cls) -> None:
         testing_config = TestConfig.FromDict(name="HelloAPITestConfig", unparsed_elements=settings)
-        cls.base_url = testing_config.NonStandardElements.get("REMOTE_ADDRESS", t_ParamHello_remote.DEFAULT_ADDRESS)
+        cls.base_url = testing_config.NonStandardElements.get("REMOTE_ADDRESS", RemoteCase.DEFAULT_ADDRESS)
         cls.param = "Tester"
 
         _level = logging.DEBUG if testing_config.Verbose else logging.INFO
@@ -28,10 +28,10 @@ class t_ParamHello_remote(TestCase):
         except Exception as err:
             self.fail(str(err))
         else:
-            self.assertNotEqual(result, None, f"No response from {_url}")
-            self.assertEqual(result.Status, 200, f"Bad status from {_url}")
+            self.assertIsNotNone(result, f"No response from {_url}")
+            self.assertTrue(result.OK, f"Bad status from {_url}")
             self.assertEqual(str(result.Type), "GET", f"Bad type from {_url}")
-            self.assertEqual(result.Value, None, f"Bad val from {_url}")
+            self.assertIsNone(result.Value, f"Bad val from {_url}")
             self.assertEqual(result.Message, f"Hello {self.param}! You GETted successfully!", f"Bad msg from {_url}")
 
     def test_post(self):
@@ -41,10 +41,10 @@ class t_ParamHello_remote(TestCase):
         except Exception as err:
             self.fail(str(err))
         else:
-            self.assertNotEqual(result, None, f"No response from {_url}")
-            self.assertEqual(result.Status, 200, f"Bad status from {_url}")
+            self.assertIsNotNone(result, f"No response from {_url}")
+            self.assertTrue(result.OK, f"Bad status from {_url}")
             self.assertEqual(str(result.Type), "POST", f"Bad type from {_url}")
-            self.assertEqual(result.Value, None, f"Bad val from {_url}")
+            self.assertIsNone(result.Value, f"Bad val from {_url}")
             self.assertEqual(result.Message, f"Hello {self.param}! You POSTed successfully!", f"Bad msg from {_url}")
 
     def test_put(self):
@@ -55,8 +55,8 @@ class t_ParamHello_remote(TestCase):
         except Exception as err:
             self.fail(str(err))
         else:
-            self.assertNotEqual(result, None, f"No response from {_url}")
-            self.assertEqual(result.Status, 200, f"Bad status from {_url}")
+            self.assertIsNotNone(result, f"No response from {_url}")
+            self.assertTrue(result.OK, f"Bad status from {_url}")
             self.assertEqual(str(result.Type), "PUT", f"Bad type from {_url}")
-            self.assertEqual(result.Value, None, f"Bad val from {_url}")
+            self.assertIsNone(result.Value, f"Bad val from {_url}")
             self.assertEqual(result.Message, f"Hello {self.param}! You PUTted successfully!", f"Bad msg from {_url}")
