@@ -30,7 +30,7 @@ class t_Hello_remote(TestCase):
             self.assertIsNotNone(result, f"No response from {_url}")
             self.assertTrue(result.OK, f"Bad status from {_url}")
             self.assertEqual(str(result.Type), "GET", f"Bad type from {_url}")
-            self.assertEqual(result.Value, None, f"Bad val from {_url}")
+            self.assertIsNone(result.Value, f"Bad val from {_url}")
             self.assertEqual(result.Message, "Hello! You GETted successfully!", f"Bad msg from {_url}")
 
     def test_post(self):
@@ -43,7 +43,7 @@ class t_Hello_remote(TestCase):
             self.assertIsNotNone(result, f"No response from {_url}")
             self.assertTrue(result.OK, f"Bad status from {_url}")
             self.assertEqual(str(result.Type), "POST", f"Bad type from {_url}")
-            self.assertEqual(result.Value, None, f"Bad val from {_url}")
+            self.assertIsNone(result.Value, f"Bad val from {_url}")
             self.assertEqual(result.Message, "Hello! You POSTed successfully!", f"Bad msg from {_url}")
 
     def test_put(self):
@@ -57,5 +57,5 @@ class t_Hello_remote(TestCase):
             self.assertIsNotNone(result, f"No response from {_url}")
             self.assertTrue(result.OK, f"Bad status from {_url}")
             self.assertEqual(str(result.Type), "PUT", f"Bad type from {_url}")
-            self.assertEqual(result.Value, None, f"Bad val from {_url}")
+            self.assertIsNone(result.Value, f"Bad val from {_url}")
             self.assertEqual(result.Message, "Hello! You PUTted successfully!", f"Bad msg from {_url}")
