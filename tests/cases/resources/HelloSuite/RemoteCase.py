@@ -7,6 +7,7 @@ from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.utils.Logger import Logger
 # import locals
 from ogd.apis.models.APIRequest import APIRequest
+from ogd.apis.models.APIResponse import APIResponse
 from tests.config import t_config
 
 class t_Hello_remote(TestCase):
@@ -23,7 +24,7 @@ class t_Hello_remote(TestCase):
     def test_get(self):
         _url = f"{self.base_url}/hello"
         try:
-            result = APIRequest(url=_url, request_type="GET", params={}).Execute(logger=Logger.std_logger)
+            result : APIResponse = APIRequest(url=_url, request_type="GET", params={}).Execute(logger=Logger.std_logger)
         except Exception as err:
             self.fail(str(err))
         else:
@@ -36,7 +37,7 @@ class t_Hello_remote(TestCase):
     def test_post(self):
         _url = f"{self.base_url}/hello"
         try:
-            result = APIRequest(url=_url, request_type="POST", params={}).Execute(logger=Logger.std_logger)
+            result : APIResponse = APIRequest(url=_url, request_type="POST", params={}).Execute(logger=Logger.std_logger)
         except Exception as err:
             self.fail(str(err))
         else:
@@ -50,7 +51,7 @@ class t_Hello_remote(TestCase):
         _url = f"{self.base_url}/hello"
         Logger.Log(f"PUT test at {_url}", logging.DEBUG)
         try:
-            result = APIRequest(url=_url, request_type="PUT", params={}).Execute(logger=Logger.std_logger)
+            result : APIResponse = APIRequest(url=_url, request_type="PUT", params={}).Execute(logger=Logger.std_logger)
         except Exception as err:
             self.fail(str(err))
         else:
