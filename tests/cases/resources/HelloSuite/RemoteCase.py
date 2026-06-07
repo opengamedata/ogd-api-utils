@@ -27,7 +27,7 @@ class t_Hello_remote(TestCase):
         except Exception as err:
             self.fail(str(err))
         else:
-            self.assertNotEqual(result, None, f"No response from {_url}")
+            self.assertIsNotNone(result, f"No response from {_url}")
             self.assertTrue(result.OK, f"Bad status from {_url}")
             self.assertEqual(str(result.Type), "GET", f"Bad type from {_url}")
             self.assertEqual(result.Value, None, f"Bad val from {_url}")
@@ -40,7 +40,7 @@ class t_Hello_remote(TestCase):
         except Exception as err:
             self.fail(str(err))
         else:
-            self.assertNotEqual(result, None, f"No response from {_url}")
+            self.assertIsNotNone(result, f"No response from {_url}")
             self.assertTrue(result.OK, f"Bad status from {_url}")
             self.assertEqual(str(result.Type), "POST", f"Bad type from {_url}")
             self.assertEqual(result.Value, None, f"Bad val from {_url}")
@@ -54,7 +54,7 @@ class t_Hello_remote(TestCase):
         except Exception as err:
             self.fail(str(err))
         else:
-            self.assertNotEqual(result, None, f"No response from {_url}")
+            self.assertIsNotNone(result, f"No response from {_url}")
             self.assertTrue(result.OK, f"Bad status from {_url}")
             self.assertEqual(str(result.Type), "PUT", f"Bad type from {_url}")
             self.assertEqual(result.Value, None, f"Bad val from {_url}")
