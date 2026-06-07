@@ -19,13 +19,13 @@ class RemoteCase(TestCase):
         cls.param = "Tester"
 
         _level = logging.DEBUG if testing_config.Verbose else logging.INFO
-        Logger.std_logger.setLevel(_level)
+        Logger.InitializeLogger(level=_level, use_logfile=False)
 
     def test_get(self):
         _url = f"{self.base_url}/p_hello/{self.param}"
         try:
             result = APIRequest(url=_url, request_type="GET", params={}).Execute(logger=Logger.std_logger)
-        except Exception as err:
+        except Exception as err: # pylint: disable=broad-exception-caught
             self.fail(str(err))
         else:
             self.assertIsNotNone(result, f"No response from {_url}")
@@ -38,7 +38,7 @@ class RemoteCase(TestCase):
         _url = f"{self.base_url}/p_hello/{self.param}"
         try:
             result = APIRequest(url=_url, request_type="POST", params={}).Execute(logger=Logger.std_logger)
-        except Exception as err:
+        except Exception as err: # pylint: disable=broad-exception-caught
             self.fail(str(err))
         else:
             self.assertIsNotNone(result, f"No response from {_url}")
@@ -52,7 +52,7 @@ class RemoteCase(TestCase):
         Logger.Log(f"PUT test at {_url}", logging.DEBUG)
         try:
             result = APIRequest(url=_url, request_type="PUT", params={}).Execute(logger=Logger.std_logger)
-        except Exception as err:
+        except Exception as err: # pylint: disable=broad-exception-caught
             self.fail(str(err))
         else:
             self.assertIsNotNone(result, f"No response from {_url}")

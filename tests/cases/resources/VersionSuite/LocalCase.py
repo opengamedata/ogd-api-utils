@@ -13,11 +13,12 @@ from src.ogd.apis.configs.ServerConfig import ServerConfig
 from src.ogd.apis.HelloAPI import HelloAPI
 from tests.config.t_config import settings
 
-class t_Version_local(TestCase):
+class LocalCase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         # 1. Get testing config
         _testing_cfg = TestConfig.FromDict(name="HelloAPITestConfig", unparsed_elements=settings)
+
         _level     = logging.DEBUG if _testing_cfg.Verbose else logging.INFO
         _str_level =       "DEBUG" if _testing_cfg.Verbose else "INFO"
         Logger.std_logger.setLevel(_level)
@@ -39,13 +40,11 @@ class t_Version_local(TestCase):
     def test_get(self):
         _url = "/version"
         # 1. Run request
-        self.application.logger.debug(f"GET test at {_url}")
         result = self.server.get(_url)
-        self.application.logger.debug(f"Result: status '{result.status}', and data <{result.data}>")
         body = json.loads(result.get_data(as_text=True))
         # 2. Perform assertions
-        self.assertNotEqual(result, None)
-        self.assertEqual(result.status, "200 OK")
-        self.assertEqual(body.get("type"), "GET")
-        self.assertEqual(body.get("val"), {"version": "0.0.0-Testing"})
-        self.assertEqual(body.get("msg"), "Successfully retrieved API version.")
+        self.assertIsNotNone(result, f"No response from {_url}")
+        self.assertEqual(result.status, "200 OK", f"Bad status from {_url}")
+        self.assertEqual(body.get("type"), "GET", f"Bad type from {_url}")
+        self.assertEqual(body.get("val"), {"version": "0.0.0-Testing"}, f"Bad val from {_url}")
+        self.assertEqual(body.get("msg"), "Successfully retrieved API version.", f"Bad msg from {_url}")

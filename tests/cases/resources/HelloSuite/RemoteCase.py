@@ -5,9 +5,9 @@ from unittest import TestCase
 # import ogd-core libraries.
 from ogd.common.configs.TestConfig import TestConfig
 from ogd.common.utils.Logger import Logger
-# import locals
 from ogd.apis.models.APIRequest import APIRequest
 from ogd.apis.models.APIResponse import APIResponse
+# import locals
 from tests.config import t_config
 
 class RemoteCase(TestCase):
@@ -25,7 +25,7 @@ class RemoteCase(TestCase):
         _url = f"{self.base_url}/hello"
         try:
             result : APIResponse = APIRequest(url=_url, request_type="GET", params={}).Execute(logger=Logger.std_logger)
-        except Exception as err:
+        except Exception as err: # pylint: disable=broad-exception-caught
             self.fail(str(err))
         else:
             self.assertIsNotNone(result, f"No response from {_url}")
@@ -38,7 +38,7 @@ class RemoteCase(TestCase):
         _url = f"{self.base_url}/hello"
         try:
             result : APIResponse = APIRequest(url=_url, request_type="POST", params={}).Execute(logger=Logger.std_logger)
-        except Exception as err:
+        except Exception as err: # pylint: disable=broad-exception-caught
             self.fail(str(err))
         else:
             self.assertIsNotNone(result, f"No response from {_url}")
@@ -52,7 +52,7 @@ class RemoteCase(TestCase):
         Logger.Log(f"PUT test at {_url}", logging.DEBUG)
         try:
             result : APIResponse = APIRequest(url=_url, request_type="PUT", params={}).Execute(logger=Logger.std_logger)
-        except Exception as err:
+        except Exception as err: # pylint: disable=broad-exception-caught
             self.fail(str(err))
         else:
             self.assertIsNotNone(result, f"No response from {_url}")
