@@ -6,9 +6,9 @@ on:
   workflow_call:
   push:
     paths:
-    - '.github/workflows/TEST_HelloAPI_remote.yml'
+    - '.github/workflows/TEST_resources_remote.yml'
     - '.github/actions/test_config/**'
-    - 'tests/cases/apis/HelloAPI/remote/**'
+    - 'tests/cases/resources/**/RemoteCase.py'
     - 'tests/config/**'
     - '!.github/workflows/CI_APIUtils.yml'
     - '!.github/workflows/BUILD_APIUtils.yml'

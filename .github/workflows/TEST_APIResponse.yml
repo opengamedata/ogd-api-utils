@@ -8,7 +8,7 @@ on:
     paths:
     - '.github/workflows/TEST_APIResponse.yml'
     - '.github/actions/test_config/**'
-    - 'tests/cases/utils/t_APIResponse.py'
+    - 'tests/cases/models/APIResponseSuite/**'
     - 'tests/config/**'
     - '!.github/workflows/CI_APIUtils.yml'
     - '!.github/workflows/BUILD_APIUtils.yml'
