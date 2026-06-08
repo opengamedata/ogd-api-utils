@@ -1,6 +1,5 @@
 # import libraries
 import logging
-import unittest
 from unittest import TestCase
 # import ogd libraries.
 from ogd.common.configs.TestConfig import TestConfig
@@ -13,7 +12,7 @@ except ModuleNotFoundError as err:
 finally:
     from tests.config.t_config import settings
 
-class t_ParseList(TestCase):
+class ParseListCase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         _config = TestConfig.FromDict(name="APIUtilsTestConfig", unparsed_elements=settings)
@@ -39,11 +38,3 @@ class t_ParseList(TestCase):
         list_str = "Not a [list] type of thing"
         parsed = parse_list(list_str=list_str, logger=Logger.std_logger)
         self.assertEqual(parsed, None)
-
-class t_GenInterface(TestCase):
-    @unittest.skip("No tests written yet")
-    def test_gen_anything(self):
-        pass
-
-if __name__ == '__main__':
-    unittest.main()

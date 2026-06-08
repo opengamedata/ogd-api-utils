@@ -2,7 +2,6 @@
 import json
 import logging
 import unittest
-from pathlib import Path
 from unittest import TestCase
 # import ogd libraries
 from ogd.common.configs.TestConfig import TestConfig
@@ -14,7 +13,7 @@ from ogd.apis.models.APIResponse import APIResponse
 from tests.config.t_config import settings
 
 
-class t_APIResponse(TestCase):
+class BasicInitCase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         _config = TestConfig.FromDict(name="APIResponseTestConfig", unparsed_elements=settings)
@@ -124,6 +123,3 @@ class t_APIResponse(TestCase):
         self.assertEqual(self.response.Message, "SUCCESS: Default server success")
         self.assertEqual(self.response.Status, ResponseStatus.OK)
         self.assertEqual(self.response.Value, {"foo":"bar"})
-
-if __name__ == '__main__':
-    unittest.main()

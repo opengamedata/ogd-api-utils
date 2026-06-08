@@ -10,7 +10,7 @@ from ogd.common.utils.Logger import Logger
 from src.ogd.apis.configs.ServerConfig import ServerConfig
 from tests.config.t_config import settings
 
-class t_ServerConfig(TestCase):
+class BasicInitCase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         # 1. Get testing config
@@ -26,10 +26,6 @@ class t_ServerConfig(TestCase):
             other_elements={ "foo":"bar" }
         )
 
-    @staticmethod
-    def RunAll():
-        pass
-
     def test_DebugLevel(self):
         _lvl = self.test_schema.DebugLevel
         self.assertIsInstance(_lvl, int)
@@ -43,7 +39,3 @@ class t_ServerConfig(TestCase):
     @unittest.skip("Not yet implemented")
     def test_AsMarkdown(self):
         pass
-
-
-if __name__ == '__main__':
-    unittest.main()
