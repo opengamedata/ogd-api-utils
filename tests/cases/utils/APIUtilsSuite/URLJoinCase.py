@@ -4,12 +4,7 @@ from unittest import TestCase
 # import ogd libraries.
 from ogd.common.utils.Logger import Logger
 # import locals
-try:
-    from src.ogd.apis.utils.APIUtils import urljoin
-except ModuleNotFoundError as err:
-    Logger.Log(f"Import error: {err}")
-finally:
-    from tests.config.t_config import settings
+from src.ogd.apis.utils.APIUtils import urljoin
 
 class URLJoinCase(TestCase):
     """Test case for the `urljoin` utility function.
@@ -39,6 +34,3 @@ class URLJoinCase(TestCase):
         base = "ogd-services.fielddaylab.wisc.edu/"
         loc  = "/app.wsgi/path/to/endpoint"
         self.assertEqual(urljoin(base=base, url=loc), f"{base[:-1]}/{loc[1:]}")
-
-if __name__ == '__main__':
-    unittest.main()
