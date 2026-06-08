@@ -14,7 +14,7 @@ from ogd.apis.models.APIResponse import APIResponse
 from tests.config.t_config import settings
 
 
-class t_APIResponse(TestCase):
+class BasicInitCase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         _config = TestConfig.FromDict(name="APIResponseTestConfig", unparsed_elements=settings)
