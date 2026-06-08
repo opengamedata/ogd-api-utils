@@ -10,7 +10,7 @@ from ogd.common.utils.Logger import Logger
 from src.ogd.apis.configs.ServerConfig import ServerConfig
 from tests.config.t_config import settings
 
-class t_ServerConfig(TestCase):
+class BasicInitCase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         # 1. Get testing config
