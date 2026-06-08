@@ -18,19 +18,39 @@ class URLJoinCase(TestCase):
     def test_noslashes_noscheme(self):
         base = "ogd-services.fielddaylab.wisc.edu"
         loc  = "app.wsgi/path/to/endpoint"
-        self.assertEqual(urljoin(base=base, url=loc), f"{base}/{loc}")
+        self.assertEqual(urljoin(base=base, url=loc), f"https://{base}/{loc}")
 
     def test_baseslash_noscheme(self):
         base = "ogd-services.fielddaylab.wisc.edu/"
         loc  = "app.wsgi/path/to/endpoint"
-        self.assertEqual(urljoin(base=base, url=loc), f"{base[:-1]}/{loc}")
+        self.assertEqual(urljoin(base=base, url=loc), f"https://{base[:-1]}/{loc}")
 
     def test_urlslash_noscheme(self):
         base = "ogd-services.fielddaylab.wisc.edu"
         loc  = "/app.wsgi/path/to/endpoint"
-        self.assertEqual(urljoin(base=base, url=loc), f"{base}/{loc[1:]}")
+        self.assertEqual(urljoin(base=base, url=loc), f"https://{base}/{loc[1:]}")
 
     def test_bothslash_noscheme(self):
         base = "ogd-services.fielddaylab.wisc.edu/"
+        loc  = "/app.wsgi/path/to/endpoint"
+        self.assertEqual(urljoin(base=base, url=loc), f"https://{base[:-1]}/{loc[1:]}")
+
+    def test_noslashes_withscheme(self):
+        base = "https://ogd-services.fielddaylab.wisc.edu"
+        loc  = "app.wsgi/path/to/endpoint"
+        self.assertEqual(urljoin(base=base, url=loc), f"{base}/{loc}")
+
+    def test_baseslash_withscheme(self):
+        base = "https://ogd-services.fielddaylab.wisc.edu/"
+        loc  = "app.wsgi/path/to/endpoint"
+        self.assertEqual(urljoin(base=base, url=loc), f"{base[:-1]}/{loc}")
+
+    def test_urlslash_withscheme(self):
+        base = "https://ogd-services.fielddaylab.wisc.edu"
+        loc  = "/app.wsgi/path/to/endpoint"
+        self.assertEqual(urljoin(base=base, url=loc), f"{base}/{loc[1:]}")
+
+    def test_bothslash_withscheme(self):
+        base = "https://ogd-services.fielddaylab.wisc.edu/"
         loc  = "/app.wsgi/path/to/endpoint"
         self.assertEqual(urljoin(base=base, url=loc), f"{base[:-1]}/{loc[1:]}")
