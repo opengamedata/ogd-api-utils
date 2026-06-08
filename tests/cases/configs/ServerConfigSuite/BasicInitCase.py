@@ -26,10 +26,6 @@ class BasicInitCase(TestCase):
             other_elements={ "foo":"bar" }
         )
 
-    @staticmethod
-    def RunAll():
-        pass
-
     def test_DebugLevel(self):
         _lvl = self.test_schema.DebugLevel
         self.assertIsInstance(_lvl, int)
@@ -43,7 +39,3 @@ class BasicInitCase(TestCase):
     @unittest.skip("Not yet implemented")
     def test_AsMarkdown(self):
         pass
-
-
-if __name__ == '__main__':
-    unittest.main()
