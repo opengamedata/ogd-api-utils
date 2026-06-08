@@ -43,7 +43,7 @@ jobs:
   testbed_hello_local:
     name: HelloAPI Local Testbed
     needs: build
-    uses: ./.github/workflows/TEST_HelloAPI_local.yml
+    uses: ./.github/workflows/TEST_resource_local.yml
   
   deploy_helloapi:
     name: HelloAPI Deploy
@@ -57,4 +57,4 @@ jobs:
   testbed_hello_remote:
     name: HelloAPI Remote Testbed
     needs: deploy_helloapi
-    uses: ./.github/workflows/TEST_HelloAPI_remote.yml
+    uses: ./.github/workflows/TEST_resources_remote.yml
