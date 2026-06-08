@@ -2,7 +2,6 @@
 import json
 import logging
 import unittest
-from pathlib import Path
 from unittest import TestCase
 # import ogd libraries
 from ogd.common.configs.TestConfig import TestConfig
@@ -124,6 +123,3 @@ class BasicInitCase(TestCase):
         self.assertEqual(self.response.Message, "SUCCESS: Default server success")
         self.assertEqual(self.response.Status, ResponseStatus.OK)
         self.assertEqual(self.response.Value, {"foo":"bar"})
-
-if __name__ == '__main__':
-    unittest.main()
