@@ -22,7 +22,7 @@ jobs:
   testbed_hello:
     name: HelloAPI Testbed
     needs: build
-    uses: ./.github/workflows/TEST_HelloAPI_local.yml
+    uses: ./.github/workflows/TEST_resources_local.yml
 
   testbed_api_response:
     name: APIResponse Testbed
