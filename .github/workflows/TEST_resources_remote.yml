@@ -3,6 +3,12 @@ name: Remote Testbed - HelloAPI resources
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 on:
   workflow_dispatch:
+    inputs:
+      host:
+        type: string
+        description: "Which host to run test on"
+        required: false
+        default: ""
   workflow_call:
   push:
     paths:
@@ -18,7 +24,7 @@ on:
     - '!tests/utils/**'
 
 env:
-  DEPLOY_URL: ${{ vars.OGD_STAGING_HOST }}/${{ vars.API_BASE_URL }}/utils/${{ github.ref_name }}/app.wsgi
+  DEPLOY_URL: ${{ inputs.host || vars.OGD_STAGING_HOST }}/${{ vars.API_BASE_URL }}/utils/${{ github.ref_name }}/app.wsgi
 
 jobs:
   check_deploy:
