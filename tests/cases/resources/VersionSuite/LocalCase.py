@@ -50,7 +50,7 @@ class LocalCase(TestCase):
         # 2. Perform assertions
         self.assertIsNotNone(response, f"No response from {_url}")
         if response:
-            self.assertTrue(response.OK, f"Bad status from {_url}")
+            self.assertTrue(response.OK, f"Bad status from {_url}: {response.Status}")
             self.assertEqual(response.Type, RESTType.GET, f"Bad type from {_url}")
             self.assertEqual(response.Value, {"version": "0.0.0-Testing"}, f"Bad val from {_url}")
             self.assertEqual(response.Message, "Successfully retrieved API version.", f"Bad msg from {_url}")

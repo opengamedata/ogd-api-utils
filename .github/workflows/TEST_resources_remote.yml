@@ -4,6 +4,12 @@ run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' &
 on:
   workflow_dispatch:
   workflow_call:
+    inputs:
+      host:
+        type: string
+        description: "Which host to run test on"
+        required: false
+        default: ""
   push:
     paths:
     - '.github/workflows/TEST_resources_remote.yml'
@@ -18,7 +24,7 @@ on:
     - '!tests/utils/**'
 
 env:
-  DEPLOY_URL: ${{ vars.OGD_STAGING_HOST }}/${{ vars.API_BASE_URL }}/utils/${{ github.ref_name }}/app.wsgi
+  DEPLOY_URL: ${{ inputs.host || vars.OGD_STAGING_HOST }}/${{ vars.API_BASE_URL }}/utils/${{ github.ref_name }}/app.wsgi
 
 jobs:
   check_deploy:

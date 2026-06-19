@@ -51,7 +51,7 @@ class LocalCase(TestCase):
         # 2. Perform assertions
         self.assertIsNotNone(response, f"No response from {_url}")
         if response:
-            self.assertTrue(response.OK, f"Bad status from {_url}")
+            self.assertTrue(response.OK, f"Bad status from {_url}: {response.Status}")
             self.assertEqual(response.Type, RESTType.GET, f"Bad type from {_url}")
             self.assertIsNone(response.Value, f"Bad val from {_url}")
             self.assertEqual(response.Message, f"Hello {param}! You GETted successfully!", f"Bad msg from {_url}")
@@ -69,7 +69,7 @@ class LocalCase(TestCase):
         # 2. Perform assertions
         self.assertIsNotNone(response, f"No response from {_url}")
         if response:
-            self.assertTrue(response.OK, f"Bad status from {_url}")
+            self.assertTrue(response.OK, f"Bad status from {_url}: {response.Status}")
             self.assertEqual(response.Type, RESTType.POST, f"Bad type from {_url}")
             self.assertIsNone(response.Value, f"Bad val from {_url}")
             self.assertEqual(response.Message, f"Hello {param}! You POSTed successfully!", f"Bad msg from {_url}")
@@ -87,7 +87,7 @@ class LocalCase(TestCase):
         # 2. Perform assertions
         self.assertIsNotNone(response, f"No response from {_url}")
         if response:
-            self.assertTrue(response.OK, f"Bad status from {_url}")
+            self.assertTrue(response.OK, f"Bad status from {_url}: {response.Status}")
             self.assertEqual(response.Type, RESTType.PUT, f"Bad type from {_url}")
             self.assertIsNone(response.Value, f"Bad val from {_url}")
             self.assertEqual(response.Message, f"Hello {param}! You PUTted successfully!", f"Bad msg from {_url}")
