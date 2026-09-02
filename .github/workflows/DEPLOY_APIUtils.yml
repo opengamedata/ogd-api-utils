@@ -24,7 +24,7 @@ jobs:
   deploy_helloapi:
     name: Deploy APIUtils Test App
     if: inputs.remove == false
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-deploy
       cancel-in-progress: true
@@ -35,7 +35,7 @@ jobs:
 
     # 1. Local checkout & config
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7.0.1
     - name: Set Deploy Dir in app.wsgi
       run: sed -i 's@DEPLOY_DIR@${{ env.DEPLOY_DIR }}@g' ./tests/utils/app.wsgi
       shell: bash
@@ -81,7 +81,7 @@ jobs:
   branch_delete:
     name: Remove APIUtils Deploy
     if: inputs.remove == true
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
       cancel-in-progress: false
@@ -113,7 +113,7 @@ jobs:
       run: echo "Removed branch deploy at ${{ env.DEPLOY_URL }}"
 
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7.0.1
       with:
         name: "cleanup-log"
         path: ./*.log

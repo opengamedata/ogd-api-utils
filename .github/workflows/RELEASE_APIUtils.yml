@@ -38,7 +38,7 @@ jobs:
     name: Publish Release to PyPI
     needs: [build, testbed_server_config, testbed_hello, testbed_api_response, testbed_api_utils]
     if: github.event.action == 'released'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     environment:
       name: pypi_release
       url: https://pypi.org/manage/project/opengamedata-api-utils/
@@ -49,7 +49,7 @@ jobs:
     # 1. Local checkout & config
     - name: Restore Cached Build
       id: cached-build
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v6.1.0
       with:
         key: opengamedata-api-utils-build-${{ github.run_id }}-${{ github.run_attempt }}
         path: ./dist/
@@ -72,7 +72,7 @@ jobs:
     name: Publish Prerelease to PyPI
     needs: [build, testbed_server_config, testbed_hello, testbed_api_response, testbed_api_utils]
     if: github.event.action == 'prereleased'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     environment:
       name: pypi_prerelease
       url: https://pypi.org/manage/project/opengamedata-api-utils/
@@ -83,7 +83,7 @@ jobs:
     # 1. Local checkout & config
     - name: Restore Cached Build
       id: cached-build
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v6.1.0
       with:
         key: opengamedata-api-utils-build-${{ github.run_id }}-${{ github.run_attempt }}
         path: ./dist/

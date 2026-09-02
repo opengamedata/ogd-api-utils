@@ -21,7 +21,7 @@ jobs:
 
   run_testbed_server_config:
     name: Run ServerConfig Testbed
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     container: python:${{ vars.OGD_PYTHON_VERSION }}-alpine
     defaults:
       run:
@@ -33,7 +33,7 @@ jobs:
     steps:
   # 1. Local checkout 
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7.0.1
     - name: Get Dependencies
       run: python -m pip install -r requirements.txt
     - name: Set up Config File
@@ -50,7 +50,7 @@ jobs:
 
   # 4. Cleanup & complete
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7.0.1
       with:
         name: "test-log"
         path: ./*.log
