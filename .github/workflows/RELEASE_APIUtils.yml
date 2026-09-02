@@ -107,7 +107,7 @@ jobs:
 
   wait_for_pypi:
     name: Wait for PyPI to Update
-    needs: [build, pypi_release]
+    needs: [build, release]
     environment: release-wait-deploy # use environment to force waiting a few minutes after the PyPI release.
     runs-on: ubuntu-24.04
     steps:
@@ -118,7 +118,7 @@ jobs:
   deploy:
     name: Release Deploy
     if: github.event.action == 'released'
-    needs: [build, pypi_release, wait_for_pypi]
+    needs: [build, release, wait_for_pypi]
     uses: ./.github/workflows/DEPLOY_FileAPI.yml
     with:
       image_name:       ${{ github.repository }} # github.repository includes organization as prefix
