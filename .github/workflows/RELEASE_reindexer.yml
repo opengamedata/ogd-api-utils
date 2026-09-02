@@ -15,7 +15,7 @@ env:
 jobs:
   reindexer_release:
     name: Release of Reindexer Script
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
 
   # 1. Local checkout & config

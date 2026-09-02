@@ -21,7 +21,7 @@ jobs:
 
   run_testbed_api_utils:
     name: Run APIUtils Testbed
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     container: python:${{ vars.OGD_PYTHON_VERSION }}-alpine
     defaults:
       run:

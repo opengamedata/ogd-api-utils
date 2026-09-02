@@ -21,7 +21,7 @@ jobs:
 
   run_testbed_server_config:
     name: Run ServerConfig Testbed
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     container: python:${{ vars.OGD_PYTHON_VERSION }}-alpine
     defaults:
       run:
