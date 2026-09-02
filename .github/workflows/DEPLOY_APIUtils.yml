@@ -64,7 +64,7 @@ jobs:
     # 4. Cleanup & complete
 
   branch_delete:
-    name: Remove FileAPI Deploy
+    name: Remove APIUtils Deploy
     if: inputs.remove == true
     runs-on: ubuntu-24.04
     concurrency:
