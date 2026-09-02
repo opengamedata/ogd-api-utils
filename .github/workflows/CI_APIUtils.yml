@@ -7,23 +7,23 @@ on:
     paths:
     - '.github/workflows/CI_APIUtils.yml'
     - '.github/workflows/BUILD_APIUtils.yml'
+    - '.github/workflows/DEPLOY_APIUtils.yml'
     - '.github/actions/**'
     - 'requirements.txt'
     - 'src/**'
     - 'tests/utils/**'
 
-env:
-  DEPLOY_HOST: ${{ vars.OGD_STAGING_HOST }}
-  DEPLOY_DIR:                              ${{ vars.API_BASE_PATH }}/utils/${{ github.ref_name }}
-  DEPLOY_URL:  ${{ vars.OGD_STAGING_HOST }}/${{ vars.API_BASE_URL }}/utils/${{ github.ref_name }}/app.wsgi
-
 jobs:
 
-  build:
-    name: Build Python Package
-    uses: ./.github/workflows/BUILD_APIUtils.yml
-    with:
-      with_caching: false
+  setup:
+    name: Get Branch
+    runs-on: ubuntu-24.04
+    outputs:
+      branch-tag: ${{ steps.get-branch.outputs.branch-name }}
+    steps:
+      - name: Get Branch
+        id: get-branch
+        uses: opengamedata/actions-get-branch@v1.0
 
   testbed_server_config:
     name: ServerConfig Testbed
@@ -44,13 +44,25 @@ jobs:
     name: HelloAPI Local Testbed
     needs: build
     uses: ./.github/workflows/TEST_resources_local.yml
+
+  build:
+    name: Build Python Package
+    needs: [setup, testbed_hello_local, testbed_server_config, testbed_api_response, testbed_api_utils]
+    uses: ./.github/workflows/BUILD_APIUtils.yml
+    with:
+      image_name:   ${{ github.repository }} # github.repository includes organization as prefix
+      image_tag:    ${{ needs.setup.outputs.branch-tag }}
+      with_caching: false
+    secrets:
+      image_repository: ${{ secrets.DOCKER_IMAGE_REPO }}
   
   deploy_helloapi:
-    name: HelloAPI Deploy
-    needs: [testbed_hello_local, testbed_server_config, testbed_api_response, testbed_api_utils]
+    name: CI Deploy to GCP
+    needs: [setup, testbed_hello_local, testbed_server_config, testbed_api_response, testbed_api_utils, build]
     uses: ./.github/workflows/DEPLOY_APIUtils.yml
     with:
-      branch: ${{ github.ref_name }}
+      image_name: ${{ github.repository }} # github.repository includes organization as prefix
+      image_tag:  ${{ needs.setup.outputs.branch-tag }}
       remove: false
     secrets: inherit
 
