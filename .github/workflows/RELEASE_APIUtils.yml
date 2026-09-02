@@ -129,5 +129,5 @@ jobs:
 
   testbed_hello_remote:
     name: HelloAPI Remote Testbed
-    needs: deploy_helloapi
+    needs: deploy
     uses: ./.github/workflows/TEST_resources_remote.yml
