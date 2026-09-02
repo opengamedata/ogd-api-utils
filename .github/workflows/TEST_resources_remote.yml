@@ -38,15 +38,6 @@ jobs:
     - name: cURL Check Hello Endpoint
       run: curl -Is --fail-with-body ${{ env.DEPLOY_URL }}/hello
 
-  deploy_if_needed:
-    name: HelloAPI Deploy (If Needed)
-    if: failure()
-    uses: ./.github/workflows/DEPLOY_APIUtils.yml
-    secrets: inherit
-    with:
-      branch: ${{ github.ref_name }}
-      remove: false
-
   run_testbed_hello_remote:
     name: Run HelloAPI Remote Testbed
     needs: [check_deploy, deploy_if_needed]
