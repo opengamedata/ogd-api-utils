@@ -17,11 +17,6 @@ on:
         description: "Whether to remove the deploy for the current branch."
         required: true
         default: false
-      as_latest:
-        type: boolean
-        description: "Whether to also deploy/remove as the 'latest' version of API"
-        required: false
-        default: false
 
 env:
   SERVICE_NAME: 'ogd-api-utils-test'
@@ -58,17 +53,7 @@ jobs:
         workload_identity_provider: 'projects/${{ vars.GCLOUD_PROJECT_NUM }}/locations/global/workloadIdentityPools/${{ secrets.GCLOUD_ID_POOL }}/providers/${{ secrets.GCLOUD_ID_PROVIDER }}'
         service_account: ${{ secrets.GCLOUD_DEPLOY_USER }}
     
-    - name: Check as_latest value
-      run: echo ${{ inputs.as_latest }}
-    - name: Deploy to Cloud Run Service as latest
-      if: ${{ inputs.as_latest == 'true' }}
-      uses: 'google-github-actions/deploy-cloudrun@v3.0.1'
-      with:
-        service: ${{ env.SERVICE_NAME }}
-        image: "${{ secrets.DOCKER_IMAGE_REPO }}/${{ inputs.image_name }}:${{ inputs.image_tag }}"
-        tag: latest
     - name: Deploy to Cloud Run Service
-      if: ${{ inputs.as_latest != 'true' }}
       uses: 'google-github-actions/deploy-cloudrun@v3.0.1'
       with:
         service: ${{ env.SERVICE_NAME }}
