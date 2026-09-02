@@ -52,6 +52,10 @@ jobs:
     needs: [check_deploy, deploy_if_needed]
     if: always() && (needs.check_deploy.result == 'success' || needs.deploy_if_needed.result == 'success')
     runs-on: ubuntu-22.04
+    container: python:${{ vars.OGD_PYTHON_VERSION }}-alpine
+    defaults:
+      run:
+        shell: sh
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-HelloAPI-remote
       cancel-in-progress: true
@@ -65,9 +69,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     - name: Get Dependencies
-      uses: opengamedata/setup-ogd-py-dependencies@v1.0
-      with:
-        python_version: ${{ vars.OGD_PYTHON_VERSION }}
+      run: python -m pip install -r requirements.txt
     - name: Local self-install
       run: python -m pip install -e .
     - name: Set up Config File
