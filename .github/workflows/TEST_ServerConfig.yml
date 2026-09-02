@@ -40,6 +40,7 @@ jobs:
       uses: ./.github/actions/test_config
       with:
           verbose_output:     "True"
+          shell: sh
 
   # 2. Build & configure remote environments
 
