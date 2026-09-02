@@ -114,20 +114,3 @@ jobs:
     - name: Done Waiting
       run: echo "Done waiting."
       shell: bash
-
-  deploy:
-    name: Release Deploy
-    if: github.event.action == 'released'
-    needs: [build, release, wait_for_pypi]
-    uses: ./.github/workflows/DEPLOY_FileAPI.yml
-    with:
-      image_name:       ${{ github.repository }} # github.repository includes organization as prefix
-      image_tag:        ${{ github.ref_name }}
-      as_latest: true
-      remove: false
-    secrets: inherit
-
-  testbed_hello_remote:
-    name: HelloAPI Remote Testbed
-    needs: deploy
-    uses: ./.github/workflows/TEST_resources_remote.yml
