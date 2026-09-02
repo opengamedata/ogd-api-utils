@@ -54,7 +54,7 @@ jobs:
   
   deploy_helloapi:
     name: CI Deploy to GCP
-    needs: [setup, testbed_hello_local, testbed_server_config, testbed_api_response, testbed_api_utils, build]
+    needs: [setup, build]
     uses: ./.github/workflows/DEPLOY_APIUtils.yml
     with:
       image_name: ${{ github.repository }} # github.repository includes organization as prefix
