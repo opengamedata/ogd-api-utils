@@ -14,7 +14,7 @@ def _logImportErr(msg:str, err:Exception):
     application.logger.exception(err)
 
 # 1. Add local directory to path, so we can import locals.
-HOME_FOLDER = "DEPLOY_DIR"
+HOME_FOLDER = "/src"
 if not HOME_FOLDER in sys.path:
     sys.path.insert(0, HOME_FOLDER)
     sys.path.insert(0, str(Path(HOME_FOLDER) / "ogd"))
