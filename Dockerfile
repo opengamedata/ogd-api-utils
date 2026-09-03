@@ -4,7 +4,7 @@ FROM python:3.12-alpine
 ENV PYTHONPATH=src
 COPY requirements.txt /
 COPY src/ /
-COPY config/config.py /src/config.py
+COPY tests/utils/app.wsgi /src/app.wsgi
 
 RUN pip install -r requirements.txt
 RUN pip install waitress
