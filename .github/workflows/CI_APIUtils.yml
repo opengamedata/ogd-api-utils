@@ -9,6 +9,7 @@ on:
     - '.github/workflows/BUILD_APIUtils.yml'
     - '.github/workflows/DEPLOY_APIUtils.yml'
     - '.github/actions/**'
+    - 'Dockerfile'
     - 'requirements.txt'
     - 'src/**'
     - 'tests/utils/**'
