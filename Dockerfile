@@ -31,8 +31,8 @@ COPY tests/utils/app.wsgi ./app.wsgi
 
 CMD ["gunicorn", \
      "--bind",    ":8080", \
-     "--workers", "1", "\
-     --threads",  "8", \
+     "--workers", "1", \
+     "--threads", "8", \
      "--timeout", "0", \
      "app:application" \
 ]
