@@ -9,10 +9,9 @@ on:
     - '.github/workflows/BUILD_APIUtils.yml'
     - '.github/workflows/DEPLOY_APIUtils.yml'
     - '.github/actions/**'
+    - 'src/**'
     - 'Dockerfile'
     - 'requirements.txt'
-    - 'src/**'
-    - 'tests/utils/**'
 
 jobs:
 
@@ -20,11 +19,11 @@ jobs:
     name: Get Branch
     runs-on: ubuntu-24.04
     outputs:
-      branch-tag: ${{ steps.get-branch.outputs.branch-name }}
+      branch_tag: ${{ steps.get-branch.outputs.branch-name }}
     steps:
-      - name: Get Branch
-        id: get-branch
-        uses: opengamedata/actions-get-branch@v1.0
+    - name: Get Branch
+      id: get-branch
+      uses: opengamedata/actions-get-branch@v1.0
 
   testbed_server_config:
     name: ServerConfig Testbed
@@ -42,28 +41,35 @@ jobs:
     name: HelloAPI Local Testbed
     uses: ./.github/workflows/TEST_resources_local.yml
 
-  build:
+  package:
     name: Build Python Package
     needs: [setup, testbed_hello_local, testbed_server_config, testbed_api_response, testbed_api_utils]
+    uses: ./.github/workflows/PACKAGE_APIUtils.yml
+    with:
+      with_caching: false
+
+  build:
+    name: Build Docker Image
+    needs: [setup, package]
     uses: ./.github/workflows/BUILD_APIUtils.yml
     with:
-      image_name:   ${{ github.repository }} # github.repository includes organization as prefix
-      image_tag:    ${{ needs.setup.outputs.branch-tag }}
-      with_caching: false
+      image_tag: ${{ needs.setup.outputs.branch_tag }}
     secrets:
       image_repository: ${{ secrets.DOCKER_IMAGE_REPO }}
   
-  deploy_helloapi:
+  deploy:
     name: CI Deploy to GCP
     needs: [setup, build]
     uses: ./.github/workflows/DEPLOY_APIUtils.yml
     with:
-      image_name: ${{ github.repository }} # github.repository includes organization as prefix
-      image_tag:  ${{ needs.setup.outputs.branch-tag }}
+      image_name: ${{ needs.build.outputs.image_name }}
+      revision_tag:  ${{ needs.setup.outputs.branch_tag }}
       remove: false
     secrets: inherit
 
   testbed_hello_remote:
     name: HelloAPI Remote Testbed
-    needs: deploy_helloapi
+    needs: deploy
     uses: ./.github/workflows/TEST_resources_remote.yml
+    with:
+      base_url: ${{ needs.deploy.outputs.url }}

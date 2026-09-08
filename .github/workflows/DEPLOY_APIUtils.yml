@@ -24,7 +24,7 @@ on:
 
 env:
   TEST_URL: ${{ inputs.revision_tag }}---ogd-api-utils-test-${{ vars.GCLOUD_REVISION_HASH }}.a.run.app
-  SERVICE_NAME: 'ogd-api-utils-test'
+  SERVICE_NAME: 'ogd-api-utils-test' # Use env var instead of input here, since we've only got one service name
 
 jobs:
   derive_url:
@@ -72,7 +72,7 @@ jobs:
       with:
         service: ${{ env.SERVICE_NAME }}
         image:   "${{ secrets.DOCKER_IMAGE_REPO }}/${{ inputs.image_name }}"
-        tag:     ${{ inputs.image_tag }}
+        tag:     ${{ inputs.revision_tag }}
         no_traffic: true
 
     # 4. Cleanup & complete
