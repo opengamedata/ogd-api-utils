@@ -42,7 +42,8 @@ jobs:
   run_testbed_hello_remote:
     name: Run HelloAPI Remote Testbed
     needs: [check_deploy]
-    if: always() && (needs.check_deploy.result == 'success' || needs.deploy_if_needed.result == 'success')
+    # if: always() && (needs.check_deploy.result == 'success' || needs.deploy_if_needed.result == 'success')
+    if: always() && needs.check_deploy.result == 'success'
     runs-on: ubuntu-24.04
     container: python:${{ vars.OGD_PYTHON_VERSION }}-alpine
     defaults:
@@ -55,7 +56,7 @@ jobs:
     steps:
 
     - name: Announce testing
-      run: echo "Testing HelloAPI endpoint at ${{ env.DEPLOY_URL }}"
+      run: echo "Testing HelloAPI endpoint at ${{ inputs.base_url }}"
 
   # 1. Local checkout 
     - name: Checkout repository
