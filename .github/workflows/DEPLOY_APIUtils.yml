@@ -20,22 +20,22 @@ on:
     outputs:
       url:
         description: "The URL of the deploy."
-        value: ${{ env.TEST_URL }}
-        # value: ${{ jobs.derive_url.outputs.url }}
+        value: ${{ jobs.derive_url.outputs.url }}
 
 env:
   TEST_URL: ${{ inputs.revision_tag }}---ogd-api-utils-test-${{ vars.GCLOUD_REVISION_HASH }}.a.run.app
+  SERVICE_NAME: 'ogd-api-utils-test'
 
 jobs:
-  # derive_url:
-  #   name: Derive Target URL for Deploy
-  #   runs-on: ubuntu-24.04
-  #   outputs:
-  #     url: ${{ steps.set-url.outputs.url }}
-  #   steps:
-  #     - name: Get URL
-  #       id: set-url
-  #       run: echo "url=${{ env.TEST_URL }}" >> "$GITHUB_OUTPUT"
+  derive_url:
+    name: Derive Target URL for Deploy
+    runs-on: ubuntu-24.04
+    outputs:
+      url: ${{ steps.set-url.outputs.url }}
+    steps:
+      - name: Get URL
+        id: set-url
+        run: echo "url=${{ env.TEST_URL }}" >> "$GITHUB_OUTPUT"
   
   deploy_image:
     name: Deploy Image to Google Cloud
