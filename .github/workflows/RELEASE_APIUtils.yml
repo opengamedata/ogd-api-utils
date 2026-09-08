@@ -24,20 +24,16 @@ jobs:
     name: HelloAPI Testbed
     uses: ./.github/workflows/TEST_resources_local.yml
 
-  build:
+  package:
     name: Build Python Package
     needs: [testbed_server_config, testbed_api_response, testbed_api_utils, testbed_hello_local]
-    uses: ./.github/workflows/BUILD_APIUtils.yml
+    uses: ./.github/workflows/PACKAGE_APIUtils.yml
     with:
-      image_name:   ${{ github.repository }} # github.repository includes organization as prefix
-      image_tag:    ${{ github.ref_name }}
       with_caching: true
-    secrets:
-      image_repository: ${{ secrets.DOCKER_IMAGE_REPO }}
 
   release:
     name: Publish Release to PyPI
-    needs: [build]
+    needs: [package]
     if: github.event.action == 'released'
     runs-on: ubuntu-24.04
     environment:
@@ -71,7 +67,7 @@ jobs:
 
   prerelease:
     name: Publish Prerelease to PyPI
-    needs: [build]
+    needs: [package]
     if: github.event.action == 'prereleased'
     runs-on: ubuntu-24.04
     environment:
@@ -107,10 +103,37 @@ jobs:
 
   wait_for_pypi:
     name: Wait for PyPI to Update
-    needs: [build, release]
+    needs: [package, release]
     environment: release-wait-deploy # use environment to force waiting a few minutes after the PyPI release.
     runs-on: ubuntu-24.04
     steps:
     - name: Done Waiting
       run: echo "Done waiting."
       shell: bash
+
+  build:
+    name: Build Docker Image for Test Deploy
+    needs: [wait_for_pypi]
+    uses: ./.github/workflows/BUILD_APIUtils.yml
+    with:
+      image_tag:  ${{ github.ref_name }}
+    secrets:
+      image_repository: ${{ secrets.DOCKER_IMAGE_REPO }}
+
+  deploy:
+    name: Test Deploy
+    if: github.event.action == 'released'
+    needs: [build]
+    uses: ./.github/workflows/DEPLOY_APIUtils.yml
+    with:
+      image_name: ${{ needs.build.outputs.image_name }}
+      revision_tag: ${{ github.ref_name }}
+      remove: false
+    secrets: inherit
+
+  testbed_hello_remote:
+    name: HelloAPI Remote Testbed
+    needs: deploy
+    uses: ./.github/workflows/TEST_resources_remote.yml
+    with:
+      base_url: ${{ needs.deploy.outputs.url }}
