@@ -62,8 +62,9 @@ jobs:
     needs: [setup, build]
     uses: ./.github/workflows/DEPLOY_APIUtils.yml
     with:
-      image_name: ${{ needs.build.outputs.image_name }}
-      revision_tag:  "t-${{ needs.setup.outputs.branch_tag }}-t"
+      image_name:   ${{ needs.build.outputs.image_name }}
+      revision_tag: ${{ needs.setup.outputs.branch_tag }}
+      suffix:       ${{ needs.setup.outputs.branch_tag }}
       remove: false
     secrets: inherit
 

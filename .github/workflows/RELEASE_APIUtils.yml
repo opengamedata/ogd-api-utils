@@ -126,8 +126,9 @@ jobs:
     needs: [build]
     uses: ./.github/workflows/DEPLOY_APIUtils.yml
     with:
-      image_name: ${{ needs.build.outputs.image_name }}
-      revision_tag: ${{ github.ref_name }}
+      image_name:   ${{ needs.build.outputs.image_name }}
+      revision_tag: "latest"
+      suffix:       ${{ github.ref_name }}
       remove: false
     secrets: inherit
 
