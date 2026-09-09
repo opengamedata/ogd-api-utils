@@ -40,7 +40,7 @@ else:
         "DEBUG_LEVEL" : "DEBUG"
     }
     _server_cfg = ServerConfig.FromDict(name="HelloAPITestServer", unparsed_elements=_server_cfg_elems)
-    HelloAPI.register(application, _server_cfg)
+    HelloAPI.register(application, _server_cfg, root_endpoint='hello')
 
 # if __name__ == '__main__':
 # 	application.run(debug=True)
