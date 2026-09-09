@@ -14,7 +14,7 @@ def _logImportErr(msg:str, err:Exception):
     application.logger.exception(err)
 
 # 1. Add local directory to path, so we can import locals.
-HOME_FOLDER = "DEPLOY_DIR"
+HOME_FOLDER = "/src"
 if not HOME_FOLDER in sys.path:
     sys.path.insert(0, HOME_FOLDER)
     sys.path.insert(0, str(Path(HOME_FOLDER) / "ogd"))
@@ -28,8 +28,8 @@ sys.path.insert(0, sys.path.pop()) # Move venv sitedir to front of sys.path
 
 # 3. Register api
 try:
-    from apis.configs.ServerConfig import ServerConfig
-    from apis.HelloAPI import HelloAPI
+    from ogd.apis.configs.ServerConfig import ServerConfig
+    from ogd.apis.HelloAPI import HelloAPI
 except ImportError as err:
     _logImportErr(msg="Could not import Hello API, an ImportError occurred:", err=err)
 except Exception as err:
