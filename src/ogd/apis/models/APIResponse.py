@@ -27,22 +27,24 @@ class APIResponse:
         self._type   : Optional[RESTType]
         self._val    : Optional[Map]
 
-        if isinstance(req_type, RESTType):
-            self._type = req_type
-        elif isinstance(req_type, str):
-            self._type = RESTType[req_type]
-        else:
-            self._type = None
-        if isinstance(val, dict) or val is None:
-            self._val = val
-        else:
-            try:
-                self._val = json.loads(str(val))
-            except json.decoder.JSONDecodeError as err:
-                abbreviated_val = f"{str(val)[:20]}..." if len(str(val)) > 20 else str(val)
-                _msg = f"API response 'value' field contained value '{abbreviated_val}' with invalid type {type(val)}, which could not be converted to a dictionary. Attempting to do so resulted in error:\n{err}\nThe value field will be left blank."
-                Logger.Log(_msg, logging.ERROR)
-                self._val = None
+        match req_type:
+            case RESTType():
+                self._type = req_type
+            case str():
+                self._type = RESTType[req_type]
+            case _:
+                self._type = None
+        match val:
+            case dict() | None:
+                self._val = val
+            case _:
+                try:
+                    self._val = json.loads(str(val))
+                except json.decoder.JSONDecodeError as err:
+                    abbreviated_val = f"{str(val)[:20]}..." if len(str(val)) > 20 else str(val)
+                    _msg = f"API response 'value' field contained value '{abbreviated_val}' with invalid type {type(val)}, which could not be converted to a dictionary. Attempting to do so resulted in error:\n{err}\nThe value field will be left blank."
+                    Logger.Log(_msg, logging.ERROR)
+                    self._val = None
         self._msg    : str                = msg
         self._status : ResponseStatus     = status
 
