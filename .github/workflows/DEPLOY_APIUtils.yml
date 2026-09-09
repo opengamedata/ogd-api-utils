@@ -76,8 +76,8 @@ jobs:
       with:
         service: ${{ env.SERVICE_NAME }}
         image:   "${{ secrets.DOCKER_IMAGE_REPO }}/${{ inputs.image_name }}"
-        suffix:  ${{ inputs.revision_tag }}
-        tag:     "t-${{ inputs.revision_tag }}-t"
+        suffix:  ${{ inputs.suffix }}
+        tag:     ${{ inputs.revision_tag }}
         no_traffic: true
 
     # 4. Cleanup & complete
