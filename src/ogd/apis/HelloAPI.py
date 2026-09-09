@@ -30,17 +30,11 @@ class HelloAPI:
     @staticmethod
     def register(app:Flask, server_config:ServerConfig, root_endpoint:Optional[ENDPOINTS | str]=None):
         api = Api(app)
-        api.add_resource(Hello, '/hello')
+        urls = ['/hello'] + ['/'] if root_endpoint == HelloAPI.ENDPOINTS.HELLO else []
+        api.add_resource(Hello, *urls)
         api.add_resource(ParamHello, '/p_hello/<name>')
-        api.add_resource(HelloAPI.Version, '/version')
-        # If given a valid root_endpoint, use corresponding endpoint at /
-        match root_endpoint.lower() if root_endpoint else None:
-            case HelloAPI.ENDPOINTS.HELLO:
-                api.add_resource(Hello, '/')
-            case HelloAPI.ENDPOINTS.VERSION:
-                api.add_resource(HelloAPI.Version, '/')
-            case _:
-                pass
+        urls = ['/version'] + ['/'] if root_endpoint == HelloAPI.ENDPOINTS.VERSION else []
+        api.add_resource(HelloAPI.Version, *urls)
 
         HelloAPI.server_config = server_config
 
