@@ -27,7 +27,7 @@ ENV PATH="/app/.venv/bin:$PATH"
 # ENV PYTHONPATH='src'
 
 COPY src/ ./
-COPY tests/utils/app.wsgi ./app.wsgi
+COPY tests/utils/app.py ./app.py
 
 CMD ["gunicorn", \
      "--bind",    ":8080", \
