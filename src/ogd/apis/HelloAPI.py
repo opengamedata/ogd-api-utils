@@ -5,6 +5,8 @@ Contains the HelloAPI class, which we register to all API apps as a way to test 
 """
 
 # import libraries
+from enum import StrEnum
+from typing import Optional
 
 # import 3rd-party libraries
 from flask import Flask
@@ -21,12 +23,18 @@ from ogd.apis.models.enums.RESTType import RESTType
 from ogd.apis.models.APIResponse import APIResponse
 
 class HelloAPI:
+    class ENDPOINTS(StrEnum):
+        HELLO = 'hello'
+        VERSION = 'version'
+
     @staticmethod
-    def register(app:Flask, server_config:ServerConfig):
+    def register(app:Flask, server_config:ServerConfig, root_endpoint:Optional[ENDPOINTS | str]=None):
         api = Api(app)
-        api.add_resource(Hello, '/hello')
+        urls = ['/hello'] + (['/'] if root_endpoint == HelloAPI.ENDPOINTS.HELLO else [])
+        api.add_resource(Hello, *urls)
         api.add_resource(ParamHello, '/p_hello/<name>')
-        api.add_resource(HelloAPI.Version, '/version')
+        urls = ['/version'] + (['/'] if root_endpoint == HelloAPI.ENDPOINTS.VERSION else [])
+        api.add_resource(HelloAPI.Version, *urls)
 
         HelloAPI.server_config = server_config
 
@@ -35,6 +43,6 @@ class HelloAPI:
             ret_val = APIResponse(
                 req_type = RESTType.GET,
                 val      = { "version" : str(HelloAPI.server_config.Version) },
-                msg      = f"Successfully retrieved API version.",
+                msg      = "Successfully retrieved API version.",
                 status   = ResponseStatus.OK)
             return ret_val.AsDict

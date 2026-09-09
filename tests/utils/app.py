@@ -13,20 +13,6 @@ def _logImportErr(msg:str, err:Exception):
     application.logger.warning(msg)
     application.logger.exception(err)
 
-# 1. Add local directory to path, so we can import locals.
-HOME_FOLDER = "/src"
-if not HOME_FOLDER in sys.path:
-    sys.path.insert(0, HOME_FOLDER)
-    sys.path.insert(0, str(Path(HOME_FOLDER) / "ogd"))
-
-# 2. Set up venv
-py_version = ".".join([str(sys.version_info.major), str(sys.version_info.minor)])
-packages_dir = Path(HOME_FOLDER) / ".venv" / "lib" / f"python{py_version}" / "site-packages"
-
-site.addsitedir(str(packages_dir))
-sys.path.insert(0, sys.path.pop()) # Move venv sitedir to front of sys.path
-
-# 3. Register api
 try:
     from ogd.apis.configs.ServerConfig import ServerConfig
     from ogd.apis.HelloAPI import HelloAPI
@@ -40,7 +26,7 @@ else:
         "DEBUG_LEVEL" : "DEBUG"
     }
     _server_cfg = ServerConfig.FromDict(name="HelloAPITestServer", unparsed_elements=_server_cfg_elems)
-    HelloAPI.register(application, _server_cfg)
+    HelloAPI.register(application, _server_cfg, root_endpoint='hello')
 
 # if __name__ == '__main__':
 # 	application.run(debug=True)

@@ -22,41 +22,46 @@ class RemoteCase(TestCase):
         Logger.InitializeLogger(level=_level, use_logfile=False)
 
     def test_get(self):
-        _url = f"{self.base_url}/hello"
-        try:
-            response : APIResponse = APIRequest(url=_url, request_type="GET", params={}).Execute(logger=Logger.std_logger)
-        except Exception as err: # pylint: disable=broad-exception-caught
-            self.fail(str(err))
-        else:
-            self.assertIsNotNone(response, f"No response from {_url}")
-            self.assertTrue(response.OK, f"Bad status from {_url}: {response.Status}")
-            self.assertEqual(str(response.Type), "GET", f"Bad type from {_url}")
-            self.assertIsNone(response.Value, f"Bad val from {_url}")
-            self.assertEqual(response.Message, "Hello! You GETted successfully!", f"Bad msg from {_url}")
+        urls = [f"{self.base_url}/", f"{self.base_url}/hello"]
+        for url in urls:
+            with self.subTest(url=url):
+                try:
+                    response : APIResponse = APIRequest(url=url, request_type="GET", params={}).Execute(logger=Logger.std_logger)
+                except Exception as err: # pylint: disable=broad-exception-caught
+                    self.fail(str(err))
+                else:
+                    self.assertIsNotNone(response, f"No response from {url}")
+                    self.assertTrue(response.OK, f"Bad status from {url}: {response.Status}")
+                    self.assertEqual(str(response.Type), "GET", f"Bad type from {url}")
+                    self.assertIsNone(response.Value, f"Bad val from {url}")
+                    self.assertEqual(response.Message, "Hello! You GETted successfully!", f"Bad msg from {url}")
 
     def test_post(self):
-        _url = f"{self.base_url}/hello"
-        try:
-            response : APIResponse = APIRequest(url=_url, request_type="POST", params={}).Execute(logger=Logger.std_logger)
-        except Exception as err: # pylint: disable=broad-exception-caught
-            self.fail(str(err))
-        else:
-            self.assertIsNotNone(response, f"No response from {_url}")
-            self.assertTrue(response.OK, f"Bad status from {_url}: {response.Status}")
-            self.assertEqual(str(response.Type), "POST", f"Bad type from {_url}")
-            self.assertIsNone(response.Value, f"Bad val from {_url}")
-            self.assertEqual(response.Message, "Hello! You POSTed successfully!", f"Bad msg from {_url}")
+        urls = [f"{self.base_url}/", f"{self.base_url}/hello"]
+        for url in urls:
+            with self.subTest(url=url):
+                try:
+                    response : APIResponse = APIRequest(url=url, request_type="POST", params={}).Execute(logger=Logger.std_logger)
+                except Exception as err: # pylint: disable=broad-exception-caught
+                    self.fail(str(err))
+                else:
+                    self.assertIsNotNone(response, f"No response from {url}")
+                    self.assertTrue(response.OK, f"Bad status from {url}: {response.Status}")
+                    self.assertEqual(str(response.Type), "POST", f"Bad type from {url}")
+                    self.assertIsNone(response.Value, f"Bad val from {url}")
+                    self.assertEqual(response.Message, "Hello! You POSTed successfully!", f"Bad msg from {url}")
 
     def test_put(self):
-        _url = f"{self.base_url}/hello"
-        Logger.Log(f"PUT test at {_url}", logging.DEBUG)
-        try:
-            response : APIResponse = APIRequest(url=_url, request_type="PUT", params={}).Execute(logger=Logger.std_logger)
-        except Exception as err: # pylint: disable=broad-exception-caught
-            self.fail(str(err))
-        else:
-            self.assertIsNotNone(response, f"No response from {_url}")
-            self.assertTrue(response.OK, f"Bad status from {_url}: {response.Status}")
-            self.assertEqual(str(response.Type), "PUT", f"Bad type from {_url}")
-            self.assertIsNone(response.Value, f"Bad val from {_url}")
-            self.assertEqual(response.Message, "Hello! You PUTted successfully!", f"Bad msg from {_url}")
+        urls = [f"{self.base_url}/", f"{self.base_url}/hello"]
+        for url in urls:
+            with self.subTest(url=url):
+                try:
+                    response : APIResponse = APIRequest(url=url, request_type="PUT", params={}).Execute(logger=Logger.std_logger)
+                except Exception as err: # pylint: disable=broad-exception-caught
+                    self.fail(str(err))
+                else:
+                    self.assertIsNotNone(response, f"No response from {url}")
+                    self.assertTrue(response.OK, f"Bad status from {url}: {response.Status}")
+                    self.assertEqual(str(response.Type), "PUT", f"Bad type from {url}")
+                    self.assertIsNone(response.Value, f"Bad val from {url}")
+                    self.assertEqual(response.Message, "Hello! You PUTted successfully!", f"Bad msg from {url}")
