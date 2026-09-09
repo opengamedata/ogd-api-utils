@@ -38,14 +38,17 @@ class APIRequest:
 
         if not (url.startswith("http://") or url.startswith("https://")):
             url = f"https://{url}"
-        if isinstance(request_type, RESTType):
-            self._request_type = request_type
-        else:
-            try:
-                self._request_type = RESTType[request_type]
-            except KeyError:
-                current_app.logger.warning(f"Bad request type {request_type}, defaulting to GET")
-                self._request_type = RESTType.GET
+        match request_type:
+            case RESTType():
+                self._request_type = request_type
+            case str():
+                try:
+                    self._request_type = RESTType[request_type.upper()]
+                except KeyError:
+                    current_app.logger.warning(f"Bad request type {request_type}, defaulting to GET")
+                    self._request_type = RESTType.GET
+            case _:
+                raise TypeError(f"request_type for APIRequest was invalid type {type(request_type)}")
 
         self._url = url
         self._params = params
