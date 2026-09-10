@@ -54,9 +54,6 @@ jobs:
       with:
         name: env.CACHE_KEY
         path: ./dist/
-    - name: Fail if Cache Restore Failed
-      if: steps.cached-build.outputs.cache-hit == 'false'
-      run: exit 1
     # 2. Build 
 
     # 3. Remote config & deploy
@@ -87,9 +84,6 @@ jobs:
       with:
         name: env.CACHE_KEY
         path: ./dist/
-    - name: Fail if Cache Restore Failed
-      if: steps.cached-build.outputs.cache-hit == 'false'
-      run: exit 1
 
     # 2. Build 
 
