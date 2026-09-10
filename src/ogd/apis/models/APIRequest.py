@@ -1,6 +1,5 @@
 import logging
 from typing import Any, Dict, Optional
-from urllib.parse import urlparse, urlunparse, ParseResult
 
 import requests
 from flask import current_app
