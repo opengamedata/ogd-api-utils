@@ -22,7 +22,7 @@ jobs:
   run_testbed_server_config:
     name: Run ServerConfig Testbed
     runs-on: ubuntu-24.04
-    container: python:${{ vars.OGD_PYTHON_VERSION }}-alpine
+    container: ${{ vars.EXEC_CONTAINER }}
     defaults:
       run:
         shell: sh
