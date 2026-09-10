@@ -10,7 +10,7 @@ on:
         required: true
       cache_to:
         type: string
-        description: "Key for caching the built package, if caching is used."
+        description: "Name of artifact to store package for sharing to other workflows, if caching is used."
         required: false
         default: "key"
 
@@ -44,9 +44,9 @@ jobs:
     - name: Cache Build for Publishing
       if: inputs.with_caching == true
       id: cache-build
-      uses: actions/cache/save@v6.1.0
+      uses: actions/upload-artifact@v7.0.1
       with:
-        key: ${{ inputs.cache_to }}
+        name: ${{ inputs.cache_to }}
         path: ./dist/
     - name: Non-Cached Build
       if: inputs.with_caching != true
