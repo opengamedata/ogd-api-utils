@@ -40,7 +40,6 @@ jobs:
     needs: [package]
     if: github.event.action == 'released'
     runs-on: ubuntu-24.04
-    container: python:${{ vars.OGD_PYTHON_VERSION }}-slim-trixie
     environment:
       name: pypi_release
       url: https://pypi.org/manage/project/opengamedata-api-utils/
@@ -74,7 +73,6 @@ jobs:
     needs: [package]
     if: github.event.action == 'prereleased'
     runs-on: ubuntu-24.04
-    container: python:${{ vars.OGD_PYTHON_VERSION }}-slim-trixie
     environment:
       name: pypi_prerelease
       url: https://pypi.org/manage/project/opengamedata-api-utils/
