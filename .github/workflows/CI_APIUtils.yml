@@ -26,7 +26,7 @@ jobs:
       uses: opengamedata/actions-get-branch@v1.1
       with:
         n: 20
-        remove: '\\.'
+        remove: '\.'
 
   testbed_server_config:
     name: ServerConfig Testbed
