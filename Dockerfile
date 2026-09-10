@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # STAGE 1: setup dependencies
-FROM python:3.12-alpine AS setup
+FROM python:3.12-slim-trixie AS setup
 
 # 1. Set up a venv for easy copying
 RUN python -m venv /app/.venv
@@ -17,7 +17,7 @@ RUN --mount=type=bind,source=requirements-production.txt,target=requirements-pro
     pip install -r requirements-production.txt
 
 # STAGE 2: Create final image
-FROM python:3.12-alpine
+FROM python:3.12-slim-trixie
 WORKDIR /app
 
 # 1. Copy venv from setup stage
