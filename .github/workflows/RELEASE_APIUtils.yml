@@ -58,7 +58,6 @@ jobs:
 
     # 3. Remote config & deploy
     - name: Publish to PyPI
-      if: steps.cached-build.outputs.cache-hit == 'true'
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         print-hash: true
@@ -89,7 +88,6 @@ jobs:
 
     # 3. Remote config & deploy
     - name: Publish to PyPI
-      if: steps.cached-build.outputs.cache-hit == 'true'
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         print-hash: true
