@@ -128,7 +128,6 @@ jobs:
     with:
       image_name:   ${{ needs.build.outputs.image_name }}
       revision_tag: "latest"
-      suffix:       ${{ github.ref_name }}
       remove: false
     secrets: inherit
 
