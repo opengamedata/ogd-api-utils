@@ -2,7 +2,7 @@
 # Visit https://bit.ly/cffinit to generate yours today!
 
 cff-version: 1.2.0
-title: opengamedata-server
+title: opengamedata-api-utils
 message: >-
   If you use this software, please cite it using the
   metadata from this file.
@@ -23,5 +23,5 @@ authors:
     email: djgagnon@wisc.edu
     affiliation: Field Day Lab
     orcid: 'https://orcid.org/0000-0001-5126-0476'
-repository-code: 'https://github.com/opengamedata/opengamedata-server'
+repository-code: 'https://github.com/opengamedata/ogd-api-utils'
 license: MIT
