@@ -23,9 +23,10 @@ jobs:
     steps:
     - name: Get Branch
       id: get-branch
-      uses: opengamedata/actions-get-branch@v1.0
+      uses: opengamedata/actions-get-branch@v1.1
       with:
         n: 20
+        remove: '\\.'
 
   testbed_server_config:
     name: ServerConfig Testbed
