@@ -28,7 +28,6 @@ jobs:
         shell: sh
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-HelloAPI-local
-      cancel-in-progress: true
 
     steps:
   # 1. Local checkout 

@@ -28,7 +28,6 @@ jobs:
         shell: sh
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}-APIResponse
-      cancel-in-progress: true
 
     steps:
   # 1. Local checkout 
