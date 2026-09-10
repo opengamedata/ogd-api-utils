@@ -6,6 +6,9 @@ on:
   release:
     types: [prereleased, released]
 
+env:
+  CACHE_KEY: opengamedata-api-utils-build-${{ github.run_id }}-${{ github.run_attempt }}
+
 jobs:
 
   testbed_server_config:
@@ -30,6 +33,7 @@ jobs:
     uses: ./.github/workflows/PACKAGE_APIUtils.yml
     with:
       with_caching: true
+      cache_to: env.CACHE_KEY
 
   release:
     name: Publish Release to PyPI
@@ -48,7 +52,7 @@ jobs:
       id: cached-build
       uses: actions/cache/restore@v6.1.0
       with:
-        key: opengamedata-api-utils-build-${{ github.run_id }}-${{ github.run_attempt }}
+        key: env.CACHE_KEY
         path: ./dist/
         fail-on-cache-miss: true
     - name: Fail if Cache Restore Failed
@@ -82,7 +86,7 @@ jobs:
       id: cached-build
       uses: actions/cache/restore@v6.1.0
       with:
-        key: opengamedata-api-utils-build-${{ github.run_id }}-${{ github.run_attempt }}
+        key: env.CACHE_KEY
         path: ./dist/
         fail-on-cache-miss: true
     - name: Fail if Cache Restore Failed
