@@ -76,7 +76,6 @@ jobs:
       id-token: write
     steps:
 
-    # 1. Local checkout & config
     - name: Restore Cached Build
       id: cached-build
       uses: actions/download-artifact@v7.0.0
@@ -84,16 +83,11 @@ jobs:
         name: env.CACHE_KEY
         path: ./dist/
 
-    # 2. Build 
-
-    # 3. Remote config & deploy
     - name: Publish to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         print-hash: true
         repository-url: https://test.pypi.org/legacy/
-
-    # 4. Cleanup & complete
 
   wait_for_pypi:
     name: Wait for PyPI to Update
