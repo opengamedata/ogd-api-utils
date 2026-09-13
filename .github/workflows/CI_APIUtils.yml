@@ -61,7 +61,7 @@ jobs:
       image_repository: ${{ secrets.DOCKER_IMAGE_REPO }}
   
   deploy:
-    name: CI Deploy to GCP
+    name: Deploy to GCP
     needs: [setup, build]
     uses: ./.github/workflows/DEPLOY_APIUtils.yml
     with:
