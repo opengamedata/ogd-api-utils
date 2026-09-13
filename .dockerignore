@@ -3,9 +3,9 @@ gha-creds-*.json
 .github/
 .vscode/
 store/
-tests/
+tests/cases/
+tests/config/
 .DS_Store
-.dockerignore
 .gitignore
 .gitmodules
 .git
