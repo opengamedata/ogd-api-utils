@@ -74,32 +74,3 @@ jobs:
         image:   "${{ secrets.DOCKER_IMAGE_REPO }}/${{ inputs.image_name }}"
         tag:     ${{ inputs.revision_tag }}
         no_traffic: true
-
-    # 4. Cleanup & complete
-
-  branch_delete:
-    name: Remove APIUtils Deploy
-    if: inputs.remove == true
-    runs-on: ubuntu-24.04
-    concurrency:
-      group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}
-      cancel-in-progress: false
-    
-    steps:
-
-    - name: Announce cleanup
-      run: echo "Removing branch deploy at ${{ env.TEST_URL }}"
-    
-    # 1. Remove Image from GitHub
-    - name: Remove Image from Repo
-      uses: dataaxiom/ghcr-cleanup-action@v1.2.2
-      with:
-        delete-tags: ${{ inputs.revision_tag }}
-
-    # 2. Remove from GCP
-
-    - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v7.0.1
-      with:
-        name: "cleanup-log"
-        path: ./*.log
