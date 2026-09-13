@@ -92,8 +92,6 @@ jobs:
     secrets:
       image_repository: ${{ secrets.DOCKER_IMAGE_REPO }}
 
-    # *** Prerelease Case ***
-
   get_branch:
     name: Get Branch
     if: github.event.action == 'prereleased'
@@ -118,8 +116,6 @@ jobs:
       revision_tag: ${{ case(github.event.action == 'released', 'latest', needs.get_branch.outputs.branch_tag) }}
       remove:       false
     secrets: inherit
-
-    # *** Release Case ***
 
   # *** 4. Remote Testbeds ***
 
