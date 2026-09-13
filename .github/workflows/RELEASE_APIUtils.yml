@@ -26,7 +26,7 @@ jobs:
     uses: ./.github/workflows/TEST_APIUtils.yml
 
   testbed_hello_local:
-    name: HelloAPI Testbed
+    name: HelloAPI Local Testbed
     uses: ./.github/workflows/TEST_resources_local.yml
 
   # *** 2. Package and Publish ***
@@ -110,7 +110,7 @@ jobs:
         remove: '\.'
 
   deploy:
-    name: Deploy for Testing
+    name: Deploy Release for Testing
     needs: [build]
     uses: ./.github/workflows/DEPLOY_APIUtils.yml
     with:
